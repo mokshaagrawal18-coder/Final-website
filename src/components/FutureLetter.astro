@@ -1,0 +1,126 @@
+---
+/**
+ * A small envelope. Opening it lifts the flap and slides the letter out;
+ * it can be resealed. Without JS the letter is simply shown.
+ */
+const lines = [
+  'I hope I’m still making things before I feel completely ready.',
+  'I hope I’m still curious enough to change my mind.',
+  'I hope I’m still choosing people, work, and ideas that make me want to look a little closer.',
+  'And I hope I still take the small things seriously enough to care.',
+];
+---
+<div class="future" data-letter>
+  <div class="fl-letter-wrap" data-letter-wrap>
+    <div class="fl-letter paper" id="future-letter" data-letter-body>
+      {lines.map((l, i) => <p style={`--i:${i}`}>{l}</p>)}
+      <p class="hand fl-ps" style={`--i:${lines.length}`}>P.S. please still have strong pasta opinions.</p>
+      <p class="fl-mark hand hand--grey" style={`--i:${lines.length + 1}`}>2026 → ?</p>
+    </div>
+  </div>
+
+  <div class="fl-envelope" aria-hidden="true">
+    <div class="fl-back"></div>
+    <div class="fl-flap"></div>
+    <div class="fl-front">
+      <span class="fl-to hand">for future me</span>
+    </div>
+    <span class="fl-seal"></span>
+  </div>
+
+  <button type="button" class="arrow-link fl-toggle" aria-expanded="false" aria-controls="future-letter" data-letter-toggle hidden>
+    <span class="al-text" data-letter-label>open in a few years</span>
+    <span class="al-arrow al-arrow--right" aria-hidden="true">→</span>
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-letter]').forEach((root) => {
+    const btn = root.querySelector<HTMLButtonElement>('[data-letter-toggle]')!;
+    const label = root.querySelector<HTMLElement>('[data-letter-label]')!;
+    const body = root.querySelector<HTMLElement>('[data-letter-body]')!;
+    root.classList.add('is-sealed', 'is-enhanced');
+    btn.hidden = false;
+    body.setAttribute('inert', '');
+
+    btn.addEventListener('click', () => {
+      const opening = root.classList.contains('is-sealed');
+      root.classList.toggle('is-sealed', !opening);
+      root.classList.toggle('is-open', opening);
+      btn.setAttribute('aria-expanded', String(opening));
+      label.textContent = opening ? 'fold it back up' : 'open in a few years';
+      body.toggleAttribute('inert', !opening);
+    });
+  });
+</script>
+
+<style>
+  .future { display: flex; flex-direction: column; align-items: center; }
+
+  /* the letter lives above the envelope and rises out of it */
+  .fl-letter-wrap { width: min(560px, 100%); display: grid; grid-template-rows: 1fr; }
+  .fl-letter {
+    overflow: hidden;
+    padding: 36px 40px 30px;
+    background-color: var(--paper);
+    border-top: 2px solid var(--cobalt);
+    color: var(--ink);
+    font-size: 1.075rem;
+    line-height: 1.6;
+  }
+  .fl-letter p + p { margin-top: 0.9em; }
+  .fl-ps { margin-top: 1.4em !important; font-size: 1.4rem; }
+  .fl-mark { text-align: right; font-size: 1.05rem; margin-top: 0.4em !important; }
+
+  .is-enhanced .fl-letter-wrap { grid-template-rows: 0fr; margin-bottom: -18px; transition: grid-template-rows 620ms var(--ease) 180ms; position: relative; z-index: 1; }
+  .is-enhanced .fl-letter { min-height: 0; transform: translateY(60px); transition: transform 620ms var(--ease) 180ms, padding 620ms var(--ease) 180ms; padding-block: 0; }
+  .is-enhanced .fl-letter p { opacity: 0; transform: translateY(6px); transition: opacity 360ms var(--ease), transform 360ms var(--ease); }
+  .is-enhanced.is-open .fl-letter-wrap { grid-template-rows: 1fr; z-index: 3; }
+  .is-enhanced.is-open .fl-letter { transform: none; padding-block: 36px 30px; }
+  .is-enhanced.is-open .fl-letter p { opacity: 1; transform: none; transition-delay: calc(560ms + var(--i) * 110ms); }
+
+  /* envelope */
+  .fl-envelope { position: relative; width: 300px; height: 184px; margin-top: 0; z-index: 2; }
+  .fl-back, .fl-front, .fl-flap { position: absolute; left: 0; right: 0; }
+  .fl-back { inset: 0; background: #EFE6D3; border-radius: 4px; box-shadow: var(--shadow-paper); }
+  .fl-front {
+    inset: 0;
+    border-radius: 4px;
+    background:
+      linear-gradient(to top right, #F9F3E6 50%, transparent 50.4%) left bottom / 50% 100% no-repeat,
+      linear-gradient(to top left, #F9F3E6 50%, transparent 50.4%) right bottom / 50% 100% no-repeat;
+    display: flex; align-items: flex-end; justify-content: center; padding-bottom: 26px;
+  }
+  .fl-to { font-size: 1.5rem; transform: rotate(-3deg); }
+  .fl-flap {
+    top: 0; height: 104px;
+    background: linear-gradient(to bottom, #F4ECDB, #EFE5D1);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top center;
+    transition: transform 460ms var(--ease);
+    z-index: 3;
+    filter: drop-shadow(0 1px 0 rgba(23,23,23,0.06));
+  }
+  .fl-seal {
+    position: absolute; z-index: 4; left: 50%; top: 88px;
+    width: 30px; height: 30px; margin-left: -15px;
+    border-radius: 50%;
+    background: var(--yellow);
+    box-shadow: inset 0 0 0 3px rgba(255,255,255,0.35), 0 1px 2px rgba(120, 90, 10, 0.3);
+    transition: opacity 240ms var(--ease), transform 300ms var(--ease);
+  }
+  .is-open .fl-flap { transform: perspective(600px) rotateX(180deg); z-index: 0; }
+  .is-open .fl-seal { opacity: 0; transform: scale(0.6); }
+
+  /* without JS the envelope is just a small closing mark under the letter */
+  .future:not(.is-enhanced) .fl-envelope { transform: scale(0.6); margin-top: -8px; }
+
+  :global(.fl-toggle) { margin-top: 22px; background: none; border: 0; padding: 0 4px; }
+
+  @media (max-width: 640px) {
+    .fl-letter { padding-inline: 22px; }
+    .fl-envelope { width: 260px; height: 160px; }
+    .fl-flap { height: 90px; }
+    .fl-seal { top: 74px; }
+  }
+</style>

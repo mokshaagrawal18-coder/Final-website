@@ -1,0 +1,171 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Portrait from '../components/Portrait.astro';
+import AboutNotes from '../components/AboutNotes.astro';
+import FutureLetter from '../components/FutureLetter.astro';
+import HandNote from '../components/HandNote.astro';
+---
+<BaseLayout title="About" description="The slightly more personal version: a few things that explain how Moksha thinks, shows up, and makes her way through things.">
+  <!-- ABOUT 1 · PORTRAIT + ANNOTATIONS -->
+  <section class="container about-hero">
+    <div class="ah-title">
+      <p class="label">About</p>
+      <h1 class="t-page">The slightly more personal version.</h1>
+    </div>
+
+    <div class="ah-compose">
+      <div class="ah-col ah-left">
+        <div class="ann ann-eta reveal">
+          <svg class="ann-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8" /><path d="M12 9v4l2.5 2M9 2.5h6" /></svg>
+          <p class="ann-title">ETA: early</p>
+        </div>
+
+        <div class="ann ann-backstory reveal" style="--delay:80ms">
+          <p class="ann-title">wants the backstory</p>
+          <p class="ann-snip">ads, films, people, decisions — usually wants the part before the final version.</p>
+        </div>
+
+        <div class="ann ann-how reveal" style="--delay:160ms">
+          <p class="ann-title">not satisfied with <span class="struck">“that’s just how it is”</span></p>
+        </div>
+
+        <div class="ann ann-dance reveal" style="--delay:240ms">
+          <span class="stamp" aria-hidden="true"><span class="stamp-n">16</span><span class="stamp-u">yrs</span></span>
+          <p class="ann-title">16 years of dancing and still counting</p>
+        </div>
+      </div>
+
+      <div class="ah-portrait">
+        <Portrait eager src="/images/portrait-about.jpg" />
+      </div>
+
+      <div class="ah-col ah-right">
+        <div class="ann ann-sister reveal" style="--delay:120ms">
+          <p class="ann-title">elder sister</p>
+          <p class="ann-snip">part planner, part sounding board, part “did you remember to eat?”</p>
+        </div>
+
+        <div class="ann ann-charger reveal" style="--delay:200ms">
+          <p class="ann-title">somewhere between organised and “where is my charger?”</p>
+          <div class="charger paper paper--graph" aria-hidden="true">
+            <span><i class="cb on"></i>planner</span>
+            <span><i class="cb on"></i>labels</span>
+            <span><i class="cb"></i>charger?</span>
+          </div>
+          <p class="ann-snip">the system exists. whether the charger is inside it is another matter.</p>
+        </div>
+
+        <div class="ann ann-pasta reveal" style="--delay:280ms">
+          <p class="pasta-stamp">pasta opinions: firm</p>
+        </div>
+
+        <div class="ann ann-explain reveal" style="--delay:360ms">
+          <HandNote arrow="left" tone="cobalt" rotate={-3}>will happily explain it 10 different ways</HandNote>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT 2 · SOME TRUTHS, TOLD AS NOTES -->
+  <section class="section container" aria-labelledby="truths-title">
+    <div class="truths-head">
+      <h2 class="t-section" id="truths-title">Some truths, told as notes.</h2>
+      <p class="truths-sub muted">Not a bio. Not a résumé. Just a few things that explain how I think, show up, and make my way through things.</p>
+    </div>
+    <AboutNotes />
+    <div class="truths-close">
+      <p class="hand hand--ink">that’s enough self-analysis for one section.</p>
+      <a href="#future" class="arrow-link"><span class="al-text">keep going</span> <span class="al-arrow al-arrow--down" aria-hidden="true">↓</span></a>
+    </div>
+  </section>
+
+  <!-- ABOUT 3 · FUTURE ME -->
+  <section class="section container future-sec" id="future" aria-labelledby="future-title">
+    <h2 class="t-h3" id="future-title">For future me</h2>
+    <FutureLetter />
+  </section>
+</BaseLayout>
+
+<style>
+  .about-hero { padding-top: clamp(40px, 5vw, 80px); }
+  .ah-title { max-width: 760px; margin-bottom: clamp(40px, 5vw, 72px); }
+  .ah-title .label { margin-bottom: 14px; }
+
+  .ah-compose {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 4fr) minmax(0, 3fr);
+    column-gap: clamp(28px, 4vw, 64px);
+    align-items: center;
+  }
+  .ah-col { display: grid; gap: 44px; }
+  .ah-left { justify-items: end; text-align: right; }
+  .ah-right { justify-items: start; }
+  .ah-portrait { max-width: 440px; width: 100%; justify-self: center; }
+
+  .ann { max-width: 250px; }
+  .ann-title { font-weight: 500; line-height: 1.35; }
+  .ann-snip { margin-top: 6px; font-size: 0.9rem; color: var(--grey); line-height: 1.45; }
+  .ann-icon { width: 26px; height: 26px; fill: none; stroke: var(--cobalt); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 6px; }
+  .ah-left .ann-icon { margin-left: auto; }
+  .ann-eta { transform: translateX(-24px); }
+  .ann-how { transform: translateX(-12px); }
+
+  .struck { position: relative; white-space: nowrap; color: var(--grey); }
+  .struck::after {
+    content: ''; position: absolute; left: -2px; right: -2px; top: 54%;
+    height: 2px; background: var(--red); border-radius: 2px; transform: rotate(-2.5deg);
+  }
+
+  .ann-dance { display: flex; align-items: center; gap: 14px; flex-direction: row-reverse; }
+  .stamp {
+    flex: none; width: 58px; height: 58px; border-radius: 50%;
+    border: 1.5px solid var(--cobalt); color: var(--cobalt);
+    display: grid; place-content: center; text-align: center; line-height: 1;
+    transform: rotate(-8deg);
+  }
+  .stamp-n { font-family: var(--font-head); font-weight: 700; font-size: 1.35rem; }
+  .stamp-u { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  .charger {
+    display: flex; gap: 14px; flex-wrap: wrap;
+    margin-top: 10px; padding: 8px 12px;
+    font-size: 0.85rem; transform: rotate(1.2deg);
+    width: fit-content;
+  }
+  .charger span { display: inline-flex; align-items: center; gap: 6px; }
+  .cb { width: 12px; height: 12px; border: 1.3px solid var(--ink); border-radius: 2px; position: relative; display: inline-block; }
+  .cb.on::after { content: ''; position: absolute; left: 3px; top: -3px; width: 4px; height: 9px; border: solid var(--cobalt); border-width: 0 2px 2px 0; transform: rotate(40deg); }
+
+  .pasta-stamp {
+    display: inline-block;
+    font-family: var(--font-head); font-weight: 600; font-size: 0.85rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--red); border: 1.5px solid var(--red); border-radius: 3px;
+    padding: 6px 10px 5px; transform: rotate(-4deg);
+    opacity: 0.9;
+  }
+  .ann-explain { max-width: 280px; margin-left: -20px; }
+
+  .truths-head { max-width: 720px; margin-bottom: 36px; }
+  .truths-sub { margin-top: 16px; max-width: 52ch; }
+  .truths-close { margin-top: 64px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+  .truths-close .hand { transform: rotate(-1deg); }
+
+  .future-sec { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 36px; }
+  .future-sec :global(.fl-letter) { text-align: left; }
+
+  @media (max-width: 1024px) {
+    .ah-compose { grid-template-columns: 1fr 1fr; row-gap: 40px; }
+    .ah-portrait { grid-column: 1 / -1; grid-row: 1; max-width: 400px; }
+    .ah-left { justify-items: start; text-align: left; }
+    .ah-left .ann-icon { margin-left: 0; }
+    .ann-eta, .ann-how { transform: none; }
+    .ann-dance { flex-direction: row; }
+    .ann-explain { margin-left: 0; }
+    .ann-explain :global(.hn-arrow) { display: none; }
+  }
+  @media (max-width: 640px) {
+    .ah-compose { grid-template-columns: 1fr; }
+    .ah-col { gap: 28px; }
+  }
+</style>

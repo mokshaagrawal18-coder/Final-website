@@ -1,0 +1,49 @@
+---
+import { site } from '../data/site';
+---
+<footer class="site-footer">
+  <div class="container">
+    <hr class="footer-rule" />
+    <div class="footer-grid">
+      <p class="footer-main head">Thanks for looking a little closer.</p>
+      <ul class="footer-links" role="list">
+        <li><a href={`mailto:${site.email}`}>Email</a></li>
+        <li><a href={site.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+        <li><a href={site.github} target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a href={site.resume} target="_blank" rel="noopener">Résumé</a></li>
+      </ul>
+    </div>
+    <div class="footer-base">
+      <p class="hand hand--grey built">Built with too many tabs open.</p>
+      <a href="#top" class="arrow-link arrow-link--ink to-top"><span class="al-text">Back to top</span> <span class="al-arrow al-arrow--up" aria-hidden="true">↑</span></a>
+      <p class="copy">© 2026 Moksha Agrawal</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer { margin-top: auto; padding: clamp(72px, 8vw, 120px) 0 28px; }
+  .footer-rule { border: 0; height: 1.5px; background: var(--cobalt); margin: 0 0 clamp(36px, 4vw, 56px); }
+  .footer-grid { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 24px 48px; }
+  .footer-main { font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.4rem); font-weight: 600; max-width: 18ch; }
+  .footer-links { display: flex; flex-wrap: wrap; gap: 4px 28px; }
+  .footer-links a {
+    display: inline-flex; align-items: center; min-height: 44px;
+    font-weight: 500;
+    background-image: linear-gradient(var(--cobalt), var(--cobalt));
+    background-size: 0 1.5px; background-position: 0 78%; background-repeat: no-repeat;
+    transition: background-size var(--t-micro) var(--ease), color var(--t-micro) var(--ease);
+  }
+  .footer-links a:hover { color: var(--cobalt); background-size: 100% 1.5px; }
+  .footer-base {
+    margin-top: clamp(40px, 5vw, 64px);
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px;
+    font-size: 0.875rem; color: var(--grey);
+  }
+  .built { font-size: 1.15rem; }
+  .to-top { font-size: 0.9rem; }
+  .copy { font-size: 0.8125rem; }
+  @media (max-width: 640px) {
+    .footer-base { flex-direction: column; align-items: flex-start; }
+  }
+</style>

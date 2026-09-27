@@ -1,0 +1,177 @@
+---
+/**
+ * Home's one signature interaction.
+ * Without JS, or on small screens, this is a plain stacked list of four routes.
+ * With JS on wider screens it becomes a small deck: one card forward, the next peeking.
+ */
+import ArrowLink from './ArrowLink.astro';
+
+const routes = [
+  {
+    q: 'Want to see the work?',
+    d: 'Research, analytics, automation, and the problems I’ve worked on.',
+    cta: 'Work', href: '/work/',
+    icon: 'M6 38V26M16 38V18M26 38V22M36 38V10M3 40h38',
+  },
+  {
+    q: 'Want to see what I’ve built?',
+    d: 'Projects, experiments, and questions that became actual things.',
+    cta: 'Projects', href: '/projects/',
+    icon: 'M8 30l14 8 14-8M8 22l14 8 14-8M22 6L8 14l14 8 14-8z',
+  },
+  {
+    q: 'Want the person behind it?',
+    d: 'A few things that probably don’t belong on a résumé.',
+    cta: 'About', href: '/about/',
+    icon: 'M22 8a7 7 0 1 0 0.01 0M8 40c1-9 7-14 14-14s13 5 14 14M30 8l3-3M34 12l4-1',
+  },
+  {
+    q: 'Want to see what I keep thinking about?',
+    d: 'Notes on people, products, behaviour, and whatever caught my attention.',
+    cta: 'Notes', href: '/notes/',
+    icon: 'M10 38l4-12L32 8l6 6-18 18zM14 26l6 6M8 42h28',
+  },
+];
+---
+<div class="route-selector" data-route-selector>
+  <ol class="rs-deck" role="list" data-deck>
+    {routes.map((r, i) => (
+      <li class="route-card" data-card data-index={i}>
+        <div class="rc-top">
+          <span class="rc-num num">{String(i + 1).padStart(2, '0')}</span>
+          <svg class="rc-icon" viewBox="0 0 44 44" aria-hidden="true"><path d={r.icon} /></svg>
+        </div>
+        <h3 class="rc-q">{r.q}</h3>
+        <p class="rc-d">{r.d}</p>
+        <ArrowLink href={r.href} class="rc-cta">{r.cta}</ArrowLink>
+      </li>
+    ))}
+  </ol>
+
+  <div class="rs-controls" data-controls hidden>
+    <button type="button" class="rs-btn" data-prev aria-label="Previous question">
+      <span aria-hidden="true">←</span>
+    </button>
+    <p class="rs-progress" aria-live="polite"><span data-current>01</span> <span class="muted">/ 04</span></p>
+    <button type="button" class="rs-btn" data-next aria-label="Next question">
+      <span aria-hidden="true">→</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-route-selector]').forEach((root) => {
+    const deck = root.querySelector<HTMLElement>('[data-deck]')!;
+    const cards = Array.from(root.querySelectorAll<HTMLElement>('[data-card]'));
+    const controls = root.querySelector<HTMLElement>('[data-controls]')!;
+    const current = root.querySelector<HTMLElement>('[data-current]')!;
+    const n = cards.length;
+    const mq = window.matchMedia('(min-width: 900px)');
+    let index = 0;
+
+    const render = () => {
+      cards.forEach((card, i) => {
+        const pos = (i - index + n) % n; // 0 front, 1 peeking, 2 faint, 3 tucked away
+        card.dataset.pos = String(pos);
+        const front = pos === 0;
+        card.toggleAttribute('inert', !front);
+        card.setAttribute('aria-hidden', String(!front));
+      });
+      current.textContent = String(index + 1).padStart(2, '0');
+    };
+    const go = (delta: number) => { index = (index + delta + n) % n; render(); };
+
+    const enhance = (on: boolean) => {
+      root.classList.toggle('is-deck', on);
+      controls.hidden = !on;
+      if (on) {
+        render();
+      } else {
+        cards.forEach((card) => { card.removeAttribute('inert'); card.removeAttribute('aria-hidden'); delete card.dataset.pos; });
+      }
+    };
+
+    root.querySelector('[data-prev]')!.addEventListener('click', () => go(-1));
+    root.querySelector('[data-next]')!.addEventListener('click', () => go(1));
+    // clicking the card that peeks out brings it forward
+    deck.addEventListener('click', (e) => {
+      if (!root.classList.contains('is-deck')) return;
+      const card = (e.target as HTMLElement).closest<HTMLElement>('[data-card]');
+      if (card && card.dataset.pos === '1') go(1);
+    });
+    root.addEventListener('keydown', (e) => {
+      if (!root.classList.contains('is-deck')) return;
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+    });
+
+    enhance(mq.matches);
+    mq.addEventListener('change', (e) => enhance(e.matches));
+  });
+</script>
+
+<style>
+  /* ----- default: a clean stacked list ----- */
+  .rs-deck { display: grid; gap: 14px; }
+  .route-card {
+    position: relative;
+    background: var(--paper);
+    border-radius: 4px;
+    box-shadow: var(--shadow-paper);
+    padding: 24px 22px 14px;
+  }
+  .rc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+  .rc-num { font-size: 0.95rem; }
+  .rc-icon { width: 36px; height: 36px; fill: none; stroke: var(--cobalt); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0.85; }
+  .rc-q { font-size: clamp(1.45rem, 1.1rem + 1.3vw, 2.4rem); line-height: 1.08; max-width: 16ch; }
+  .rc-d { margin-top: 12px; color: var(--grey); max-width: 38ch; }
+  :global(.rc-cta) { margin-top: 12px; }
+
+  /* ----- enhanced: the deck ----- */
+  .is-deck .rs-deck { position: relative; height: 380px; max-width: 760px; display: block; }
+  .is-deck .route-card {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: min(640px, 84%);
+    height: 360px;
+    padding: 36px 40px 28px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 520ms var(--ease), opacity 420ms var(--ease), box-shadow 300ms var(--ease);
+    will-change: transform;
+  }
+  .is-deck .rc-q { font-size: 2.6rem; }
+  .is-deck :global(.rc-cta) { margin-top: auto; font-size: 1.05rem; }
+  .is-deck .route-card[data-pos='0'] { z-index: 4; transform: none; opacity: 1; }
+  .is-deck .route-card[data-pos='1'] {
+    z-index: 3; opacity: 1; cursor: pointer;
+    transform: translate(76px, 12px) rotate(1.6deg) scale(0.97);
+    box-shadow: var(--shadow-paper);
+  }
+  .is-deck .route-card[data-pos='1']:hover { transform: translate(84px, 8px) rotate(1.8deg) scale(0.97); }
+  .is-deck .route-card[data-pos='2'] { z-index: 2; opacity: 0.55; transform: translate(132px, 22px) rotate(3deg) scale(0.94); }
+  .is-deck .route-card[data-pos='3'] { z-index: 1; opacity: 0; transform: translate(-24px, 8px) rotate(-1deg) scale(0.97); pointer-events: none; }
+  /* keep the text of cards behind from competing */
+  .is-deck .route-card:not([data-pos='0']) > * { opacity: 0.35; transition: opacity 300ms var(--ease); }
+  .is-deck .route-card[data-pos='0'] > * { opacity: 1; transition: opacity 300ms var(--ease) 120ms; }
+
+  .rs-controls { display: flex; align-items: center; gap: 14px; margin-top: 18px; }
+  .rs-controls[hidden] { display: none; }
+  .rs-btn {
+    width: 46px; height: 46px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    background: transparent;
+    border: 1.5px solid var(--line-strong);
+    color: var(--ink);
+    font-size: 1.05rem;
+    transition: border-color var(--t-micro) var(--ease), color var(--t-micro) var(--ease), background-color var(--t-micro) var(--ease);
+  }
+  .rs-btn:hover { border-color: var(--cobalt); color: var(--cobalt); background: var(--cobalt-soft); }
+  .rs-btn:active { transform: scale(0.96); }
+  .rs-progress { font-family: var(--font-head); font-weight: 600; font-variant-numeric: tabular-nums; min-width: 64px; text-align: center; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .is-deck .route-card { transition: none; }
+  }
+</style>

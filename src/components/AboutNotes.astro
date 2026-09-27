@@ -1,0 +1,331 @@
+---
+/**
+ * "Some truths, told as notes."
+ * Eight paper notes; clicking one unfolds it into a reading panel.
+ * No JS → every note's full text is simply listed below the board.
+ */
+import { notes } from '../data/about';
+---
+<div class="about-notes" data-notes>
+  <p class="hand an-cue hide-sm">click a note to unfold the whole story →</p>
+  <p class="hand an-cue an-cue-sm">tap a note to unfold the whole story ↓</p>
+
+  <div class="an-stage">
+    <ul class="an-board" role="list" data-board>
+      {notes.map((note, i) => (
+        <li class="an-cell" style={`--r:${note.rotate}deg`}>
+          <button type="button" class={`an-tile paper-${note.paper}`} data-open={i} aria-haspopup="dialog" aria-controls="note-reader">
+            <span class="an-num num">{note.n}</span>
+            <span class="an-title head">{note.title}</span>
+            <svg class="an-icon" viewBox="0 0 24 24" aria-hidden="true"><path d={note.icon} /></svg>
+            <span class="an-open" aria-hidden="true">open note →</span>
+            <span class="an-read" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 13l5 5L20 6" /></svg>
+            </span>
+            <span class="visually-hidden an-read-sr"></span>
+          </button>
+        </li>
+      ))}
+    </ul>
+
+    <div class="an-reader" id="note-reader" role="dialog" aria-modal="false" aria-label="Note" data-reader>
+      <button type="button" class="an-close" data-close aria-label="Close note">
+        <span aria-hidden="true">×</span><span class="an-close-text">close</span>
+      </button>
+      {notes.map((note, i) => (
+        <article class={`an-article paper-${note.paper}`} data-article={i} aria-labelledby={`note-title-${i}`}>
+          <p class="an-a-num num">{note.n}</p>
+          <h3 class="an-a-title" id={`note-title-${i}`} tabindex="-1">{note.title}</h3>
+          <p class="hand an-a-kicker">{note.kicker}</p>
+          <div class="an-a-body">
+            {note.body.map((p) => <p>{p}</p>)}
+          </div>
+          {note.pullout === 'shape' && (
+            <div class="an-pull an-pull-shape" aria-hidden="true">
+              <svg viewBox="0 0 280 90">
+                <path class="scribble" d="M20 46c10-26 40-28 52-10 14-20 42-8 36 12 18 4 12 32-8 30-8 16-40 14-48 0-26 6-44-18-32-32z" />
+                <text x="36" y="52" class="t-small">everything</text>
+                <path class="arrow" d="M130 46h40M162 39l9 7-9 7" />
+                <rect x="190" y="14" width="74" height="18" rx="2" /><text x="198" y="27" class="t-small">1.</text>
+                <rect x="190" y="37" width="74" height="18" rx="2" /><text x="198" y="50" class="t-small">2.</text>
+                <rect x="190" y="60" width="74" height="18" rx="2" /><text x="198" y="73" class="t-small">3.</text>
+              </svg>
+            </div>
+          )}
+          {note.pullout === 'list' && (
+            <ul class="an-pull an-pull-list" role="list" aria-hidden="true">
+              <li><span class="box is-on"></span>a recipe</li>
+              <li><span class="box is-on"></span>a design idea</li>
+              <li><span class="box"></span><s>something to learn</s> <span class="hand hand--red">maybe later</span></li>
+              <li><span class="box"></span>something to make</li>
+            </ul>
+          )}
+          {note.pullout === 'counts' && (
+            <p class="an-pull an-pull-counts" aria-hidden="true">
+              <span>5</span><span>6</span><span>7</span><span>8</span>
+            </p>
+          )}
+          <p class="hand an-a-closing">{note.closing}</p>
+          <nav class="an-a-nav" aria-label="Notes">
+            <button type="button" data-go={(i - 1 + notes.length) % notes.length}>
+              <span aria-hidden="true">←</span> {notes[(i - 1 + notes.length) % notes.length].n}
+              <span class="visually-hidden">previous note</span>
+            </button>
+            <span class="an-a-count">{i + 1} of {notes.length}</span>
+            <button type="button" data-go={(i + 1) % notes.length}>
+              {notes[(i + 1) % notes.length].n} <span aria-hidden="true">→</span>
+              <span class="visually-hidden">next note</span>
+            </button>
+          </nav>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <p class="hand an-all" data-all hidden>you really did read all of them :)</p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-notes]').forEach((root) => {
+    const board = root.querySelector<HTMLElement>('[data-board]')!;
+    const reader = root.querySelector<HTMLElement>('[data-reader]')!;
+    const tiles = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-open]'));
+    const articles = Array.from(root.querySelectorAll<HTMLElement>('[data-article]'));
+    const allRead = root.querySelector<HTMLElement>('[data-all]')!;
+    const read = new Set<number>();
+    let open = -1;
+    let opener: HTMLElement | null = null;
+
+    root.classList.add('is-enhanced');
+    reader.hidden = true;
+
+    const show = (i: number, focus = true) => {
+      open = i;
+      reader.hidden = false;
+      root.classList.add('has-open');
+      articles.forEach((a, j) => { a.hidden = j !== i; });
+      tiles.forEach((t, j) => {
+        t.classList.toggle('is-current', j === i);
+        t.setAttribute('aria-expanded', String(j === i));
+      });
+      reader.setAttribute('aria-label', `Note ${i + 1} of ${articles.length}`);
+      board.toggleAttribute('inert', window.matchMedia('(max-width: 760px)').matches);
+
+      read.add(i);
+      const tile = tiles[i];
+      tile.classList.add('is-read');
+      tile.querySelector('.an-read-sr')!.textContent = '(read)';
+      if (read.size === tiles.length) allRead.hidden = false;
+
+      // restart the unfold animation each time
+      const art = articles[i];
+      art.classList.remove('is-unfolding'); void art.offsetWidth; art.classList.add('is-unfolding');
+      if (focus) art.querySelector<HTMLElement>('.an-a-title')?.focus({ preventScroll: true });
+      if (window.matchMedia('(min-width: 761px)').matches) {
+        const r = reader.getBoundingClientRect();
+        if (r.top < 70 || r.bottom > window.innerHeight) reader.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    };
+    const close = () => {
+      if (open < 0) return;
+      reader.hidden = true;
+      root.classList.remove('has-open');
+      board.removeAttribute('inert');
+      tiles.forEach((t) => { t.classList.remove('is-current'); t.setAttribute('aria-expanded', 'false'); });
+      (opener ?? tiles[open]).focus({ preventScroll: true });
+      open = -1;
+    };
+
+    tiles.forEach((t, i) => {
+      t.setAttribute('aria-expanded', 'false');
+      t.addEventListener('click', () => { opener = t; show(i); });
+    });
+    root.querySelectorAll<HTMLButtonElement>('[data-go]').forEach((b) =>
+      b.addEventListener('click', () => { opener = tiles[+b.dataset.go!]; show(+b.dataset.go!); })
+    );
+    root.querySelector('[data-close]')!.addEventListener('click', close);
+
+    document.addEventListener('keydown', (e) => {
+      if (open < 0) return;
+      if (e.key === 'Escape') { e.preventDefault(); close(); }
+      const inReader = reader.contains(document.activeElement);
+      if (!inReader) return;
+      if (e.key === 'ArrowRight') { e.preventDefault(); opener = tiles[(open + 1) % tiles.length]; show((open + 1) % tiles.length); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); opener = tiles[(open - 1 + tiles.length) % tiles.length]; show((open - 1 + tiles.length) % tiles.length); }
+    });
+    // click outside the panel (on the softened board background) closes it on desktop
+    root.addEventListener('click', (e) => {
+      if (open < 0) return;
+      const t = e.target as HTMLElement;
+      if (!reader.contains(t) && !t.closest('[data-open]') && root.querySelector('.an-stage')!.contains(t)) close();
+    });
+  });
+</script>
+
+<style>
+  .about-notes { position: relative; }
+  .an-cue { display: inline-block; transform: rotate(-1.5deg); margin-bottom: 28px; }
+  .an-cue-sm { display: none; }
+
+  .an-stage { position: relative; }
+  .an-board {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 30px 28px;
+    transition: opacity 300ms var(--ease), filter 300ms var(--ease);
+  }
+  .an-cell { transform: rotate(var(--r)); }
+  .an-cell:nth-child(even) { margin-top: 18px; }
+
+  .an-tile {
+    position: relative;
+    width: 100%;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    text-align: left;
+    padding: 22px 22px 18px;
+    border: 0;
+    border-radius: 3px;
+    background: var(--paper);
+    box-shadow: var(--shadow-paper);
+    transition: transform var(--t-micro) var(--ease), box-shadow var(--t-micro) var(--ease), outline-color var(--t-micro);
+    outline: 1.5px solid transparent;
+    outline-offset: -1.5px;
+  }
+  .an-tile:hover, .an-tile:focus-visible {
+    transform: translateY(-5px) rotate(calc(var(--r) * -1));
+    box-shadow: var(--shadow-lift);
+    outline-color: var(--cobalt-line);
+  }
+  .an-tile:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 3px; }
+  .an-num { font-size: 0.9rem; }
+  .an-title { font-size: 1.3rem; font-weight: 600; line-height: 1.15; letter-spacing: -0.015em; max-width: 13ch; }
+  .an-icon { width: 24px; height: 24px; margin-top: auto; fill: none; stroke: var(--cobalt); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0.8; }
+  .an-open {
+    position: absolute; right: 18px; bottom: 16px;
+    font-size: 0.8125rem; font-weight: 500; color: var(--cobalt);
+    opacity: 0; transform: translateX(-4px);
+    transition: opacity var(--t-micro) var(--ease), transform var(--t-micro) var(--ease);
+  }
+  .an-tile:hover .an-open, .an-tile:focus-visible .an-open { opacity: 1; transform: none; }
+  .an-read { position: absolute; top: 14px; right: 16px; width: 22px; height: 22px; opacity: 0; transform: scale(0.6); transition: opacity 240ms, transform 240ms var(--ease); }
+  .an-read svg { fill: none; stroke: var(--cobalt); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .an-tile.is-read .an-read { opacity: 1; transform: rotate(-6deg); }
+
+  /* paper variants: cohesive, not a scrapbook */
+  .paper-lined { background-image: repeating-linear-gradient(to bottom, transparent 0 27px, rgba(36,82,214,0.12) 27px 28px); background-position: 0 12px; }
+  .paper-graph { background-image: linear-gradient(var(--grid-ink) 1px, transparent 1px), linear-gradient(90deg, var(--grid-ink) 1px, transparent 1px); background-size: 16px 16px; }
+  .paper-yellow { background-color: #FBEFC6; }
+  .paper-card { box-shadow: var(--shadow-paper), inset 0 3px 0 var(--cobalt); }
+  .an-tile.paper-card { padding-top: 26px; }
+
+  /* ----- open state ----- */
+  .has-open .an-board { opacity: 0.4; filter: saturate(0.7); }
+  .has-open .an-tile.is-current { outline-color: var(--cobalt); }
+
+  .is-enhanced .an-reader {
+    position: absolute;
+    z-index: 5;
+    left: 50%;
+    top: 50%;
+    width: min(700px, 92%);
+    transform: translate(-50%, -50%);
+  }
+  .an-reader[hidden] { display: none; }
+  .an-article {
+    position: relative;
+    background-color: var(--paper);
+    border-radius: 4px;
+    box-shadow: 0 1px 0 rgba(23,23,23,0.05), 0 30px 60px -28px rgba(60,45,20,0.5);
+    padding: 44px 52px 26px;
+  }
+  .an-article.paper-lined { background-image: none; }
+  .an-article.paper-graph { background-image: none; }
+  .an-article.paper-yellow { background-color: #FCF3D6; }
+  .is-unfolding { animation: unfold 420ms var(--ease) both; transform-origin: top center; }
+  @keyframes unfold {
+    from { opacity: 0; transform: perspective(900px) rotateX(-8deg) scaleY(0.94) translateY(-6px); }
+    to { opacity: 1; transform: none; }
+  }
+  .an-close {
+    position: absolute; z-index: 2; top: 12px; right: 12px;
+    display: inline-flex; align-items: center; gap: 6px;
+    min-height: 44px; padding: 0 12px;
+    background: transparent; border: 0; border-radius: 4px;
+    font-size: 0.875rem; font-weight: 500; color: var(--ink);
+  }
+  .an-close span[aria-hidden] { font-size: 1.4rem; line-height: 1; }
+  .an-close:hover { background: var(--cobalt-soft); color: var(--cobalt); }
+
+  .an-a-num { font-size: 1rem; }
+  .an-a-title { margin-top: 6px; font-size: clamp(1.7rem, 1.3rem + 1.2vw, 2.4rem); max-width: 20ch; }
+  .an-a-title:focus { outline: none; }
+  .an-a-kicker { margin-top: 10px; transform: rotate(-1deg); transform-origin: left; }
+  .an-a-body { margin-top: 20px; max-width: 54ch; }
+  .an-a-body p + p { margin-top: 0.7em; }
+  .an-a-closing { margin-top: 22px; color: var(--ink); transform: rotate(-1.2deg); transform-origin: left; display: inline-block; }
+  .an-a-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 22px; padding-top: 12px; border-top: 1px solid var(--line);
+    font-size: 0.9rem;
+  }
+  .an-a-nav button {
+    min-height: 44px; padding: 0 10px; margin: 0 -10px;
+    background: none; border: 0; border-radius: 4px;
+    font-weight: 600; font-family: var(--font-head); color: var(--cobalt);
+  }
+  .an-a-nav button:hover { background: var(--cobalt-soft); }
+  .an-a-count { color: var(--grey); }
+
+  /* pullouts */
+  .an-pull { margin-top: 22px; }
+  .an-pull-shape svg { width: 280px; max-width: 100%; overflow: visible; }
+  .an-pull-shape .scribble, .an-pull-shape rect, .an-pull-shape .arrow { fill: none; stroke: var(--cobalt); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+  .an-pull-shape .scribble { stroke: var(--grey); stroke-dasharray: 3 3; }
+  .an-pull-shape .t-small { font-family: var(--font-hand); font-size: 17px; fill: var(--ink); }
+  .an-pull-list { list-style: none; padding: 0; display: grid; gap: 6px; font-size: 0.95rem; }
+  .an-pull-list li { display: flex; align-items: center; gap: 10px; }
+  .an-pull-list .box { width: 14px; height: 14px; border: 1.5px solid var(--ink); border-radius: 2px; position: relative; flex: none; }
+  .an-pull-list .box.is-on::after { content: ''; position: absolute; left: 3px; top: -2px; width: 5px; height: 10px; border: solid var(--cobalt); border-width: 0 2px 2px 0; transform: rotate(40deg); }
+  .an-pull-list s { color: var(--grey); text-decoration-color: var(--red); text-decoration-thickness: 1.5px; }
+  .an-pull-list .hand { font-size: 1.1rem; }
+  .an-pull-counts { display: flex; gap: 22px; font-family: var(--font-head); font-weight: 700; font-size: 2rem; color: var(--cobalt); }
+  .an-pull-counts span:last-child { color: var(--yellow); -webkit-text-stroke: 0.5px #b8901c; }
+
+  .an-all { margin-top: 28px; text-align: center; transform: rotate(-1deg); }
+
+  /* no-JS: list every note in full below the board */
+  .about-notes:not(.is-enhanced) .an-reader { margin-top: 48px; display: grid; gap: 24px; }
+  .about-notes:not(.is-enhanced) .an-close,
+  .about-notes:not(.is-enhanced) .an-a-nav { display: none; }
+
+  @media (max-width: 1100px) {
+    .an-board { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .an-cell:nth-child(even) { margin-top: 0; }
+  }
+  @media (max-width: 760px) {
+    .an-cue { display: none; }
+    .an-cue-sm { display: inline-block; }
+    .an-board { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 14px; }
+    .an-tile { min-height: 170px; padding: 18px 16px 16px; }
+    .an-title { font-size: 1.1rem; }
+    .an-open { display: none; }
+    /* full-width reading panel on small screens */
+    .is-enhanced .an-reader {
+      position: fixed; inset: 0; left: 0; top: 0; width: 100%; transform: none;
+      z-index: 80; overflow-y: auto;
+      background: rgba(246, 241, 231, 0.96);
+      padding: 16px;
+    }
+    .an-article { padding: 56px 22px 18px; }
+    .an-close { top: 20px; right: 20px; }
+    .has-open .an-board { opacity: 1; filter: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .is-unfolding { animation: none; }
+    .an-tile:hover, .an-tile:focus-visible { transform: none; }
+  }
+</style>

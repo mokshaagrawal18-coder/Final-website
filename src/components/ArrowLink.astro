@@ -1,0 +1,25 @@
+---
+/**
+ * The site's one link style: "See the work →", "LinkedIn ↗", "Résumé ↓".
+ * The underline draws in on hover and the arrow nudges in its own direction.
+ */
+interface Props {
+  href: string;
+  dir?: 'right' | 'down' | 'up' | 'left' | 'ext' | 'none';
+  variant?: 'link' | 'button' | 'ink';
+  external?: boolean;
+  download?: boolean;
+  class?: string;
+  [key: string]: any;
+}
+const { href, dir = 'right', variant = 'link', external = false, download = false, class: cls = '', ...rest } = Astro.props;
+const glyph = { right: '→', down: '↓', up: '↑', left: '←', ext: '↗', none: '' }[dir];
+const classes = [variant === 'button' ? 'button' : 'arrow-link', variant === 'ink' ? 'arrow-link--ink' : '', cls].filter(Boolean).join(' ');
+const extAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+---
+<a href={href} class={classes} {...extAttrs} {...(download ? { download: '' } : {})} {...rest}>
+  {dir === 'left' && <span class="al-arrow al-arrow--left" aria-hidden="true">{glyph}</span>}
+  <span class="al-text"><slot /></span>
+  {dir !== 'left' && dir !== 'none' && <span class={`al-arrow al-arrow--${dir}`} aria-hidden="true">{glyph}</span>}
+  {external && <span class="visually-hidden">(opens in a new tab)</span>}
+</a>

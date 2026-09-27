@@ -1,0 +1,195 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArrowLink from '../components/ArrowLink.astro';
+import HandUnderline from '../components/HandUnderline.astro';
+import Portrait from '../components/Portrait.astro';
+import RouteSelector from '../components/RouteSelector.astro';
+import RiderCompare from '../components/visuals/RiderCompare.astro';
+
+const proof = [
+  { name: 'D. E. Shaw', tags: 'financial research · automation · structured data', metric: '~5 hrs → ~2 mins', href: '/work/#de-shaw' },
+  { name: 'Groww', tags: 'customer friction · onboarding · support', metric: '5,000+ queries', href: '/work/#groww' },
+  { name: 'Mensa Brands', tags: 'e-commerce · consumer behaviour · growth', metric: '300+ competitor products', href: '/work/#mensa' },
+];
+
+const truths = [
+  '16 years of dancing and still counting',
+  'wants the backstory',
+  'ETA: early',
+  'will happily explain it 10 different ways',
+  'pasta opinions: firm',
+];
+---
+<BaseLayout description="Hi, I’m Moksha. I like making complicated things simpler: data, research, and processes with far too many steps.">
+  <!-- HOME 1 · HERO -->
+  <section class="hero container grid">
+    <div class="hero-text">
+      <p class="hero-eyebrow">the why<span>.</span> the pattern<span>.</span> the simpler way through<span>.</span></p>
+      <h1 class="t-page">Hi, I’m <HandUnderline delay={500}>Moksha.</HandUnderline></h1>
+      <p class="lede hero-lede">I like making complicated things simpler.</p>
+      <div class="body-copy hero-copy">
+        <p>Sometimes that means data. Sometimes research. Sometimes a process with far too many steps.</p>
+        <p>I also like building things, asking one more question, and figuring out why people do what they do.</p>
+      </div>
+      <ArrowLink href="#start" dir="down" class="hero-cta">take a look around</ArrowLink>
+    </div>
+    <div class="hero-portrait">
+      <Portrait eager />
+    </div>
+  </section>
+
+  <!-- HOME 2 · ROUTE SELECTOR -->
+  <section class="section container" id="start" aria-labelledby="start-title">
+    <div class="grid">
+      <div class="route-head">
+        <h2 class="t-section" id="start-title">Where do you want to start?</h2>
+      </div>
+      <div class="route-body">
+        <RouteSelector />
+      </div>
+    </div>
+  </section>
+
+  <!-- HOME 3 · QUICK PROOF -->
+  <section class="section container" aria-labelledby="proof-title">
+    <div class="proof-head">
+      <h2 class="t-h3" id="proof-title">A few things I’ve worked on</h2>
+      <ArrowLink href="/work/" class="hide-sm">see the work</ArrowLink>
+    </div>
+    <ul class="proof" role="list">
+      {proof.map((p, i) => (
+        <li class="proof-item reveal" style={`--delay:${i * 90}ms`}>
+          <a href={p.href} class="proof-link">
+            <span class="proof-name head">{p.name}</span>
+            <span class="proof-tags">{p.tags}</span>
+            <span class="proof-metric num">{p.metric}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <ArrowLink href="/work/" class="proof-cta-sm">see the work</ArrowLink>
+  </section>
+
+  <!-- HOME 4 · FEATURED PROJECT -->
+  <section class="section container" aria-labelledby="feature-title">
+    <div class="grid feature">
+      <div class="feature-text reveal">
+        <p class="label">One question I got stuck on</p>
+        <h2 class="t-section feature-title" id="feature-title">Is the Algorithm Being Fair to Riders?</h2>
+        <p class="feature-q">Can a performance score be mathematically accurate and still be unfair?</p>
+        <p class="body-copy feature-copy">I analysed 15,000 delivery records to understand how much rider performance was being shaped by skill versus circumstances like traffic and weather.</p>
+        <ul class="tags" role="list">
+          <li class="tag tag--metric">15,000 records</li>
+          <li class="tag">model fairness</li>
+          <li class="tag">Python</li>
+        </ul>
+        <ArrowLink href="/projects/rider-fairness/" class="feature-cta">view project</ArrowLink>
+      </div>
+      <div class="feature-visual reveal" style="--delay:120ms">
+        <RiderCompare compact />
+      </div>
+    </div>
+  </section>
+
+  <!-- HOME 5 · PERSONAL PREVIEW -->
+  <section class="section container" aria-labelledby="also-title">
+    <div class="grid also">
+      <div class="also-head">
+        <h2 class="t-section" id="also-title">Also true about me</h2>
+        <ArrowLink href="/about/" class="also-cta">the slightly more personal version</ArrowLink>
+      </div>
+      <div class="also-memo paper paper--lined reveal">
+        <ul role="list">
+          {truths.map((t) => (
+            <li>{t === 'pasta opinions: firm' ? <span class="hl">{t}</span> : t}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOME 6 · CLOSE -->
+  <section class="section container close" aria-labelledby="close-title">
+    <h2 class="t-section" id="close-title">Still curious?</h2>
+    <ul class="close-links" role="list">
+      <li><ArrowLink href="/about/" variant="ink">About</ArrowLink></li>
+      <li><ArrowLink href="/work/" variant="ink">Work</ArrowLink></li>
+      <li><ArrowLink href="/projects/" variant="ink">Projects</ArrowLink></li>
+      <li><ArrowLink href="/notes/" variant="ink">Notes</ArrowLink></li>
+    </ul>
+    <p class="hand close-note">thanks for looking a little closer.</p>
+  </section>
+</BaseLayout>
+
+<style>
+  /* hero */
+  .hero { padding-top: clamp(40px, 6vw, 96px); align-items: center; row-gap: 48px; }
+  .hero-text { grid-column: 1 / span 7; }
+  .hero-portrait { grid-column: 9 / span 4; }
+  .hero-eyebrow { font-size: 0.95rem; color: var(--grey); margin-bottom: 20px; letter-spacing: 0.01em; }
+  .hero-eyebrow span { color: var(--cobalt); font-weight: 700; }
+  .hero-lede { margin-top: 28px; font-weight: 500; max-width: none; }
+  .hero-copy { margin-top: 16px; color: var(--ink); max-width: 560px; }
+  :global(.hero-cta) { margin-top: 28px; }
+
+  /* route selector */
+  .route-head { grid-column: 1 / span 4; }
+  .route-head h2 { max-width: 9ch; }
+  .route-body { grid-column: 5 / span 8; }
+
+  /* proof */
+  .proof-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 24px; }
+  .proof { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line-strong); }
+  .proof-item + .proof-item { border-left: 1px solid var(--line); }
+  .proof-link { display: grid; gap: 6px; padding: 22px 24px 24px; height: 100%; transition: background-color var(--t-micro) var(--ease); }
+  .proof-item:first-child .proof-link { padding-left: 0; }
+  .proof-link:hover { background: rgba(252, 249, 242, 0.7); }
+  .proof-link:hover .proof-name { color: var(--cobalt); }
+  .proof-name { font-size: 1.5rem; font-weight: 600; transition: color var(--t-micro) var(--ease); }
+  .proof-tags { font-size: 0.9rem; color: var(--grey); }
+  .proof-metric { font-size: 1.35rem; margin-top: 10px; }
+  :global(.proof-cta-sm) { display: none; }
+
+  /* featured project */
+  .feature { align-items: center; row-gap: 40px; }
+  .feature-text { grid-column: 1 / span 5; }
+  .feature-visual { grid-column: 7 / span 6; }
+  .feature-title { margin-top: 14px; }
+  .feature-q { margin-top: 20px; font-size: 1.2rem; font-weight: 500; color: var(--cobalt); max-width: 32ch; line-height: 1.4; }
+  .feature-copy { margin: 16px 0 20px; }
+  :global(.feature-cta) { margin-top: 16px; }
+
+  /* also true */
+  .also { align-items: center; row-gap: 32px; }
+  .also-head { grid-column: 1 / span 5; }
+  :global(.also-cta) { margin-top: 20px; }
+  .also-memo { grid-column: 7 / span 5; padding: 12px 32px 20px 44px; transform: rotate(-0.8deg); }
+  .also-memo ul { line-height: 32px; font-size: 1.075rem; }
+  .also-memo li { position: relative; }
+  .also-memo li::before { content: '—'; position: absolute; left: -22px; color: var(--cobalt); opacity: 0.6; }
+
+  /* close */
+  .close { text-align: left; }
+  .close-links { display: flex; flex-wrap: wrap; gap: 4px 36px; margin-top: 20px; font-size: 1.25rem; }
+  .close-note { margin-top: 28px; transform: rotate(-1.5deg); transform-origin: left; display: inline-block; }
+
+  @media (max-width: 1024px) {
+    .hero-text { grid-column: 1 / span 5; }
+    .hero-portrait { grid-column: 6 / span 3; }
+    .route-head, .route-body { grid-column: 1 / -1; }
+    .route-head { margin-bottom: 28px; }
+    .route-head h2 { max-width: none; }
+    .feature-text, .feature-visual, .also-head, .also-memo { grid-column: 1 / -1; }
+    .also-memo { max-width: 460px; }
+  }
+  @media (max-width: 760px) {
+    .proof { grid-template-columns: 1fr; }
+    .proof-item + .proof-item { border-left: 0; border-top: 1px solid var(--line); }
+    .proof-link { padding-left: 0; }
+    :global(.proof-cta-sm) { display: inline-flex; margin-top: 12px; }
+  }
+  @media (max-width: 640px) {
+    .hero-text, .hero-portrait { grid-column: 1 / -1; }
+    .hero-portrait { max-width: 320px; }
+  }
+</style>

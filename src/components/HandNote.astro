@@ -1,0 +1,43 @@
+---
+/**
+ * A margin thought: short handwritten line, optionally with a small arrow.
+ * Keep these few and short — they are annotations, not copy.
+ */
+interface Props {
+  arrow?: 'left' | 'right' | 'down' | 'up' | 'curve-down' | 'curve-left' | 'none';
+  tone?: 'cobalt' | 'ink' | 'grey' | 'red';
+  rotate?: number;
+  class?: string;
+  as?: string;
+}
+const { arrow = 'none', tone = 'cobalt', rotate = -2, class: cls = '', as: Tag = 'p' } = Astro.props;
+const paths: Record<string, { d: string; head: string; vb: string; w: number; h: number }> = {
+  right: { vb: '0 0 60 20', w: 44, h: 16, d: 'M3 12 C 18 6, 34 6, 52 10', head: 'M45 4 L53 10 L44 15' },
+  left: { vb: '0 0 60 20', w: 44, h: 16, d: 'M57 12 C 42 6, 26 6, 8 10', head: 'M15 4 L7 10 L16 15' },
+  down: { vb: '0 0 20 50', w: 16, h: 38, d: 'M9 3 C 13 16, 13 30, 10 44', head: 'M4 37 L10 45 L16 37' },
+  up: { vb: '0 0 20 50', w: 16, h: 38, d: 'M10 47 C 6 34, 6 20, 10 6', head: 'M4 13 L10 5 L16 13' },
+  'curve-down': { vb: '0 0 50 50', w: 36, h: 36, d: 'M4 6 C 26 4, 40 16, 38 42', head: 'M31 36 L38 44 L44 35' },
+  'curve-left': { vb: '0 0 60 40', w: 46, h: 30, d: 'M56 6 C 50 28, 30 34, 8 30', head: 'M15 23 L7 30 L16 36' },
+};
+const p = arrow !== 'none' ? paths[arrow] : null;
+const inline = arrow === 'left' || arrow === 'right';
+---
+<Tag class={`hand-note hand hand--${tone} ${inline ? 'is-inline' : ''} ${arrow === 'left' ? 'is-left' : ''} ${cls}`} style={`--r:${rotate}deg`}>
+  {p && arrow === 'left' && (
+    <svg class="hn-arrow draw" data-reveal viewBox={p.vb} width={p.w} height={p.h} aria-hidden="true">
+      <path d={p.d} style="--len:70" /><path d={p.head} style="--len:30;--delay:600ms" />
+    </svg>
+  )}
+  <span class="hn-text"><slot /></span>
+  {p && arrow !== 'left' && (
+    <svg class="hn-arrow draw" data-reveal viewBox={p.vb} width={p.w} height={p.h} aria-hidden="true">
+      <path d={p.d} style="--len:70" /><path d={p.head} style="--len:30;--delay:600ms" />
+    </svg>
+  )}
+</Tag>
+<style>
+  .hand-note { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 4px; transform: rotate(var(--r)); transform-origin: left center; }
+  .hand-note.is-inline { flex-direction: row; align-items: center; gap: 8px; }
+  .hn-arrow { flex: none; overflow: visible; }
+  .hn-arrow path { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+</style>
