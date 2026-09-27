@@ -1,0 +1,147 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArrowLink from '../../components/ArrowLink.astro';
+import HandNote from '../../components/HandNote.astro';
+import RiderCompare from '../../components/visuals/RiderCompare.astro';
+import HealthcareFactors from '../../components/visuals/HealthcareFactors.astro';
+import PricingTeaser from '../../components/visuals/PricingTeaser.astro';
+import DriftSketch from '../../components/visuals/DriftSketch.astro';
+import { site } from '../../data/site';
+---
+<BaseLayout title="Projects" description="Things Moksha built, tested, or investigated because the question interested her.">
+  <section class="container grid proj-hero">
+    <div class="ph-main">
+      <h1 class="t-page">Projects</h1>
+      <p class="lede ph-sub">Things I built, tested, or investigated because the question interested me.</p>
+    </div>
+    <div class="ph-aside hide-sm">
+      <HandNote rotate={-3}>Different questions. Different tools. Same curiosity.</HandNote>
+    </div>
+  </section>
+
+  <div class="container projects">
+    <!-- 01 -->
+    <article class="project grid" aria-labelledby="p1-title">
+      <div class="p-text reveal">
+        <p class="num p-n">01</p>
+        <h2 class="t-section p-title" id="p1-title">Is the Algorithm Being Fair to Riders?</h2>
+        <p class="p-q">Can a performance score be mathematically accurate and still be unfair?</p>
+        <ul class="tags" role="list">
+          <li class="tag">Data analysis</li>
+          <li class="tag">Model fairness</li>
+          <li class="tag tag--metric">15,000 records</li>
+          <li class="tag">Python</li>
+        </ul>
+        <ArrowLink href="/projects/rider-fairness/" variant="button" class="p-cta">View project</ArrowLink>
+      </div>
+      <div class="p-visual reveal" style="--delay:120ms">
+        <RiderCompare />
+      </div>
+    </article>
+
+    <!-- 02 -->
+    <article class="project grid" aria-labelledby="p2-title">
+      <div class="p-text reveal">
+        <p class="num p-n">02</p>
+        <h2 class="t-section p-title" id="p2-title">Healthcare Expenditure:<br /> A Gender-Based Analysis</h2>
+        <p class="p-q">What actually drives healthcare spending, and is it the same for everyone?</p>
+        <ul class="tags" role="list">
+          <li class="tag">Research</li>
+          <li class="tag">Statistics</li>
+          <li class="tag tag--metric">370 responses</li>
+          <li class="tag">Jamovi</li>
+        </ul>
+        <ArrowLink href="/projects/healthcare-expenditure/" variant="button" class="p-cta">View project</ArrowLink>
+      </div>
+      <div class="p-visual reveal" style="--delay:120ms">
+        <HealthcareFactors />
+      </div>
+    </article>
+
+    <!-- 03 -->
+    <article class="project grid" aria-labelledby="p3-title">
+      <div class="p-text reveal">
+        <p class="p-n"><span class="num">03</span> <span class="soon">Coming soon</span></p>
+        <h2 class="t-section p-title" id="p3-title">Tiny UX Decisions</h2>
+        <p class="p-q">How much can one tiny interface change affect a decision?</p>
+        <ul class="tags" role="list">
+          <li class="tag">Behaviour</li>
+          <li class="tag">UX</li>
+          <li class="tag">Experimentation</li>
+        </ul>
+        <details class="p-more">
+          <summary class="arrow-link"><span class="al-text">Learn more</span> <span class="al-arrow al-arrow--right" aria-hidden="true">→</span></summary>
+          <p class="muted">Still being built, so there’s nothing to show yet. When there is, the write-up will live here.</p>
+        </details>
+      </div>
+      <div class="p-visual reveal" style="--delay:120ms">
+        <PricingTeaser />
+      </div>
+    </article>
+  </div>
+
+  <!-- SMALLER EXPERIMENTS -->
+  <section class="section container" aria-labelledby="small-title">
+    <h2 class="t-h3 small-title" id="small-title">Smaller experiments <span aria-hidden="true" class="small-arrow">→</span></h2>
+    <div class="exp grid">
+      <div class="exp-visual">
+        <DriftSketch />
+      </div>
+      <div class="exp-text">
+        <h3 class="exp-name">Random Drift</h3>
+        <p class="exp-copy">A small game I built while experimenting with movement, randomness, and browser interactions.</p>
+        <ul class="tags" role="list">
+          <li class="tag">Small build</li>
+          <li class="tag">Web experiment</li>
+        </ul>
+        {site.randomDrift
+          ? <ArrowLink href={site.randomDrift} external class="exp-cta">Play</ArrowLink>
+          : <p class="hand hand--grey exp-soon">link coming soon</p>}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .proj-hero { padding-top: clamp(40px, 6vw, 96px); align-items: end; }
+  .ph-main { grid-column: 1 / span 8; }
+  .ph-sub { margin-top: 24px; }
+  .ph-aside { grid-column: 10 / span 3; padding-bottom: 10px; }
+  .ph-aside :global(.hand-note) { max-width: 16ch; }
+
+  .projects { padding-top: var(--space-section); display: grid; gap: var(--space-section); }
+  .project { align-items: center; row-gap: 36px; }
+  .p-text { grid-column: 1 / span 5; }
+  .p-visual { grid-column: 7 / span 6; }
+  .p-n { font-size: 1rem; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
+  .soon { font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; background: var(--yellow); color: var(--ink); padding: 4px 8px 3px; border-radius: 3px; }
+  .p-title { font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.9rem); }
+  .p-q { margin: 18px 0 22px; font-size: 1.2rem; line-height: 1.4; font-weight: 500; color: var(--cobalt); max-width: 30ch; }
+  :global(.p-cta) { margin-top: 28px; }
+  .p-more { margin-top: 18px; }
+  .p-more summary { list-style: none; cursor: pointer; }
+  .p-more summary::-webkit-details-marker { display: none; }
+  .p-more[open] .al-arrow { transform: rotate(90deg); }
+  .p-more p { max-width: 40ch; font-size: 0.95rem; }
+
+  .small-title { margin-bottom: 28px; }
+  .small-arrow { color: var(--cobalt); }
+  .exp { align-items: center; row-gap: 24px; padding-top: 28px; border-top: 1px solid var(--line-strong); }
+  .exp-visual { grid-column: 1 / span 4; }
+  .exp-text { grid-column: 6 / span 6; }
+  .exp-name { font-size: 1.5rem; font-weight: 600; }
+  .exp-copy { margin: 10px 0 16px; max-width: 48ch; color: var(--grey); }
+  :global(.exp-cta) { margin-top: 10px; }
+  .exp-soon { margin-top: 14px; }
+
+  @media (max-width: 1024px) {
+    .p-text, .p-visual, .ph-main { grid-column: 1 / -1; }
+    .p-visual { max-width: 640px; }
+    .ph-aside { display: none; }
+    .exp-visual { grid-column: 1 / span 3; }
+    .exp-text { grid-column: 4 / span 5; }
+  }
+  @media (max-width: 640px) {
+    .exp-visual, .exp-text { grid-column: 1 / -1; }
+  }
+</style>

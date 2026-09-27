@@ -1,0 +1,31 @@
+---
+/** "How I tested it →" — a native disclosure, styled to match the site's links. */
+interface Props { label: string; id?: string }
+const { label, id } = Astro.props;
+---
+<details class="xd" id={id}>
+  <summary>
+    <span class="xd-label head">{label}</span>
+    <span class="xd-arrow" aria-hidden="true">→</span>
+  </summary>
+  <div class="xd-body">
+    <slot />
+  </div>
+</details>
+<style>
+  .xd { border-top: 1.5px solid var(--ink); border-bottom: 1px solid var(--line-strong); }
+  .xd summary {
+    list-style: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    min-height: 72px; padding: 16px 0;
+  }
+  .xd summary::-webkit-details-marker { display: none; }
+  .xd-label { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.015em; transition: color var(--t-micro); }
+  .xd-arrow { color: var(--cobalt); font-size: 1.3rem; transition: transform var(--t-micro) var(--ease); }
+  .xd summary:hover .xd-label { color: var(--cobalt); }
+  .xd summary:hover .xd-arrow { transform: translateX(3px); }
+  .xd[open] .xd-arrow { transform: rotate(90deg); }
+  .xd-body { padding: 8px 0 40px; }
+  .xd[open] .xd-body { animation: xd-in 360ms var(--ease); }
+  @keyframes xd-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+</style>

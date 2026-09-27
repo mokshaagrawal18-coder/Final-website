@@ -1,0 +1,202 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArrowLink from '../components/ArrowLink.astro';
+import HandNote from '../components/HandNote.astro';
+import Toolkit from '../components/Toolkit.astro';
+import DesProcess from '../components/visuals/DesProcess.astro';
+import GrowwJourney from '../components/visuals/GrowwJourney.astro';
+import MensaShelf from '../components/visuals/MensaShelf.astro';
+import { companies } from '../data/work';
+
+const visuals: Record<string, any> = { 'de-shaw': DesProcess, groww: GrowwJourney, mensa: MensaShelf };
+---
+<BaseLayout title="Work" description="Financial research, customer operations and e-commerce: what Moksha was actually figuring out, how she approached it, and what changed.">
+  <!-- WORK 1 · HERO -->
+  <section class="container grid work-hero">
+    <div class="wh-main">
+      <h1 class="t-page">Work</h1>
+      <p class="lede wh-copy">I’ve worked across financial research, customer operations, and e-commerce, usually trying to understand what’s happening, what matters, and how to make the next step clearer.</p>
+    </div>
+    <div class="wh-aside hide-sm">
+      <HandNote arrow="curve-left" rotate={-4}>different problems. same curiosity.</HandNote>
+    </div>
+  </section>
+
+  <!-- WORK 2 · SUMMARY -->
+  <section class="section container" aria-labelledby="summary-title">
+    <h2 class="t-h3 sum-title" id="summary-title">What I was actually figuring out</h2>
+    <ol class="summary" role="list">
+      {companies.map((c, i) => (
+        <li class="reveal" style={`--delay:${i * 90}ms`}>
+          <a href={`#${c.id}`} class="sum-item">
+            <span class="sum-top">
+              <span class="num sum-n">{c.n}</span>
+              <span class="sum-name head">{c.name}</span>
+            </span>
+            <span class="sum-q">{c.question}</span>
+            <span class="sum-foot">
+              <span class="sum-key hand">{c.keyword}</span>
+              <span class="sum-metric num">{c.metric}</span>
+            </span>
+            <span class="sum-go" aria-hidden="true">↓</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+    <p class="sum-line" aria-label="choice, then friction, then clarity">
+      <span>choice</span><span class="arr" aria-hidden="true">→</span><span>friction</span><span class="arr" aria-hidden="true">→</span><span>clarity</span>
+    </p>
+  </section>
+
+  <!-- WORK 3–5 · COMPANIES -->
+  <div class="container companies grid">
+    <nav class="side-nav" aria-label="Companies on this page" data-side-nav>
+      <ol role="list">
+        {companies.map((c) => (
+          <li><a href={`#${c.id}`} data-side-link={c.id}><span class="sn-n">{c.n}</span> {c.short}</a></li>
+        ))}
+      </ol>
+    </nav>
+
+    <div class="companies-body">
+      {companies.map((c) => {
+        const Visual = visuals[c.id];
+        return (
+          <section class="company" id={c.id} aria-labelledby={`${c.id}-title`} data-company>
+            <header class="co-head">
+              <p class="num co-n">{c.n}</p>
+              <h2 class="t-section" id={`${c.id}-title`}>{c.name}</h2>
+              <p class="co-desc">{c.descriptor}</p>
+              <p class="co-intro">{c.intro}</p>
+            </header>
+
+            <div class="co-visual">
+              <Visual />
+            </div>
+
+            <ol class="themes" role="list">
+              {c.themes.map((t, i) => (
+                <li class="theme reveal">
+                  <span class="theme-n num">{i + 1}</span>
+                  <div class="theme-text">
+                    <h3 class="theme-title">{t.title}</h3>
+                    <p class="theme-body">{t.body}</p>
+                  </div>
+                  <p class="theme-ev"><span class="visually-hidden">Evidence: </span>{t.evidence}</p>
+                </li>
+              ))}
+            </ol>
+
+            <p class="co-reflect hand">{c.reflection}</p>
+          </section>
+        );
+      })}
+    </div>
+  </div>
+
+  <!-- WORK 6 · TOOLKIT -->
+  <Toolkit />
+
+  <!-- WORK 7 · CLOSE -->
+  <section class="section container work-close" aria-labelledby="wclose-title">
+    <h2 class="t-section" id="wclose-title">Different problems. Same instinct.</h2>
+    <p class="body-copy wc-copy">I kept gravitating toward work that involved finding the pattern, understanding the friction, and making something clearer, faster, or easier to use.</p>
+    <ArrowLink href="/projects/" variant="button">See what I’ve built</ArrowLink>
+  </section>
+</BaseLayout>
+
+<script>
+  const links = document.querySelectorAll<HTMLAnchorElement>('[data-side-link]');
+  const sections = document.querySelectorAll<HTMLElement>('[data-company]');
+  if (links.length && 'IntersectionObserver' in window) {
+    const setActive = (id: string) => links.forEach((l) => {
+      const on = l.dataset.sideLink === id;
+      l.classList.toggle('is-active', on);
+      if (on) l.setAttribute('aria-current', 'true'); else l.removeAttribute('aria-current');
+    });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) setActive((e.target as HTMLElement).id); });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    sections.forEach((s) => io.observe(s));
+  }
+</script>
+
+<style>
+  .work-hero { padding-top: clamp(40px, 6vw, 96px); align-items: end; }
+  .wh-main { grid-column: 1 / span 8; }
+  .wh-copy { margin-top: 24px; max-width: 36ch; }
+  .wh-aside { grid-column: 10 / span 3; padding-bottom: 12px; }
+
+  .sum-title { margin-bottom: 24px; }
+  .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .sum-item {
+    position: relative;
+    display: flex; flex-direction: column; gap: 14px; height: 100%;
+    padding: 26px 28px 22px;
+    background: var(--paper); border-radius: 4px; box-shadow: var(--shadow-paper);
+    transition: transform var(--t-micro) var(--ease), box-shadow var(--t-micro) var(--ease);
+  }
+  .sum-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+  .sum-top { display: flex; align-items: baseline; gap: 12px; }
+  .sum-n { font-size: 0.9rem; }
+  .sum-name { font-size: 1.35rem; font-weight: 600; }
+  .sum-q { font-size: 1.125rem; line-height: 1.4; font-weight: 500; }
+  .sum-foot { margin-top: auto; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .sum-key { font-size: 1.35rem; }
+  .sum-metric { font-size: 1.05rem; }
+  .sum-go { position: absolute; top: 22px; right: 24px; color: var(--cobalt); opacity: 0; transform: translateY(-3px); transition: opacity var(--t-micro), transform var(--t-micro) var(--ease); }
+  .sum-item:hover .sum-go, .sum-item:focus-visible .sum-go { opacity: 1; transform: none; }
+  .sum-line { margin-top: 22px; display: flex; gap: 10px; align-items: center; justify-content: center; font-size: 0.9rem; color: var(--grey); letter-spacing: 0.02em; }
+  .sum-line .arr { color: var(--cobalt); }
+
+  /* companies */
+  .companies { padding-top: var(--space-section); }
+  .side-nav { grid-column: 1 / span 2; }
+  .side-nav ol { position: sticky; top: 120px; display: grid; gap: 2px; }
+  .side-nav a {
+    display: flex; align-items: center; gap: 10px; min-height: 40px;
+    font-size: 0.9rem; font-weight: 500; color: var(--grey);
+    border-left: 2px solid var(--line); padding-left: 14px;
+    transition: color var(--t-micro), border-color var(--t-micro);
+  }
+  .side-nav a:hover { color: var(--ink); }
+  .side-nav a.is-active { color: var(--cobalt); border-left-color: var(--cobalt); }
+  .sn-n { font-family: var(--font-head); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .companies-body { grid-column: 3 / span 10; }
+
+  .company + .company { margin-top: var(--space-section); }
+  .co-n { font-size: 1rem; margin-bottom: 6px; }
+  .co-desc { margin-top: 10px; font-size: 0.95rem; color: var(--grey); }
+  .co-intro { margin-top: 20px; max-width: var(--measure); }
+  .co-visual { margin: 44px 0 52px; }
+
+  .themes { border-top: 1.5px solid var(--ink); }
+  .theme {
+    display: grid; grid-template-columns: 40px minmax(0, 1fr) minmax(180px, 250px); gap: 20px 28px;
+    padding: 22px 0; border-bottom: 1px solid var(--line);
+  }
+  .theme-n { font-size: 0.95rem; padding-top: 3px; }
+  .theme-title { font-size: 1.3rem; font-weight: 600; letter-spacing: -0.015em; }
+  .theme-body { margin-top: 8px; color: var(--grey); max-width: 58ch; }
+  .theme-ev {
+    align-self: start; padding-top: 3px;
+    font-family: var(--font-head); font-weight: 600; color: var(--cobalt); font-size: 1rem; line-height: 1.35;
+    border-left: 2px solid var(--yellow); padding-left: 14px;
+  }
+  .co-reflect { margin-top: 28px; transform: rotate(-1.2deg); transform-origin: left; display: inline-block; font-size: 1.5rem; }
+
+  .work-close { max-width: 820px; }
+  .wc-copy { margin: 20px 0 32px; }
+
+  @media (max-width: 1024px) {
+    .side-nav { display: none; }
+    .companies-body { grid-column: 1 / -1; }
+    .summary { grid-template-columns: 1fr; }
+    .wh-main { grid-column: 1 / -1; }
+    .wh-aside { display: none; }
+  }
+  @media (max-width: 640px) {
+    .theme { grid-template-columns: 28px minmax(0, 1fr); }
+    .theme-ev { grid-column: 2; }
+  }
+</style>

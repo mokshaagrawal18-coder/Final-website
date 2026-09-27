@@ -1,0 +1,33 @@
+---
+/** Two nearly identical pricing cards. The only difference is a small label. */
+---
+<figure class="pt" aria-label="Two simple pricing cards, Standard and Pro. Pro carries a small Most Popular label.">
+  <p class="pt-illus" aria-hidden="true">illustration</p>
+  <div class="pt-cards" aria-hidden="true">
+    <div class="pt-card">
+      <span class="pt-name head">Standard</span>
+      <span class="pt-line"></span><span class="pt-line s"></span><span class="pt-line"></span>
+      <span class="pt-btn"></span>
+    </div>
+    <div class="pt-card is-pop">
+      <span class="pt-badge">Most Popular</span>
+      <span class="pt-name head">Pro</span>
+      <span class="pt-line"></span><span class="pt-line s"></span><span class="pt-line"></span>
+      <span class="pt-btn"></span>
+    </div>
+  </div>
+  <p class="pt-note hand">one tiny change. different choice?</p>
+</figure>
+<style>
+  .pt { position: relative; padding: var(--pad-panel); background: var(--paper); border-radius: 4px; box-shadow: var(--shadow-paper); }
+  .pt-illus { position: absolute; top: 18px; right: 20px; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--grey); border: 1px dashed var(--line-strong); border-radius: 3px; padding: 3px 7px 2px; }
+  .pt-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 420px; margin: 28px auto 0; }
+  .pt-card { position: relative; display: grid; gap: 10px; padding: 26px 18px 18px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--cream); }
+  .pt-name { font-size: 1.15rem; font-weight: 600; margin-bottom: 6px; }
+  .pt-line { height: 6px; border-radius: 3px; background: rgba(23,23,23,0.12); }
+  .pt-line.s { width: 70%; }
+  .pt-btn { height: 30px; margin-top: 10px; border-radius: 4px; border: 1.5px solid var(--line-strong); }
+  .is-pop { border-color: var(--line-strong); }
+  .pt-badge { position: absolute; top: -11px; left: 14px; font-size: 0.72rem; font-weight: 600; padding: 3px 8px; border-radius: 3px; background: var(--yellow); color: var(--ink); }
+  .pt-note { margin-top: 22px; text-align: center; transform: rotate(-1.5deg); }
+</style>

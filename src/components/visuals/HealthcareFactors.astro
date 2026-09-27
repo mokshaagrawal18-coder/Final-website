@@ -1,0 +1,41 @@
+---
+/** Andersen-style factor groups feeding healthcare expenditure; need highlighted as strongest. */
+interface Props { class?: string }
+const { class: cls = '' } = Astro.props;
+const groups = [
+  { name: 'Demographics', strong: false },
+  { name: 'Enabling factors', strong: false },
+  { name: 'Healthcare need', strong: true },
+];
+---
+<figure class={`hc ${cls}`} data-reveal>
+  <figcaption class="visually-hidden">Three factor groups (demographics, enabling factors and healthcare need) feed into healthcare expenditure. Healthcare need is the strongest driver.</figcaption>
+  <div class="hc-groups">
+    {groups.map((g) => <span class:list={['hc-group', { 'is-strong': g.strong }]}>{g.name}</span>)}
+  </div>
+  <svg class="hc-links draw" viewBox="0 0 100 180" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M2 30 C 50 30, 50 90, 98 90" style="--len:120" class="thin" />
+    <path d="M2 90 L 98 90" style="--len:100;--delay:200ms" class="thin" />
+    <path d="M2 150 C 50 150, 50 90, 98 90" style="--len:120;--delay:350ms" class="thick" />
+  </svg>
+  <div class="hc-out">
+    <span class="hc-target head">Healthcare Expenditure</span>
+  </div>
+  <p class="hc-note hand">the strongest number still needs context.</p>
+</figure>
+<style>
+  .hc { position: relative; display: grid; grid-template-columns: minmax(0, 1.1fr) 70px minmax(0, 1fr); align-items: center; padding: var(--pad-panel); background: var(--paper); border-radius: 4px; box-shadow: var(--shadow-paper); }
+  .hc-groups { display: grid; gap: 18px; }
+  .hc-group { min-height: 44px; display: flex; align-items: center; padding: 10px 14px; border: 1px solid var(--line-strong); border-radius: 4px; font-size: 0.95rem; background: var(--cream); }
+  .hc-group.is-strong { border: 1.5px solid var(--cobalt); color: var(--cobalt); font-weight: 600; background: linear-gradient(transparent 60%, var(--yellow-soft) 60%) var(--paper); }
+  .hc-links { width: 100%; height: 180px; overflow: visible; }
+  .hc-links path { fill: none; stroke: var(--cobalt); stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .hc-links .thin { stroke-width: 1.1; opacity: 0.5; }
+  .hc-links .thick { stroke-width: 3; }
+  .hc-target { display: block; padding: 18px 16px; border: 1.5px solid var(--ink); border-radius: 4px; font-size: 1.15rem; font-weight: 600; line-height: 1.2; text-align: center; }
+  .hc-note { grid-column: 1 / -1; margin-top: 18px; transform: rotate(-1.4deg); transform-origin: left; }
+  @media (max-width: 520px) {
+    .hc { grid-template-columns: 1fr; }
+    .hc-links { height: 40px; width: 60px; justify-self: center; transform: rotate(90deg); }
+  }
+</style>

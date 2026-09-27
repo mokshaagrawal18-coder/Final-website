@@ -1,0 +1,11 @@
+/* shared styling for the "How I tested it" / "Behind the analysis" disclosures */
+.xd-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 48px; }
+.xd-block h3 { font-size: 1.15rem; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 8px; }
+.xd-block p, .xd-block li { color: var(--grey); font-size: 0.975rem; }
+.xd-block p + p { margin-top: 0.6em; }
+.xd-block ul { padding-left: 18px; margin: 0; display: grid; gap: 4px; }
+.xd-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.xd-split > div { border: 1px solid var(--line-strong); border-radius: 4px; padding: 12px 14px; background: var(--paper); }
+.xd-split .lbl { display: block; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cobalt); margin-bottom: 6px; font-weight: 600; }
+.xd-foot { margin-top: 36px; font-size: 0.9rem; color: var(--grey); }
+@media (max-width: 760px) { .xd-grid, .xd-split { grid-template-columns: 1fr; } }

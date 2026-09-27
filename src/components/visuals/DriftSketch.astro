@@ -1,0 +1,19 @@
+---
+/** Abstract sketch standing in for Random Drift until a real screenshot is added. Not gameplay. */
+---
+<figure class="drift" aria-hidden="true">
+  <svg viewBox="0 0 320 150">
+    <path class="trail" d="M20 110 C 60 40, 90 130, 130 80 S 190 30, 220 70 S 280 120, 300 50" />
+    <circle cx="300" cy="50" r="6" class="dot" />
+    <circle cx="70" cy="40" r="3" class="p" /><circle cx="170" cy="120" r="3" class="p" /><circle cx="250" cy="30" r="3" class="p" /><circle cx="110" cy="130" r="2.5" class="p" />
+  </svg>
+  <span class="drift-cap">sketch · not a screenshot</span>
+</figure>
+<style>
+  .drift { position: relative; padding: 18px; background: var(--paper); border-radius: 4px; box-shadow: var(--shadow-paper); }
+  .drift svg { width: 100%; height: auto; }
+  .trail { fill: none; stroke: var(--cobalt); stroke-width: 1.6; stroke-dasharray: 4 5; stroke-linecap: round; }
+  .dot { fill: var(--yellow); stroke: #c79b25; stroke-width: 1; }
+  .p { fill: rgba(23,23,23,0.2); }
+  .drift-cap { position: absolute; right: 14px; bottom: 10px; font-size: 0.72rem; color: var(--grey); letter-spacing: 0.04em; }
+</style>

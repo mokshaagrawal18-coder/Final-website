@@ -1,0 +1,67 @@
+---
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+import HealthcareFactors from '../../components/visuals/HealthcareFactors.astro';
+import { site } from '../../data/site';
+import '../../styles/details.css';
+---
+<ProjectLayout
+  title="Healthcare Expenditure: A Gender-Based Analysis"
+  titleLines={['Healthcare Expenditure:', 'A Gender-Based Analysis']}
+  description="Undergraduate research on what drives healthcare spending, using the Andersen model and a gender lens."
+  question="What actually drives healthcare spending, and is it the same for everyone?"
+  intro="For my undergraduate research, I studied how demographic, enabling, and healthcare-need factors influenced expenditure, using a gender lens to understand whether those relationships differed across groups."
+  did={[
+    { title: 'Built the research framework', body: 'Structured the study using the Andersen healthcare-utilisation model.' },
+    { title: 'Collected and analysed the data', body: 'Worked with roughly 370 survey responses using correlation and multiple regression.' },
+    { title: 'Interpreted the differences', body: 'Looked beyond statistical significance to consider what the findings could mean for access, support and financial protection.' },
+  ]}
+  stoodOut="Healthcare need emerged as the strongest driver of expenditure."
+  keyLine="Healthcare spending cannot be understood through income or demographics alone."
+  proof={['370 responses', 'Andersen model', 'multiple regression', 'Jamovi', 'R² 0.631']}
+  reflection="the strongest number still needs context."
+  reflectionHand
+  detailsLabel="Behind the analysis"
+  next={{ href: '/projects/rider-fairness/', label: 'Next: Rider Fairness' }}
+>
+  <HealthcareFactors slot="visual" />
+
+  <div slot="details" class="xd-grid">
+    <div class="xd-block">
+      <h3>Research framework</h3>
+      <p>The Andersen healthcare-utilisation model groups the things that shape healthcare use into three families, which became the structure of the study.</p>
+      <div class="xd-split">
+        <div><span class="lbl">demographics</span>who someone is</div>
+        <div><span class="lbl">enabling factors</span>what makes care easier or harder to access</div>
+      </div>
+      <div class="xd-split">
+        <div><span class="lbl">healthcare need</span>how much care is actually needed</div>
+        <div><span class="lbl">outcome</span>healthcare expenditure</div>
+      </div>
+    </div>
+    <div class="xd-block">
+      <h3>Variables</h3>
+      <p>Each factor group was translated into survey questions, with healthcare expenditure as the outcome and gender used as the lens for comparison.</p>
+    </div>
+    <div class="xd-block">
+      <h3>Questionnaire and process</h3>
+      <p>The questionnaire followed the framework’s three factor groups. Roughly 370 responses were collected and prepared for analysis.</p>
+    </div>
+    <div class="xd-block">
+      <h3>Jamovi and regression outputs</h3>
+      <p>Ran correlation and multiple regression in Jamovi. The model explained 63.1% of the variance in expenditure (R² 0.631), with healthcare need as the strongest driver.</p>
+    </div>
+    <div class="xd-block">
+      <h3>Limitations</h3>
+      <ul>
+        <li>Survey responses are self-reported.</li>
+        <li>Regression shows association, not cause.</li>
+      </ul>
+    </div>
+    {site.healthcareReport && (
+      <div class="xd-block">
+        <h3>Full report</h3>
+        <p><a class="text-link" href={site.healthcareReport} target="_blank" rel="noopener">Read the full report ↗</a></p>
+      </div>
+    )}
+  </div>
+</ProjectLayout>

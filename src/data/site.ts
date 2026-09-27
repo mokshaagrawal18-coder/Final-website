@@ -18,6 +18,9 @@ export const site = {
 
   // Link to the live Random Drift build (leave empty until it is hosted)
   randomDrift: '',
+
+  // Optional: full healthcare research report (e.g. '/reports/healthcare-expenditure.pdf')
+  healthcareReport: '',
 };
 
 export const nav = [

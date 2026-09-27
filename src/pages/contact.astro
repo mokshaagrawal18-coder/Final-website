@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArrowLink from '../components/ArrowLink.astro';
+import HandNote from '../components/HandNote.astro';
+import { site } from '../data/site';
+---
+<BaseLayout title="Say hi" description="Get in touch with Moksha Agrawal.">
+  <section class="container contact">
+    <h1 class="t-page">Say hi.</h1>
+    <div class="body-copy c-copy">
+      <p>If you made it this far, thank you.</p>
+      <p>If you want to talk about work, ideas, analytics, consumer behaviour, or something on this site, I’d be happy to chat.</p>
+      <p>And if this is just an excuse to say hello, that works too.</p>
+    </div>
+    <ul class="c-links" role="list">
+      <li><ArrowLink href={`mailto:${site.email}`} dir="right">Email</ArrowLink> <span class="c-detail">{site.email}</span></li>
+      <li><ArrowLink href={site.linkedin} dir="ext" external>LinkedIn</ArrowLink></li>
+      <li><ArrowLink href={site.github} dir="ext" external>GitHub</ArrowLink></li>
+      <li><ArrowLink href={site.resume} dir="down" download>Résumé</ArrowLink></li>
+    </ul>
+    <HandNote arrow="up" rotate={-3} class="c-note">I do, in fact, reply.</HandNote>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact { padding-top: clamp(40px, 6vw, 96px); }
+  .c-copy { margin-top: 32px; font-size: 1.15rem; }
+  .c-links { margin-top: 44px; display: grid; gap: 2px; max-width: 560px; border-top: 1px solid var(--line-strong); }
+  .c-links li { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 1.2rem; }
+  .c-detail { font-size: 0.9rem; color: var(--grey); }
+  :global(.c-note) { margin-top: 28px; flex-direction: column-reverse !important; }
+  @media (max-width: 480px) { .c-detail { display: none; } }
+</style>

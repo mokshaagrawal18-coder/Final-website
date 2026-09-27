@@ -1,0 +1,25 @@
+---
+import type { NoteEntry } from '../data/notes';
+interface Props { note: NoteEntry; featured?: boolean }
+const { note, featured = false } = Astro.props;
+const date = new Date(note.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+---
+<a href={note.href} class:list={['note-card', { 'is-featured': featured }]}>
+  <span class="nc-meta"><span class="nc-topic">{note.topic}</span> · <time datetime={note.date}>{date}</time></span>
+  <span class="nc-title head">{note.title}</span>
+  <span class="nc-dek">{note.dek}</span>
+  <span class="nc-go" aria-hidden="true">read →</span>
+</a>
+<style>
+  .note-card { display: flex; flex-direction: column; gap: 10px; height: 100%; padding: 22px 0; border-top: 1px solid var(--line-strong); }
+  .note-card.is-featured { padding: var(--pad-panel); background: var(--paper); border-top: 0; border-radius: 4px; box-shadow: var(--shadow-paper); transition: transform var(--t-micro) var(--ease), box-shadow var(--t-micro); }
+  .note-card.is-featured:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+  .nc-meta { font-size: 0.8125rem; color: var(--grey); }
+  .nc-topic { color: var(--cobalt); font-weight: 500; }
+  .nc-title { font-size: 1.3rem; font-weight: 600; letter-spacing: -0.015em; line-height: 1.2; transition: color var(--t-micro); }
+  .is-featured .nc-title { font-size: 1.65rem; }
+  .nc-dek { color: var(--grey); font-size: 0.95rem; }
+  .nc-go { margin-top: auto; padding-top: 8px; font-size: 0.9rem; font-weight: 500; color: var(--cobalt); transition: transform var(--t-micro) var(--ease); }
+  .note-card:hover .nc-title { color: var(--cobalt); }
+  .note-card:hover .nc-go { transform: translateX(3px); }
+</style>
