@@ -60,6 +60,7 @@ import { site } from '../../data/site';
           <li class="tag tag--metric">R² 0.631</li>
         </ul>
         <ArrowLink href="/projects/healthcare-expenditure/" variant="button" class="p-cta">View project</ArrowLink>
+        {site.healthcareReport && <ArrowLink href={site.healthcareReport} dir="ext" external class="p-report">View research report</ArrowLink>}
       </div>
       <div class="p-visual reveal" style="--delay:120ms">
         <HealthcareFactors />
@@ -130,6 +131,7 @@ import { site } from '../../data/site';
   .p-key { margin: 0 0 18px; font-weight: 500; }
   .p-q { margin: 18px 0 22px; font-size: 1.2rem; line-height: 1.4; font-weight: 500; color: var(--cobalt); max-width: 30ch; }
   :global(.p-cta) { margin-top: 28px; }
+  :global(.p-report) { margin: 28px 0 0 20px; }
   .p-more { margin-top: 18px; }
   .p-more summary { list-style: none; cursor: pointer; }
   .p-more summary::-webkit-details-marker { display: none; }

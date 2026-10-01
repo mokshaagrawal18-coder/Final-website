@@ -17,6 +17,7 @@ interface Props {
   reflectionHand?: boolean;
   detailsLabel: string;
   next: { href: string; label: string };
+  report?: string;
 }
 const p = Astro.props;
 ---
@@ -28,6 +29,7 @@ const p = Astro.props;
         <h1 class="t-page pd-title">{p.titleLines ? p.titleLines.map((l, i) => <>{l}{i < p.titleLines!.length - 1 && <br />}</>) : p.title}</h1>
         <p class="pd-q">{p.question}</p>
         <p class="lede pd-intro">{p.intro}</p>
+        {p.report && <ArrowLink href={p.report} variant="button" external class="pd-report">View research report</ArrowLink>}
       </div>
     </header>
 
@@ -85,6 +87,7 @@ const p = Astro.props;
   :global(.pd-back) { font-size: 0.95rem; margin-bottom: 20px; }
   .pd-q { margin-top: 26px; font-size: clamp(1.2rem, 1rem + 0.7vw, 1.6rem); font-weight: 500; color: var(--cobalt); line-height: 1.35; max-width: 34ch; }
   .pd-intro { margin-top: 20px; max-width: 46ch; }
+  :global(.pd-report) { margin-top: 26px; }
   .pd-visual { margin-top: clamp(48px, 5vw, 72px); }
   .pd-visual > :global(*) { max-width: 760px; }
 

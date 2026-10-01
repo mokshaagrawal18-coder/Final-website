@@ -150,7 +150,7 @@ export const toolkitSteps = [
   {
     n: '01', title: 'Understand the mess',
     body: 'What’s here, what’s missing, and what can actually be compared?',
-    examples: ['13F filings', '5,000+ customer queries', '370 healthcare responses'],
+    examples: ['13F filings', '5,000+ customer queries', '210 healthcare survey responses'],
     icon: 'mess',
   },
   {

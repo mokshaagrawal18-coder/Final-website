@@ -15,8 +15,8 @@ export const site = {
 
   email: 'mokshaagrawal18@gmail.com',
 
-  // NEEDS INPUT: paste your real profile URLs, e.g. 'https://www.linkedin.com/in/your-handle/'
-  linkedin: '',
+  // NEEDS INPUT for GitHub: paste your real profile URL, e.g. 'https://github.com/your-handle'
+  linkedin: 'https://www.linkedin.com/in/mokshaagrawal/',
   github: '',
 
   // Résumé buttons appear only once the PDF exists at public/resume/Moksha-Agrawal-Resume.pdf
@@ -26,7 +26,7 @@ export const site = {
   randomDrift: '',
 
   // Optional: full healthcare research report (e.g. '/reports/healthcare-expenditure.pdf')
-  healthcareReport: '',
+  healthcareReport: '/reports/Healthcare-Expenditure-Gender-Analysis.pdf',
 };
 
 // Notes stays reachable at /notes/ but is out of the main navigation until a first article exists.

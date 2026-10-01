@@ -12,16 +12,17 @@ import '../../styles/details.css';
   intro="For my undergraduate research, I studied how demographic, enabling, and healthcare-need factors influenced expenditure, using a gender lens to understand whether those relationships differed across groups."
   did={[
     { title: 'Built the research framework', body: 'Structured the study using the Andersen healthcare-utilisation model.' },
-    { title: 'Collected and analysed the data', body: 'Worked with roughly 370 survey responses using correlation and multiple regression.' },
+    { title: 'Collected and analysed the data', body: 'Worked with 210 valid survey responses using correlation and multiple regression.' },
     { title: 'Interpreted the differences', body: 'Looked beyond statistical significance to consider what the findings could mean for access, support and financial protection.' },
   ]}
   stoodOut="Healthcare need emerged as the strongest driver of expenditure."
   keyLine="Healthcare spending cannot be understood through income or demographics alone."
-  proof={['R² 0.631', 'Jamovi', 'multiple regression', 'Andersen model', '370 responses']}
+  proof={['R² 0.631', 'Jamovi', 'multiple regression', 'Andersen model', '210 responses']}
   reflection="the strongest number still needs context."
   reflectionHand
   detailsLabel="Behind the analysis"
   next={{ href: '/projects/rider-fairness/', label: 'Next: Rider Fairness' }}
+  report={site.healthcareReport}
 >
   <HealthcareFactors slot="visual" />
 
@@ -44,7 +45,7 @@ import '../../styles/details.css';
     </div>
     <div class="xd-block">
       <h3>Questionnaire and process</h3>
-      <p>The questionnaire followed the framework’s three factor groups. Roughly 370 responses were collected and prepared for analysis.</p>
+      <p>The questionnaire followed the framework’s three factor groups. Collected through convenience sampling, the survey received 210 valid responses against a target of 200.</p>
     </div>
     <div class="xd-block">
       <h3>Jamovi and regression outputs</h3>
@@ -54,6 +55,7 @@ import '../../styles/details.css';
       <h3>Limitations</h3>
       <ul>
         <li>Survey responses are self-reported.</li>
+        <li>Convenience sampling means the 210 respondents are not a fully representative sample.</li>
         <li>Regression shows association, not cause.</li>
       </ul>
     </div>
