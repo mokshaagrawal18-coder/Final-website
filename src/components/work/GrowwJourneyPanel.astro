@@ -1,67 +1,32 @@
 ---
-import StatTiles from './StatTiles.astro';
-import type { Stat } from '../../data/work';
-interface Props { stats: Stat[] }
-const { stats } = Astro.props;
+/** Groww: the activation journey, with the two steps where people got stuck marked. Static. */
 const steps = [
-  { label: 'Sign up', sub: 'account created', friction: false },
-  { label: 'KYC', sub: 'documents', friction: true },
-  { label: 'Verification', sub: 'checks', friction: true },
-  { label: 'Activation', sub: 'ready to trade', friction: false },
+  { label: 'Sign up', friction: false },
+  { label: 'KYC', friction: true },
+  { label: 'Verification', friction: true },
+  { label: 'Activation', friction: false },
 ];
 ---
-<div class="gj" data-journey data-reveal>
-  <h3 class="panel-title">Customer journey <span class="panel-sub">(early users)</span></h3>
-  <div class="gj-row">
-    <ol class="gj-steps" role="list">
-      <span class="gj-line" aria-hidden="true"><span class="gj-fill"></span></span>
-      {steps.map((s, i) => (
-        <li style={`--i:${i}`}>
-          <button type="button" class:list={['gj-step', { 'is-friction': s.friction }]} aria-pressed="false">
-            <span class="gj-label">{s.label}</span>
-            <span class="gj-dot" aria-hidden="true"></span>
-            <span class="gj-sub hand">{s.sub}</span>
-            {s.friction && <span class="visually-hidden">(friction point)</span>}
-          </button>
-        </li>
-      ))}
-    </ol>
-    <span class="gj-arrow" aria-hidden="true">→</span>
-    <p class="hand gj-note" aria-hidden="true">where “this is taking too long” begins.</p>
-  </div>
-  <p class="gj-hint hand" aria-hidden="true"><span class="gj-key"></span> where people got stuck · tap a step</p>
-
-  <p class="ko-label">Key outcomes</p>
-  <StatTiles stats={stats} />
-</div>
-
+<figure class="gj" aria-label="Customer journey: sign up, KYC, verification, activation. Most friction sat at KYC and verification.">
+  <p class="panel-title">Where people got stuck</p>
+  <ol class="gj-steps" role="list" aria-hidden="true">
+    {steps.map((s) => (
+      <li class:list={['gj-step', { 'is-friction': s.friction }]}>
+        <span class="gj-dot"></span>
+        <span class="gj-label">{s.label}</span>
+      </li>
+    ))}
+  </ol>
+  <p class="gj-key"><span></span> documents and verification checks</p>
+</figure>
 <style>
-  .gj-row { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 0.32fr); align-items: start; gap: 10px; margin-top: 16px; }
-  .gj-steps { position: relative; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 6px; }
-  .gj-line { position: absolute; left: 12.5%; right: 12.5%; top: 37px; height: 2px; background: rgba(36, 82, 214, 0.2); }
-  .gj-fill { position: absolute; inset: 0; background: var(--cobalt); transform-origin: left; }
-  :global(.js) .gj:not(.is-in) .gj-fill { transform: scaleX(0); }
-  .gj-fill { transition: transform 1000ms var(--ease) 200ms; }
-  .gj-step {
-    position: relative; width: 100%;
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    padding: 0 4px 6px; border: 0; background: none; text-align: center; border-radius: 6px;
-  }
-  .gj-label { font-family: var(--font-serif-text); font-size: 0.85rem; color: var(--ink); }
-  .gj-dot { position: relative; z-index: 1; width: 14px; height: 14px; border-radius: 50%; background: var(--cobalt); box-shadow: 0 0 0 3px var(--paper); transition: transform var(--t-micro) var(--ease), box-shadow var(--t-micro); }
-  .is-friction .gj-dot { background: var(--yellow); }
-  .gj-sub { font-size: 0.9rem; line-height: 1.15; color: var(--grey); transition: color var(--t-micro); }
-  .gj-step:hover .gj-dot, .gj-step[aria-pressed='true'] .gj-dot { transform: scale(1.35); box-shadow: 0 0 0 3px var(--paper), 0 0 0 7px rgba(36, 82, 214, 0.15); }
-  .gj-step:hover .gj-sub, .gj-step[aria-pressed='true'] .gj-sub { color: var(--ink); }
-  .is-friction[aria-pressed='true'] .gj-sub { background: linear-gradient(transparent 55%, var(--yellow-soft) 55%); }
-  .gj-arrow { color: var(--cobalt); font-size: 1.4rem; line-height: 1; margin-top: 26px; }
-  .gj-note { font-size: 1rem; line-height: 1.2; transform: rotate(-12deg); margin-top: -6px; }
-  .gj-hint { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 0.85rem; color: var(--grey); }
-  .gj-key { width: 10px; height: 10px; border-radius: 50%; background: var(--yellow); }
-
-  @media (max-width: 640px) {
-    .gj-row { grid-template-columns: 1fr; }
-    .gj-arrow { display: none; }
-    .gj-note { transform: rotate(-3deg); }
-  }
+  .gj { margin: 0; }
+  .gj-steps { position: relative; list-style: none; margin: 22px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 8px; }
+  .gj-steps::before { content: ''; position: absolute; left: 12.5%; right: 12.5%; top: 6px; height: 2px; background: var(--cobalt); opacity: 0.35; }
+  .gj-step { position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+  .gj-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--cobalt); box-shadow: 0 0 0 3px var(--cream); }
+  .is-friction .gj-dot { background: var(--yellow); box-shadow: 0 0 0 3px var(--cream), 0 0 0 5px rgba(242, 200, 75, 0.45); }
+  .gj-label { font-family: var(--font-serif-text); font-size: 0.8rem; color: var(--ink); }
+  .gj-key { display: flex; align-items: center; gap: 8px; margin-top: 18px; font-size: 0.8rem; color: var(--grey); }
+  .gj-key span { width: 10px; height: 10px; border-radius: 50%; background: var(--yellow); }
 </style>

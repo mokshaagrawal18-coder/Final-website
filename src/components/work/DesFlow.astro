@@ -1,0 +1,40 @@
+---
+/** D. E. Shaw: a simple research flow. The only Work diagram that animates (line draw, once). */
+const inputs = ['13F filings', 'market data', 'DRHP filings'];
+const outputs = ['dashboards', 'reusable database', 'automated workflows'];
+---
+<figure class="flow" aria-label="Research flow: 13F filings, market data and DRHP filings are structured and compared, then turned into dashboards, a reusable database and automated workflows.">
+  <p class="panel-title">How the work flows</p>
+  <div class="flow-row" aria-hidden="true">
+    <ul class="flow-col" role="list">{inputs.map((t) => <li class="flow-in">{t}</li>)}</ul>
+    <svg class="flow-link draw" data-reveal viewBox="0 0 60 120" preserveAspectRatio="none">
+      <path d="M2 20 C 30 20, 30 60, 58 60" style="--len:80" />
+      <path d="M2 60 L 58 60" style="--len:60;--delay:150ms" />
+      <path d="M2 100 C 30 100, 30 60, 58 60" style="--len:80;--delay:250ms" />
+    </svg>
+    <div class="flow-core"><span>structure</span><span>compare</span></div>
+    <svg class="flow-link draw" data-reveal viewBox="0 0 60 120" preserveAspectRatio="none">
+      <path d="M2 60 C 30 60, 30 20, 58 20" style="--len:80;--delay:450ms" />
+      <path d="M2 60 L 58 60" style="--len:60;--delay:550ms" />
+      <path d="M2 60 C 30 60, 30 100, 58 100" style="--len:80;--delay:650ms" />
+    </svg>
+    <ul class="flow-col" role="list">{outputs.map((t) => <li class="flow-out">{t}</li>)}</ul>
+  </div>
+</figure>
+<style>
+  .flow { margin: 0; }
+  .flow-row { display: grid; grid-template-columns: minmax(0, 1fr) 30px auto 30px minmax(0, 1fr); align-items: center; margin-top: 18px; }
+  .flow-col { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .flow-in, .flow-out { padding: 6px 8px; font-size: 0.78rem; line-height: 1.25; border-radius: 4px; }
+  .flow-in { border: 1px solid var(--line-strong); color: #3b3833; }
+  .flow-out { border: 1px solid var(--cobalt-line); color: var(--cobalt); }
+  .flow-link { width: 100%; height: 120px; overflow: visible; }
+  .flow-link path { fill: none; stroke: var(--cobalt); stroke-width: 1.5; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .flow-core { display: grid; gap: 2px; padding: 10px 10px; border: 1.5px solid var(--cobalt); border-radius: 6px; font-family: var(--font-serif-text); font-weight: 600; font-size: 0.85rem; }
+  .flow-core span::before { content: ''; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--yellow); vertical-align: middle; }
+  @media (max-width: 520px) {
+    .flow-row { grid-template-columns: 1fr; gap: 10px; }
+    .flow-link { display: none; }
+    .flow-core { justify-self: start; }
+  }
+</style>

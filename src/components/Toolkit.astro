@@ -1,67 +1,19 @@
 ---
-import { toolkitSteps, practice, toolGroups } from '../data/work';
-import HandNote from './HandNote.astro';
-
-const icons: Record<string, string> = {
-  // three unlike inputs feeding together
-  mess: '<rect x="4" y="6" width="10" height="10" rx="1.5"/><circle cx="24" cy="11" r="5"/><path d="M36 6l6 10H30z"/><path d="M9 16v8c0 4 4 6 8 6h6M24 16v14M36 16v8c0 4-4 6-8 6h-4"/><path d="M24 30v6M20 36h8"/>',
-  // outlined table / connected blocks
-  structure: '<rect x="5" y="7" width="36" height="30" rx="2"/><path d="M5 16h36M5 25h36M17 7v30M29 7v30"/>',
-  // small chart + magnifier
-  test: '<path d="M5 36h22"/><path d="M8 31l6-7 5 4 7-9"/><circle cx="31" cy="17" r="8"/><path d="M37 23l6 6"/><circle cx="14" cy="24" r="1.2"/><circle cx="19" cy="28" r="1.2"/>',
-  // screen with chart + gear
-  build: '<rect x="4" y="7" width="30" height="21" rx="2"/><path d="M14 34h10M19 28v6"/><path d="M9 22l5-5 4 3 6-7"/><circle cx="37" cy="31" r="4.5"/><path d="M37 24.5v2M37 35.5v2M30.5 31h2M41.5 31h2"/>',
-  // loop + check
-  better: '<path d="M36 15a14 14 0 1 0 2 11"/><path d="M38 8v8h-8"/><path d="M17 23l4 4 8-9"/>',
-};
+import { toolkitSteps, tools } from '../data/work';
 ---
 <section class="section toolkit" id="toolkit" aria-labelledby="toolkit-title">
   <div class="container">
     <div class="tk-head">
-      <div class="tk-head-main">
-        <p class="label">Technical toolkit</p>
-        <h2 class="t-section" id="toolkit-title">How I make sense of unfamiliar problems</h2>
-      </div>
-
+      <p class="label">Technical toolkit</p>
+      <h2 class="tk-title" id="toolkit-title">How I usually work with data</h2>
+      <p class="hand tk-note">the tool usually comes after the question.</p>
     </div>
 
-    <div class="tk-tools">
-      <p class="hand tk-tools-kicker">what I work with</p>
-      <div class="tk-groups">
-        {toolGroups.map((g, gi) => (
-          <div class="tk-group reveal" style={`--delay:${gi * 100}ms`}>
-            <p class="tk-group-name">{g.name}</p>
-            <ul class="tk-tool-list" role="list">
-              {g.tools.map((t) => (
-                <li class="tk-tool">
-                  <span class="tk-logo" aria-hidden="true">
-                    {'logo' in t && t.logo ? <img src={`/logos/${t.logo}`} alt="" width="40" height="40" loading="lazy" /> : <span class="tk-mono">{(t as any).mono}</span>}
-                  </span>
-                  <span class="tk-tool-name">{t.name}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-      <p class="hand tk-then" aria-hidden="true">…and here’s how I actually use them ↓</p>
-    </div>
-
-    <div class="tk-howto grid">
-      <div class="tk-head-copy tk-howto-copy">
-        <p>Most of my technical work starts when the problem is still a bit messy and the answer isn’t obvious. I usually begin by giving it structure, testing what matters, and turning the result into something that can actually be used, whether that’s an automation, a dashboard, a model or a clearer process.</p>
-        <HandNote arrow="curve-down" rotate={-2} class="tk-note">the tool usually comes after the question.</HandNote>
-      </div>
-    </div>
-
-    <ol class="tk-steps" role="list">
+    <ol class="tk-flow" role="list">
       {toolkitSteps.map((s, i) => (
-        <li class="tk-step reveal" style={`--delay:${i * 90}ms`}>
-          <div class="tk-step-top">
-            <span class="num tk-n">{s.n}</span>
-            <svg class="tk-icon" viewBox="0 0 46 44" aria-hidden="true" set:html={icons[s.icon]} />
-          </div>
-          <h3 class="tk-title">{s.title}</h3>
+        <li class="tk-step reveal" style={`--delay:${i * 80}ms`}>
+          <span class="tk-n">{s.n}</span>
+          <h3 class="tk-step-title">{s.title}</h3>
           <p class="tk-body">{s.body}</p>
           <ul class="tk-ex" role="list" aria-label="Examples">
             {s.examples.map((e) => <li>{e}</li>)}
@@ -70,129 +22,54 @@ const icons: Record<string, string> = {
       ))}
     </ol>
 
-    <div class="tk-practice">
-      <h3 class="label tk-practice-title">What that has looked like in practice</h3>
-      <ul class="tp-list" role="list">
-        {practice.map((p, i) => {
-          const Tag = p.href ? 'a' : 'div';
-          return (
-          <li class="reveal" style={`--delay:${i * 70}ms`}>
-            <Tag class:list={['tp-item', { 'is-link': p.href }]} href={p.href}>
-              <span class="tp-viz" aria-hidden="true">
-                {p.viz === 'pipeline' && (
-                  <svg viewBox="0 0 120 56"><rect x="4" y="10" width="20" height="26" rx="2"/><rect x="8" y="14" width="20" height="26" rx="2" class="f"/><path d="M34 27h18M47 22l5 5-5 5"/><rect x="60" y="14" width="22" height="26" rx="2"/><path d="M65 21h12M65 26h12M65 31h8"/><path d="M88 27h10M93 22l5 5-5 5"/><rect x="102" y="12" width="14" height="30" rx="2" class="c"/><path d="M105 20h8M105 25h8M105 30h5" class="c"/></svg>
-                )}
-                {p.viz === 'fit' && (
-                  <svg viewBox="0 0 120 56"><path d="M6 50h108M6 50V4" class="ax"/>{[[14,44],[22,40],[30,37],[38,33],[46,30],[54,27],[62,24],[70,21],[78,18],[86,15],[94,12],[102,9]].map(([x,y]) => <circle cx={x} cy={y} r="2.2" class="dot"/>)}<path d="M10 46L108 6" class="c"/></svg>
-                )}
-                {p.viz === 'r2' && (
-                  <svg viewBox="0 0 120 56"><rect x="6" y="20" width="108" height="14" rx="2" class="ax"/><rect x="6" y="20" width="68" height="14" rx="2" class="cfill"/><text x="6" y="50">R² 0.631</text></svg>
-                )}
-                {p.viz === 'buckets' && (
-                  <svg viewBox="0 0 120 56"><path d="M6 50h108" class="ax"/><rect x="12" y="12" width="14" height="38" class="cfill"/><rect x="34" y="22" width="14" height="28"/><rect x="56" y="30" width="14" height="20"/><rect x="78" y="36" width="14" height="14"/><rect x="100" y="42" width="14" height="8"/></svg>
-                )}
-                {p.viz === 'grid' && (
-                  <svg viewBox="0 0 120 56">{Array.from({ length: 24 }).map((_, k) => <rect x={6 + (k % 8) * 14} y={4 + Math.floor(k / 8) * 17} width="10" height="12" rx="1.5" class={k === 10 ? 'cfill' : ''}/>)}</svg>
-                )}
-              </span>
-              <span class="tp-text">
-                <span class="tp-title head">{p.title}{p.where && <span class="tp-where"> · {p.where}</span>}</span>
-                <span class="tp-body">{p.body}</span>
-              </span>
-              <span class="tp-metric num">{p.metric}{p.href && <span class="tp-go" aria-hidden="true"> →</span>}</span>
-            </Tag>
-          </li>
-        );})}
-      </ul>
-    </div>
-
-
+    <ul class="tk-tools" role="list" aria-label="Tools">
+      {tools.map((t) => (
+        <li>
+          {t.logo && <img src={`/logos/${t.logo}`} alt="" width="16" height="16" loading="lazy" />}
+          {t.name}
+        </li>
+      ))}
+    </ul>
   </div>
 </section>
 
 <style>
-  .tk-head { margin-bottom: 26px; }
-  .tk-head-main { grid-column: 1 / span 6; }
-  .tk-head-main .label { margin-bottom: 14px; }
-  .tk-head-copy { grid-column: 8 / span 5; }
-  :global(.tk-note) { margin-top: 18px; }
+  .tk-head { margin-bottom: 40px; }
+  .tk-head .label { margin-bottom: 12px; }
+  .tk-title { font-family: var(--font-serif-display); font-weight: 400; font-size: clamp(2rem, 1.5rem + 1.6vw, 2.9rem); letter-spacing: -0.015em; }
+  .tk-note { margin-top: 10px; display: inline-block; font-size: 1.15rem; color: var(--cobalt); transform: rotate(-1.5deg); transform-origin: left; }
 
-  .tk-steps {
-    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0;
-    border-top: 1.5px solid var(--ink);
+  /* one horizontal flow: a single rule with five stops, no cards */
+  .tk-flow { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 28px; position: relative; }
+  .tk-flow::before { content: ''; position: absolute; left: 0; right: 0; top: 11px; height: 1px; background: var(--line-strong); }
+  .tk-step { position: relative; padding-top: 34px; }
+  .tk-n {
+    position: absolute; top: 0; left: 0;
+    display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%;
+    background: var(--cream); border: 1.5px solid var(--cobalt);
+    font-family: var(--font-serif-text); font-size: 0.68rem; font-weight: 600; color: var(--cobalt);
   }
-  .tk-step { padding: 24px 22px 8px 0; }
-  .tk-step + .tk-step { padding-left: 22px; border-left: 1px solid var(--line); }
-  .tk-step-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
-  .tk-n { font-size: 0.95rem; }
-  .tk-icon { width: 46px; height: 44px; fill: none; stroke: var(--cobalt); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
-  .tk-title { font-size: 1.3rem; font-weight: 600; letter-spacing: -0.015em; }
-  .tk-body { margin-top: 10px; font-size: 0.95rem; color: var(--grey); line-height: 1.5; }
-  .tk-ex { margin-top: 16px; display: grid; gap: 4px; font-size: 0.875rem; }
-  .tk-ex li { padding-left: 14px; position: relative; }
-  .tk-ex li::before { content: ''; position: absolute; left: 0; top: 0.65em; width: 6px; height: 1.5px; background: var(--cobalt); }
+  .tk-step-title { font-family: var(--font-serif-text); font-weight: 600; font-size: 1.08rem; letter-spacing: -0.005em; }
+  .tk-body { margin-top: 6px; font-size: 0.92rem; line-height: 1.5; color: var(--grey); max-width: 26ch; }
+  .tk-ex { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 0.8rem; color: #3b3833; }
+  .tk-ex li::before { content: '·'; color: var(--cobalt); margin-right: 5px; font-weight: 700; }
 
-  .tk-practice { margin-top: clamp(64px, 7vw, 104px); }
-  .tk-practice-title { margin-bottom: 16px; font-family: var(--font-body); font-weight: 500; }
-  .tp-list { border-top: 1px solid var(--line-strong); }
-  .tp-list li { border-bottom: 1px solid var(--line); }
-  .tp-item {
-    display: grid; grid-template-columns: 130px minmax(0, 1fr) auto; gap: 28px; align-items: center;
-    padding: 18px 0;
-    transition: background-color var(--t-micro) var(--ease);
+  .tk-tools {
+    list-style: none; margin: 52px 0 0; padding: 18px 0 0;
+    border-top: 1px solid var(--line);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px 0;
+    font-size: 0.9rem; color: #3b3833;
   }
-  .tp-item.is-link:hover { background: rgba(252, 249, 242, 0.7); }
-  .tp-item.is-link:hover .tp-title { color: var(--cobalt); }
-  .tp-item.is-link:hover .tp-go { transform: translateX(3px); }
-  .tp-go { display: inline-block; transition: transform var(--t-micro) var(--ease); }
-  .tp-viz svg { width: 120px; height: 56px; }
-  .tp-viz :global(svg *) { fill: none; stroke: var(--ink); stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; opacity: 0.75; }
-  .tp-viz :global(.c) { stroke: var(--cobalt); opacity: 1; }
-  .tp-viz :global(.f) { fill: var(--paper); }
-  .tp-viz :global(.ax) { stroke: var(--line-strong); opacity: 1; }
-  .tp-viz :global(.cfill) { fill: var(--cobalt); stroke: var(--cobalt); opacity: 0.9; }
-  .tp-viz :global(.dot) { fill: var(--ink); stroke: none; opacity: 0.55; }
-  .tp-viz :global(text) { font-family: var(--font-head); font-size: 12px; fill: var(--cobalt); stroke: none; opacity: 1; font-weight: 600; }
-  .tp-text { display: grid; gap: 4px; }
-  .tp-title { font-size: 1.15rem; font-weight: 600; letter-spacing: -0.01em; transition: color var(--t-micro) var(--ease); }
-  .tp-where { color: var(--grey); font-weight: 500; }
-  .tp-body { font-size: 0.925rem; color: var(--grey); }
-  .tp-metric { font-size: 1.05rem; text-align: right; white-space: nowrap; }
+  .tk-tools li { display: inline-flex; align-items: center; gap: 6px; }
+  .tk-tools li + li::before { content: '·'; color: var(--grey); margin: 0 12px; }
+  .tk-tools img { width: 16px; height: 16px; object-fit: contain; }
 
-
-  @media (max-width: 1100px) {
-    .tk-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 0; gap: 0 24px; }
-    .tk-step, .tk-step + .tk-step { padding: 22px 0; border-left: 0; border-top: 1px solid var(--line-strong); }
-    .tk-head-main, .tk-head-copy { grid-column: 1 / -1; }
+  @media (max-width: 1000px) {
+    .tk-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 36px; }
+    .tk-flow::before { display: none; }
+    .tk-body { max-width: none; }
   }
-  @media (max-width: 640px) {
-    .tk-steps { grid-template-columns: 1fr; }
-    .tp-item { grid-template-columns: 1fr; gap: 10px; }
-    .tp-metric { text-align: left; white-space: normal; }
+  @media (max-width: 560px) {
+    .tk-flow { grid-template-columns: 1fr; }
   }
-
-  /* ---------- tools first: what I work with ---------- */
-  .tk-tools { margin-bottom: clamp(40px, 4vw, 56px); }
-  .tk-howto { margin-bottom: 40px; }
-  .tk-howto-copy { grid-column: 1 / span 7 !important; }
-  .tk-tools-kicker { margin-bottom: 14px; font-size: 1.3rem; color: var(--cobalt); transform: rotate(-1.5deg); transform-origin: left; display: inline-block; }
-  .tk-groups { display: grid; grid-template-columns: 3fr 4fr 2fr; gap: 16px; }
-  .tk-group { padding: 18px 18px 20px; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; }
-  .tk-group-name { font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--grey); margin-bottom: 14px; }
-  .tk-tool-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
-  .tk-tool {
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    width: 92px; padding: 14px 6px 12px;
-    background: #fff; border: 1px solid var(--line); border-radius: 8px;
-    transition: transform var(--t-micro) var(--ease), box-shadow var(--t-micro) var(--ease), border-color var(--t-micro);
-  }
-  .tk-tool:hover { transform: translateY(-4px) rotate(-1deg); box-shadow: var(--shadow-lift); border-color: var(--cobalt-line); }
-  .tk-logo { display: grid; place-items: center; width: 40px; height: 40px; }
-  .tk-logo img { width: 36px; height: 36px; object-fit: contain; }
-  .tk-mono { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 8px; background: #E3EAFB; color: var(--cobalt); font-weight: 700; font-size: 0.8rem; letter-spacing: -0.01em; }
-  .tk-tool-name { font-size: 0.8rem; font-weight: 500; text-align: center; line-height: 1.2; }
-  .tk-then { margin-top: 26px; font-size: 1.2rem; color: var(--ink); transform: rotate(-1deg); transform-origin: left; display: inline-block; }
-  :global(.theme-paper) .toolkit :global(.t-section) { font-family: var(--font-serif-display); font-weight: 400; letter-spacing: -0.015em; }
-  @media (max-width: 1100px) { .tk-groups { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 640px) { .tk-groups { grid-template-columns: 1fr; } .tk-tool { width: calc(33.3% - 7px); } }
 </style>

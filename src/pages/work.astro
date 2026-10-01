@@ -2,16 +2,15 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArrowLink from '../components/ArrowLink.astro';
 import Toolkit from '../components/Toolkit.astro';
-import DesSnapshot from '../components/work/DesSnapshot.astro';
+import DesFlow from '../components/work/DesFlow.astro';
 import GrowwJourneyPanel from '../components/work/GrowwJourneyPanel.astro';
 import MensaLandscape from '../components/work/MensaLandscape.astro';
 import CompanyMark from '../components/work/CompanyMark.astro';
 import { companies } from '../data/work';
 
-const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourneyPanel, mensa: MensaLandscape };
+const visuals: Record<string, any> = { 'de-shaw': DesFlow, groww: GrowwJourneyPanel, mensa: MensaLandscape };
 ---
-<BaseLayout title="Work" description="Financial research, customer operations and e-commerce: what Moksha was actually figuring out, what she worked on, and what changed.">
-
+<BaseLayout title="Work" description="Financial research, customer operations and e-commerce: what Moksha was figuring out, what she worked on, and what changed.">
   <div class="work theme-paper">
     <!-- HERO -->
     <section class="container w-hero" aria-labelledby="work-title">
@@ -20,48 +19,41 @@ const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourne
         <svg class="wh-sparks" viewBox="0 0 30 30" aria-hidden="true"><path d="M6 3 L 3 11 M 14 5 L 9 13 M 26 10 L 15 15" /></svg>
         <svg class="wh-brush" viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true">
           <path d="M2 11 C 40 6, 90 7, 140 5 S 190 6, 198 5 L 197 11 C 150 12, 100 14, 60 15 S 15 17, 3 18 Z" />
-          <path d="M40 17 C 80 15, 120 15, 160 14" class="wh-brush-2" />
         </svg>
       </div>
-      <p class="wh-copy">Real problems. Messy middles. Meaningful outcomes. <br />A few places where I’ve had the chance to think, build, and make an impact.</p>
+      <p class="wh-copy">Different problems, same instinct: understand what’s happening, find what matters, and make the next step easier.</p>
       <div class="wh-doodle hide-sm" aria-hidden="true">
         <svg viewBox="0 0 180 120">
           <path d="M6 112 L 58 52 L 78 74 L 104 30 L 150 104 L 176 116" class="mt" />
-          <path d="M58 52 L 66 76 M 104 30 L 98 58 L 104 82" class="mt mt-thin" />
           <path d="M104 30 V 10 M 104 10 L 118 14 L 104 19" class="mt" />
           <path d="M100 40 L 96 50 M 103 60 L 101 70 M 99 82 L 97 92" class="mt mt-dash" />
         </svg>
-        <p class="hand wh-note">Different problems. <br />Same curiosity. <br />Better outcomes.</p>
+        <p class="hand wh-note">different problems. <br />same curiosity.</p>
       </div>
     </section>
 
     <!-- WHAT I WAS ACTUALLY FIGURING OUT -->
-    <section class="container" aria-labelledby="figuring-title">
-      <div class="figuring">
-        <h2 class="figuring-title hand" id="figuring-title">What I was actually figuring out</h2>
-        <ul class="sum" role="list">
-          {companies.map((c) => (
-            <li>
-              <a href={`#${c.id}`} class="sum-card">
-                <CompanyMark id={c.id} name={c.name} />
-                <span class="sum-body">
-                  <span class="sum-q">{c.question}</span>
-                  <span class="sum-bullets">
-                    <span class="sum-key hand">{c.keyword}</span>
-                    {c.bullets.map((b) => <span class="sum-b">{b}</span>)}
-                  </span>
-                </span>
-                <span class="sum-go hand" aria-hidden="true">see how ↓</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
+    <section class="container figuring" aria-labelledby="figuring-title">
+      <h2 class="figuring-title hand" id="figuring-title">What I was actually figuring out</h2>
+      <ul class="sum" role="list">
+        {companies.map((c) => (
+          <li>
+            <a href={`#${c.id}`} class="sum-card">
+              <CompanyMark id={c.id} name={c.name} />
+              <span class="sum-q">{c.question}</span>
+              <span class="sum-foot">
+                <span class="sum-key hand">{c.keyword}</span>
+                <span class="sum-ev">{c.bullets.map((b) => <span>{b}</span>)}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </section>
 
     <!-- COMPANIES -->
     {companies.map((c) => {
-      const Panel = panels[c.id];
+      const Visual = visuals[c.id];
       return (
         <section class="container co-wrap" id={c.id} aria-labelledby={`${c.id}-name`}>
           <p class="co-n hand" aria-hidden="true">{c.n}</p>
@@ -72,41 +64,31 @@ const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourne
               <p class="co-role">{c.role}</p>
               <p class="co-meta">{c.place} <span aria-hidden="true">·</span> {c.dates}</p>
               <p class="co-intro">{c.intro}</p>
-              <p class="co-areas-label">Areas I worked on</p>
-              <ul class="co-areas" role="list">{c.areas.map((a) => <li>{a}</li>)}</ul>
-              <p class="hand co-note" aria-hidden="true">
-                {c.note}
-                <svg viewBox="0 0 50 30"><path d="M44 4 C 40 18, 26 26, 6 24 M 13 18 L 5 24 L 13 29" /></svg>
-              </p>
             </div>
 
-            <div class="co-mid">
-              <h3 class="panel-title">What I worked on</h3>
-              <ol class="items" role="list">
-                {c.items.map((it, i) => (
-                  <li class="item reveal" style={`--delay:${i * 90}ms`}>
-                    <span class="item-n">{String(i + 1).padStart(2, '0')}</span>
-                    <div>
-                      <h4 class="item-title">{it.title}</h4>
-                      <p class="item-body">{it.body}</p>
-                      {it.evidence && (
-                        <ul class="item-ev" role="list" aria-label="Evidence">
-                          {it.evidence.map((e) => <li>{e}</li>)}
-                        </ul>
-                      )}
-                      {it.hand && <p class="hand item-hand">{it.hand}</p>}
-                      {it.quote && <blockquote class="item-quote">{it.quote}</blockquote>}
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </div>
+            <ol class="items" role="list" aria-label={`What I worked on at ${c.name}`}>
+              {c.items.map((it, i) => (
+                <li class="item reveal" style={`--delay:${i * 80}ms`}>
+                  <span class="item-n">{String(i + 1).padStart(2, '0')}</span>
+                  <div>
+                    <h3 class="item-title">{it.title}</h3>
+                    <p class="item-body">{it.body}</p>
+                    {it.evidence && (
+                      <ul class="item-ev" role="list" aria-label="Evidence">
+                        {it.evidence.map((e) => <li>{e}</li>)}
+                      </ul>
+                    )}
+                    {it.hand && <p class="hand item-hand">{it.hand}</p>}
+                    {it.quote && <blockquote class="item-quote">{it.quote}</blockquote>}
+                  </div>
+                </li>
+              ))}
+            </ol>
 
-            <div class="co-right">
-              <Panel stats={c.outcomes} />
+            <div class="co-visual">
+              <Visual />
             </div>
           </article>
-          <p class="co-closing">{c.closing}</p>
         </section>
       );
     })}
@@ -114,42 +96,14 @@ const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourne
     <!-- TOOLKIT -->
     <Toolkit />
 
-    <!-- CLOSE -->
-    <section class="section container work-close" aria-labelledby="wclose-title">
-      <h2 class="t-section" id="wclose-title">Different problems. Same instinct.</h2>
-      <p class="body-copy wc-copy">I kept gravitating toward work that involved finding the pattern, understanding the friction, and making something clearer, faster, or easier to use.</p>
+    <!-- NEXT -->
+    <section class="container work-next">
       <ArrowLink href="/projects/" variant="button">See what I’ve built</ArrowLink>
     </section>
   </div>
 </BaseLayout>
 
 <script>
-  // numbers count up once, the first time they scroll into view
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const els = document.querySelectorAll<HTMLElement>('[data-count]');
-  const run = (el: HTMLElement) => {
-    const text = el.textContent ?? '';
-    const m = text.match(/^(\D*?)(\d[\d,]*)(.*)$/);
-    if (!m || reduce) return;
-    const [, pre, num, post] = m;
-    const target = Number(num.replace(/,/g, ''));
-    const comma = num.includes(',');
-    const t0 = performance.now();
-    const step = (t: number) => {
-      const p = Math.min(1, (t - t0) / 900);
-      const v = Math.round(target * (1 - Math.pow(1 - p, 3)));
-      el.textContent = pre + (comma ? v.toLocaleString('en-US') : String(v)) + post;
-      if (p < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  };
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => entries.forEach((e) => {
-      if (e.isIntersecting) { run(e.target as HTMLElement); io.unobserve(e.target); }
-    }), { threshold: 0.6 });
-    els.forEach((el) => io.observe(el));
-  }
-
   // 01 / 02 / 03 marker highlights for the company in view
   const markers = document.querySelectorAll<HTMLElement>('.co-n');
   if (markers.length && 'IntersectionObserver' in window) {
@@ -159,141 +113,83 @@ const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourne
     }), { rootMargin: '-45% 0px -50% 0px' });
     document.querySelectorAll('.co-wrap').forEach((sec) => so.observe(sec));
   }
-
-  // D. E. Shaw: before / after toggle
-  document.querySelectorAll<HTMLElement>('[data-before-after]').forEach((root) => {
-    const btns = root.querySelectorAll<HTMLButtonElement>('[data-mode]');
-    btns.forEach((b) => b.addEventListener('click', () => {
-      root.dataset.state = b.dataset.mode!;
-      btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-    }));
-  });
-
-  // Groww: tap a step to mark it
-  document.querySelectorAll<HTMLElement>('[data-journey]').forEach((root) => {
-    const steps = root.querySelectorAll<HTMLButtonElement>('.gj-step');
-    steps.forEach((s) => s.addEventListener('click', () => {
-      const on = s.getAttribute('aria-pressed') !== 'true';
-      steps.forEach((x) => x.setAttribute('aria-pressed', 'false'));
-      s.setAttribute('aria-pressed', String(on));
-    }));
-  });
-
-  // Mensa: find the gap
-  document.querySelectorAll<HTMLElement>('[data-gap-chart]').forEach((root) => {
-    const btn = root.querySelector<HTMLButtonElement>('.ml-toggle')!;
-    btn.addEventListener('click', () => {
-      const on = btn.getAttribute('aria-pressed') !== 'true';
-      btn.setAttribute('aria-pressed', String(on));
-      root.dataset.gap = on ? 'on' : 'off';
-    });
-  });
 </script>
 
 <style>
   /* ---------- hero ---------- */
-  .w-hero { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: end; column-gap: 36px; padding-top: clamp(28px, 4vw, 56px); padding-bottom: 28px; }
+  .w-hero { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: end; column-gap: 40px; padding-top: clamp(28px, 4vw, 56px); padding-bottom: 12px; }
   .wh-title-wrap { position: relative; }
   .wh-title { font-family: var(--font-serif-display); font-weight: 400; font-size: clamp(4.5rem, 3rem + 6vw, 8.5rem); line-height: 0.9; letter-spacing: -0.02em; color: #111; position: relative; z-index: 1; }
   .wh-sparks { position: absolute; right: -34px; top: -6px; width: 34px; height: 34px; }
   .wh-sparks path { fill: none; stroke: var(--cobalt); stroke-width: 2.4; stroke-linecap: round; }
-  .wh-brush { display: block; width: 100%; height: 22px; margin-top: 4px; }
+  .wh-brush { display: block; width: 100%; height: 18px; margin-top: 4px; }
   .wh-brush path { fill: #F5CD52; opacity: 0.9; }
-  .wh-brush .wh-brush-2 { fill: none; stroke: #F5CD52; stroke-width: 4; stroke-linecap: round; }
-  .wh-copy { font-family: var(--font-serif-text); font-size: clamp(1.05rem, 0.9rem + 0.5vw, 1.35rem); line-height: 1.5; color: #2c2a27; padding-bottom: 26px; }
-  .wh-doodle { position: relative; width: 230px; align-self: stretch; }
-  .wh-doodle svg { position: absolute; left: 0; bottom: 0; width: 190px; }
+  .wh-copy { max-width: 34ch; font-family: var(--font-serif-text); font-size: clamp(1.1rem, 0.95rem + 0.5vw, 1.4rem); line-height: 1.5; color: #2c2a27; padding-bottom: 24px; }
+  .wh-doodle { position: relative; width: 210px; height: 150px; margin-top: 40px; }
+  .wh-doodle svg { position: absolute; left: 0; bottom: 0; width: 170px; }
   .mt { fill: none; stroke: #2D45A8; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
-  .mt-thin { stroke-width: 0.8; opacity: 0.6; }
   .mt-dash { stroke-dasharray: 2 4; }
-  .wh-note { position: absolute; right: -24px; top: -48px; font-size: 1.05rem; line-height: 1.25; color: #2D45A8; transform: rotate(-14deg); }
+  .wh-note { position: absolute; right: -6px; top: -14px; font-size: 1.05rem; line-height: 1.25; color: var(--cobalt); transform: rotate(-12deg); }
 
-  /* ---------- summary ---------- */
-  .figuring { position: relative; margin-top: 18px; padding: 54px 18px 18px; border: 1px solid var(--line); border-radius: 8px; background: rgba(252, 249, 242, 0.6); }
-  .figuring-title { position: absolute; top: -20px; left: 22px; margin: 0; padding: 4px 18px 6px; font-size: clamp(1.35rem, 1.1rem + 0.7vw, 1.8rem); font-weight: 400; color: var(--ink); background: #F8E3A0; border-radius: 8px 14px 10px 12px; transform: rotate(-1deg); }
-  .sum { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-  .sum-card { position: relative; display: flex; flex-direction: column; gap: 18px; height: 100%; padding: 22px 22px 20px; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; transition: transform var(--t-micro) var(--ease), box-shadow var(--t-micro) var(--ease), border-color var(--t-micro); }
-  .sum-card:hover, .sum-card:focus-visible { transform: translateY(-4px); box-shadow: var(--shadow-lift); border-color: var(--cobalt-line); }
-  .sum-body { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 16px; }
-  .sum-q { font-family: var(--font-serif-text); font-size: 1rem; line-height: 1.45; color: #2c2a27; padding-right: 14px; border-right: 1px solid var(--line-strong); }
-  .sum-bullets { display: grid; gap: 4px; align-content: start; font-family: var(--font-serif-text); font-size: 0.9rem; color: #3b3833; }
-  .sum-b::before { content: '•'; color: var(--cobalt); margin-right: 8px; }
-  .sum-key { margin-bottom: 2px; font-size: 1.15rem; color: var(--cobalt); line-height: 1; }
-  .sum-go { position: absolute; right: 18px; top: 20px; font-size: 0.95rem; color: var(--cobalt); opacity: 0; transform: translateY(-3px); transition: opacity var(--t-micro), transform var(--t-micro) var(--ease); }
-  .sum-card:hover .sum-go, .sum-card:focus-visible .sum-go { opacity: 1; transform: none; }
+  /* ---------- summary: compact, glanceable ---------- */
+  .figuring { margin-top: clamp(40px, 5vw, 64px); }
+  .figuring-title { display: inline-block; margin: 0 0 18px; padding: 4px 16px 6px; font-size: clamp(1.3rem, 1.1rem + 0.6vw, 1.7rem); font-weight: 400; color: var(--ink); background: #F8E3A0; border-radius: 8px 14px 10px 12px; transform: rotate(-1deg); }
+  .sum { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .sum-card { display: flex; flex-direction: column; gap: 14px; height: 100%; padding: 22px 22px 18px; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; transition: transform var(--t-micro) var(--ease), border-color var(--t-micro); }
+  .sum-card:hover, .sum-card:focus-visible { transform: translateY(-3px); border-color: var(--cobalt-line); }
+  .sum-card :global(.cm--sm) { font-size: 1.55rem; }
+  .sum-q { font-family: var(--font-serif-text); font-size: 1rem; line-height: 1.45; color: #2c2a27; }
+  .sum-foot { margin-top: auto; display: flex; align-items: baseline; gap: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .sum-key { font-size: 1.1rem; color: var(--cobalt); line-height: 1; }
+  .sum-ev { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 0.85rem; font-weight: 500; color: var(--ink); }
 
-  /* ---------- company blocks ---------- */
-  .co-wrap { position: relative; margin-top: 34px; }
-  .co-n { position: absolute; left: calc(var(--gutter) - 34px); top: -14px; margin: 0; font-size: 1.4rem; color: var(--cobalt); }
+  /* ---------- company sections: open layout, no boxes ---------- */
+  .co-wrap { position: relative; margin-top: clamp(96px, 9vw, 140px); }
+  .co-n { margin: 0 0 18px; font-size: 1.4rem; color: var(--cobalt); opacity: 0.5; transform-origin: left center; width: fit-content; transition: opacity var(--t-micro), transform var(--t-micro) var(--ease); }
+  .co-n.is-current { opacity: 1; transform: scale(1.12); }
   .co {
     display: grid;
-    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.05fr) minmax(0, 1.2fr);
-    border: 1px solid var(--line); border-radius: 8px;
-    background: rgba(252, 249, 242, 0.55);
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr) minmax(0, 1fr);
+    column-gap: clamp(36px, 4vw, 64px);
+    align-items: start;
+    padding-top: 30px;
+    border-top: 1px solid var(--line);
   }
-  .co > div { padding: 30px 28px; min-width: 0; }
-  .co-mid { border-left: 1px solid var(--line); }
-  .co-right { padding: 14px !important; }
-  .co-right > :global(*) { height: 100%; padding: 22px 24px; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; }
+  .co-now { margin-top: 6px; font-size: 0.82rem; color: var(--grey); }
+  .co-role { display: inline-block; margin-top: 14px; padding: 4px 14px; font-family: var(--font-serif-text); font-size: 0.98rem; background: #F8E9BC; border-radius: 999px; }
+  .co-meta { margin-top: 8px; font-family: var(--font-serif-text); font-size: 0.92rem; color: var(--grey); }
+  .co-intro { margin-top: 20px; max-width: 38ch; font-family: var(--font-serif-text); font-size: 1.03rem; line-height: 1.6; color: #2c2a27; }
 
-  .co-role { display: inline-block; margin-top: 14px; padding: 4px 14px; font-family: var(--font-serif-text); font-size: 1rem; background: #F8E9BC; border-radius: 999px; }
-  .co-meta { margin-top: 10px; font-family: var(--font-serif-text); font-size: 0.95rem; color: var(--grey); }
-  .co-intro { margin-top: 22px; font-family: var(--font-serif-text); font-size: 1.05rem; line-height: 1.6; color: #2c2a27; }
-  .co-areas-label { margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--grey); }
-  .co-areas { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; max-width: 64%; }
-  .co-areas li { padding: 6px 14px; font-size: 0.85rem; background: rgba(23, 23, 23, 0.05); border-radius: 999px; }
-  .co-left { position: relative; }
-  .co-note { position: absolute; right: 16px; bottom: 34px; width: 112px; margin: 0; font-size: 1rem; line-height: 1.25; color: var(--cobalt); transform: rotate(-14deg); }
-  .co-note svg { display: block; width: 40px; margin: 4px 0 0 -16px; overflow: visible; }
-  .co-note path { fill: none; stroke: var(--cobalt); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+  .items { list-style: none; margin: 0; padding: 0; display: grid; gap: 34px; }
+  .item { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 14px; align-items: start; transition: transform var(--t-micro) var(--ease); }
+  .item:hover { transform: translateY(-2px); }
+  .item-n { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #E3EAFB; color: var(--cobalt); font-family: var(--font-serif-text); font-size: 0.72rem; font-weight: 600; }
+  .item-title { font-family: var(--font-serif-text); font-weight: 600; font-size: 1.08rem; color: var(--ink); }
+  .item-body { margin-top: 6px; max-width: 46ch; font-family: var(--font-serif-text); font-size: 0.95rem; line-height: 1.55; color: #4a4741; }
+  .item-ev { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .item-ev li { font-size: 0.82rem; font-weight: 600; color: var(--cobalt); }
+  .item-ev li + li::before { content: '·'; color: var(--grey); margin-right: 14px; font-weight: 400; }
+  .item-hand { margin-top: 8px; font-size: 0.95rem; line-height: 1.25; color: var(--cobalt); opacity: 0.75; transform: rotate(-1deg); transform-origin: left; max-width: 40ch; }
+  .item-quote { margin: 12px 0 0; padding-left: 12px; border-left: 2px solid var(--yellow); max-width: 42ch; font-family: var(--font-serif-text); font-style: italic; font-size: 0.95rem; line-height: 1.45; color: #3b3833; }
 
-  .work :global(.panel-title) { font-family: var(--font-serif-text); font-weight: 600; font-size: 1.2rem; letter-spacing: -0.005em; color: var(--ink); }
-  .work :global(.panel-sub) { font-weight: 400; color: #3b3833; }
-  .work :global(.ko-label) { display: inline-block; margin: 16px 0 8px; padding: 2px 12px; font-family: var(--font-hand-print); font-size: 1rem; background: #F8E3A0; border-radius: 5px; transform: rotate(-1deg); }
+  .co-visual { position: sticky; top: 110px; padding: 22px 22px 20px; background: rgba(252, 249, 242, 0.7); border-radius: 8px; }
+  .work :global(.panel-title) { font-family: var(--font-serif-text); font-weight: 600; font-size: 1rem; color: var(--ink); }
+  .work :global(.panel-sub) { font-weight: 400; color: var(--grey); }
 
-  .items { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 30px; }
-  .item { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 16px; align-items: start; padding: 10px; margin: -10px; border-radius: 8px; transition: transform var(--t-micro) var(--ease), background-color var(--t-micro); }
-  .item:hover { transform: translateY(-3px); background: rgba(252, 249, 242, 0.9); }
-  .item-ev { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
-  .item-ev li { padding: 3px 10px; font-size: 0.8rem; font-weight: 500; color: var(--cobalt); border: 1px solid var(--cobalt-line); border-radius: 999px; background: rgba(255, 255, 255, 0.5); }
-  .item-hand { margin-top: 10px; font-size: 1rem; line-height: 1.25; color: var(--cobalt); transform: rotate(-1.5deg); transform-origin: left; }
-  .item-quote { margin: 12px 0 0; padding-left: 12px; border-left: 2px solid var(--yellow); font-family: var(--font-serif-text); font-style: italic; font-size: 0.95rem; line-height: 1.45; color: #3b3833; }
-  .co-closing { margin: 14px 0 0 4px; font-family: var(--font-serif-text); font-style: italic; font-size: 0.98rem; color: var(--grey); max-width: 70ch; }
-  .co-closing::before { content: '— '; color: var(--cobalt); font-style: normal; }
-  .co-now { margin-top: 6px; font-size: 0.85rem; color: var(--grey); }
-  .co-right > :global(*) { position: sticky; top: 96px; height: auto !important; }
-  .co-n { transition: opacity var(--t-micro), transform var(--t-micro) var(--ease); opacity: 0.55; transform-origin: left center; width: fit-content; }
-  .co-n.is-current { opacity: 1; transform: scale(1.15); }
-  .item-n { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #E3EAFB; color: var(--cobalt); font-family: var(--font-serif-text); font-size: 0.8rem; font-weight: 600; transition: background-color var(--t-micro), color var(--t-micro); }
-  .item:hover .item-n { background: var(--cobalt); color: #fff; }
-  .item-title { font-family: var(--font-serif-text); font-weight: 600; font-size: 1.02rem; color: var(--ink); }
-  .item-body { margin-top: 6px; font-family: var(--font-serif-text); font-size: 0.92rem; line-height: 1.5; color: var(--grey); }
+  .work :global(.toolkit) { padding-top: clamp(110px, 10vw, 160px); }
+  .work-next { padding-top: 64px; }
 
-  /* toolkit + close keep the site's base type, spaced from the blocks above */
-  .work :global(.toolkit) { margin-top: 24px; }
-  .work-close { max-width: 820px; }
-  .wc-copy { margin: 20px 0 32px; }
-
-  @media (max-width: 1180px) {
-    .co { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-    .co-right { grid-column: 1 / -1; border-top: 1px solid var(--line); }
+  @media (max-width: 1100px) {
+    .co { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr); row-gap: 36px; }
+    .co-visual { grid-column: 1 / -1; position: static; max-width: 560px; }
     .w-hero { grid-template-columns: auto minmax(0, 1fr); }
     .wh-doodle { display: none; }
   }
-  @media (max-width: 900px) {
+  @media (max-width: 860px) {
     .sum { grid-template-columns: 1fr; }
+    .co { grid-template-columns: 1fr; }
     .w-hero { grid-template-columns: 1fr; row-gap: 12px; }
     .wh-title-wrap { width: fit-content; }
     .wh-copy { padding-bottom: 0; }
-  }
-  @media (max-width: 760px) {
-    .co { grid-template-columns: 1fr; }
-    .co-mid { border-left: 0; border-top: 1px solid var(--line); }
-    .co > div { padding: 24px 20px; }
-    .co-note { position: static; width: auto; margin-top: 18px; transform: rotate(-3deg); }
-    .co-note svg { display: none; }
-    .co-areas { max-width: none; }
-    .co-n { position: static; margin-bottom: 4px; }
-    .co-right > :global(*) { padding: 18px 16px; }
   }
 </style>
