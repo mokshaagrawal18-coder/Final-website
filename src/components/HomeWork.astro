@@ -1,0 +1,79 @@
+---
+/**
+ * Home: "A few things I've worked on" as a short trail, oldest → newest,
+ * echoing the route in the hero. Each stop: when, the company, the question, one result.
+ */
+import ArrowLink from './ArrowLink.astro';
+import CompanyMark from './work/CompanyMark.astro';
+import { companies } from '../data/work';
+
+const stops = [
+  { id: 'mensa', when: '2023', metric: '300+', unit: 'competitor products studied' },
+  { id: 'groww', when: '2024', metric: '5,000+', unit: 'customer queries analysed' },
+  { id: 'de-shaw', when: '2025 – now', metric: '2 hrs → 30 mins', unit: 'daily research tracking' },
+].map((s) => ({ ...s, c: companies.find((c) => c.id === s.id)! }));
+---
+<section class="section container hw" id="experience" aria-labelledby="hw-title">
+  <div class="hw-head">
+    <h2 class="hw-title" id="hw-title">A few things I’ve worked on</h2>
+    <ArrowLink href="/work/">see the work</ArrowLink>
+  </div>
+
+  <ol class="hw-trail" role="list">
+    {stops.map((s, i) => (
+      <li class="hw-stop reveal" style={`--delay:${i * 110}ms`}>
+        <a href={`/work/#${s.id}`} class="hw-link">
+          <span class="hw-when"><span class="hw-node" aria-hidden="true"></span>{s.when}</span>
+          <CompanyMark id={s.id} name={s.c.name} />
+          <span class="hw-q">{s.c.question}</span>
+          <span class="hw-metric">{s.metric}</span>
+          <span class="hw-unit">{s.unit}</span>
+          <span class="hw-foot">
+            <span class="hw-key hand">{s.c.keyword}</span>
+            <span class="hw-go" aria-hidden="true">read more →</span>
+          </span>
+        </a>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .hw-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 34px; }
+  .hw-title { font-size: var(--fs-section); }
+
+  .hw-trail { list-style: none; margin: 0; padding: 0; position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 3vw, 48px); }
+  /* the dashed path the three stops sit on */
+  .hw-trail::before {
+    content: ''; position: absolute; left: 6px; right: 0; top: 7px; height: 0;
+    border-top: 1.5px dashed var(--cobalt-line);
+  }
+  .hw-trail::after {
+    content: ''; position: absolute; right: -2px; top: 2px; width: 9px; height: 9px;
+    border-top: 1.5px solid var(--cobalt); border-right: 1.5px solid var(--cobalt); transform: rotate(45deg);
+  }
+
+  .hw-link { display: flex; flex-direction: column; gap: 10px; height: 100%; padding-bottom: 6px; color: var(--ink); transition: transform var(--t-micro) var(--ease); }
+  .hw-when { position: relative; width: fit-content; padding-right: 10px; background: var(--cream); display: flex; align-items: center; gap: 10px; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--grey); margin-bottom: 14px; }
+  .hw-node { width: 15px; height: 15px; border-radius: 50%; background: var(--cream); border: 2px solid var(--cobalt); flex: none; transition: background-color var(--t-micro), box-shadow var(--t-micro); }
+  .hw-link :global(.cm--sm) { font-size: 1.45rem; }
+  .hw-q { font-size: 0.98rem; line-height: 1.5; color: #4a4741; max-width: 32ch; }
+  .hw-metric { margin-top: 8px; font-family: var(--font-head); font-size: clamp(1.7rem, 1.3rem + 1.1vw, 2.3rem); line-height: 1.05; color: var(--cobalt); }
+  .hw-unit { margin-top: -4px; font-size: 0.85rem; color: var(--grey); }
+  .hw-foot { margin-top: auto; padding-top: 14px; display: flex; justify-content: space-between; align-items: baseline; }
+  .hw-key { padding: 0 8px; background: linear-gradient(transparent 50%, var(--yellow-soft) 50%); color: var(--ink); font-size: 1rem; }
+  .hw-go { font-size: 0.85rem; font-weight: 500; color: var(--cobalt); opacity: 0; transform: translateX(-4px); transition: opacity var(--t-micro), transform var(--t-micro) var(--ease); }
+
+  .hw-link:hover, .hw-link:focus-visible { transform: translateY(-3px); }
+  .hw-link:hover .hw-node, .hw-link:focus-visible .hw-node { background: var(--cobalt); box-shadow: 0 0 0 5px var(--cobalt-soft); }
+  .hw-link:hover .hw-go, .hw-link:focus-visible .hw-go { opacity: 1; transform: none; }
+
+  @media (max-width: 860px) {
+    .hw-trail { grid-template-columns: 1fr; gap: 36px; padding-left: 28px; }
+    .hw-trail::before { left: 7px; right: auto; top: 6px; bottom: 0; height: auto; border-top: 0; border-left: 1.5px dashed var(--cobalt-line); }
+    .hw-trail::after { display: none; }
+    .hw-node { position: absolute; left: -28px; }
+    .hw-go { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .hw-link:hover { transform: none; } }
+</style>

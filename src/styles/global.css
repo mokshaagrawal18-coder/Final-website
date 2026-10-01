@@ -21,16 +21,16 @@
   --grid-ink: rgba(36, 82, 214, 0.07);
 
   /* type */
-  --font-head: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+  --font-head: 'DM Serif Display', Georgia, 'Times New Roman', serif;
   --font-body: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
-  --font-hand: 'Caveat', 'Bradley Hand', 'Segoe Print', cursive;
+  --font-hand: 'Kalam', 'Bradley Hand', 'Segoe Print', cursive;
 
   --fs-page: clamp(2.5rem, 1.5rem + 3.1vw, 4.1rem);        /* ~38 → 62 */
   --fs-section: clamp(1.8rem, 1.25rem + 1.7vw, 2.8rem);    /* ~27 → 42 */
   --fs-h3: clamp(1.4rem, 1.15rem + 0.75vw, 1.85rem);       /* ~21 → 28 */
   --fs-body: clamp(1rem, 0.96rem + 0.12vw, 1.0625rem);     /* ~15 → 16 */
   --fs-small: 0.8125rem;                                   /* 13 */
-  --fs-hand: clamp(1.2rem, 1.1rem + 0.35vw, 1.45rem);      /* ~19-23 */
+  --fs-hand: clamp(1rem, 0.95rem + 0.25vw, 1.15rem);        /* Kalam runs larger than most scripts */
 
   /* layout */
   --max: 1240px;
@@ -67,6 +67,7 @@ body {
   color: var(--ink);
   font-family: var(--font-body);
   font-size: var(--fs-body);
+  font-synthesis-weight: none; /* never fake-bold the serif */
   line-height: 1.6;
   font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
@@ -81,14 +82,17 @@ body {
 /* ---------- type ---------- */
 h1, h2, h3, h4, .head {
   font-family: var(--font-head);
-  font-weight: 650;
-  line-height: 1.05;
-  letter-spacing: -0.025em;
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
-.t-page { font-size: var(--fs-page); font-weight: 700; letter-spacing: -0.035em; }
+/* small headings read better in the text face; the display serif is for large titles only */
+h3, h4 { font-family: var(--font-body); font-weight: 600; letter-spacing: -0.005em; line-height: 1.25; }
+.t-h3 { font-family: var(--font-head); font-weight: 400; }
+.t-page { font-size: var(--fs-page); font-weight: 400; letter-spacing: -0.015em; }
 .t-section { font-size: var(--fs-section); }
-.t-h3 { font-size: var(--fs-h3); line-height: 1.12; letter-spacing: -0.02em; }
+.t-h3 { font-size: var(--fs-h3); line-height: 1.12; letter-spacing: -0.01em; }
 p { text-wrap: pretty; }
 .lede { font-size: clamp(1.125rem, 1rem + 0.45vw, 1.375rem); line-height: 1.5; max-width: 34ch; }
 .body-copy { max-width: var(--measure); }
@@ -105,7 +109,7 @@ p { text-wrap: pretty; }
 }
 .num {
   font-family: var(--font-head);
-  font-weight: 600;
+  font-weight: 400;
   font-variant-numeric: tabular-nums;
   color: var(--cobalt);
 }
@@ -114,7 +118,7 @@ p { text-wrap: pretty; }
 .hand {
   font-family: var(--font-hand);
   font-size: var(--fs-hand);
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.15;
   color: var(--cobalt);
   letter-spacing: 0.005em;
@@ -322,8 +326,9 @@ main { animation: page-in 380ms var(--ease) backwards; }
 
 /* ---------- editorial paper theme (Home, Work): serif + print handwriting ---------- */
 :root {
-  --font-serif-display: 'DM Serif Display', 'Times New Roman', Georgia, serif;
-  --font-serif-text: 'Source Serif 4', Georgia, 'Times New Roman', serif;
-  --font-hand-print: 'Kalam', 'Comic Neue', 'Segoe Print', cursive;
+  /* one type system everywhere: serif display for headings, DM Sans for reading, Kalam for notes */
+  --font-serif-display: var(--font-head);
+  --font-serif-text: var(--font-body);
+  --font-hand-print: var(--font-hand);
 }
 .theme-paper { --font-hand: var(--font-hand-print); }
