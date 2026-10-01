@@ -1,0 +1,61 @@
+---
+import StatTiles from './StatTiles.astro';
+import type { Stat } from '../../data/work';
+interface Props { stats: Stat[] }
+const { stats } = Astro.props;
+// sample positions only (x: ratings, y: price) — not real products
+const rand = (() => { let s = 11; return () => ((s = (s * 9301 + 49297) % 233280) / 233280); })();
+const dots = Array.from({ length: 34 }, () => ({ x: 40 + rand() * 175, y: 18 + rand() * 120, hollow: rand() > 0.85 }));
+---
+<div class="ml" data-gap-chart data-reveal>
+  <div class="ml-head">
+    <h3 class="panel-title">Competitive landscape <span class="panel-sub">(sample view)</span></h3>
+    <button type="button" class="ml-toggle hand" aria-pressed="false">find the gap →</button>
+  </div>
+  <div class="ml-row">
+    <svg class="ml-chart" viewBox="0 0 300 175" role="img" aria-label="Sample scatter of competitor products by price and rating, with TrustBasket's focus area highlighted at higher ratings.">
+      <path d="M30 150 V 10 M26 15 L30 8 L34 15" class="ml-axis" />
+      <path d="M30 150 H 250 M243 146 L250 150 L243 154" class="ml-axis" />
+      <line x1="130" y1="14" x2="130" y2="150" class="ml-mid" />
+      <text x="24" y="16" class="ml-t ml-t--end">Higher price</text>
+      <text x="24" y="146" class="ml-t ml-t--end">Lower price</text>
+      <text x="70" y="166" class="ml-t">Lower ratings</text>
+      <text x="200" y="166" class="ml-t">Higher ratings</text>
+      <g class="ml-dots">
+        {dots.map((d, i) => <circle cx={d.x.toFixed(1)} cy={d.y.toFixed(1)} r="3" class:list={{ hollow: d.hollow }} style={`--i:${i}`} />)}
+      </g>
+      <ellipse cx="236" cy="45" rx="44" ry="28" class="ml-zone" />
+      <circle cx="222" cy="44" r="9" class="ml-us-halo" />
+      <circle cx="222" cy="44" r="3.4" class="ml-us" />
+      <text x="234" y="41" class="ml-us-t">TrustBasket</text>
+      <text x="234" y="52" class="ml-us-t">(our focus)</text>
+    </svg>
+    <p class="hand ml-note" aria-hidden="true">Find the gaps. Build what’s next.</p>
+  </div>
+  <p class="ko-label">Key outcomes</p>
+  <StatTiles stats={stats} />
+</div>
+
+<style>
+  .ml-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .ml-toggle { min-height: 34px; padding: 0 12px; border: 1px dashed var(--cobalt-line); border-radius: 999px; background: none; color: var(--cobalt); font-size: 0.95rem; transition: background-color var(--t-micro); }
+  .ml-toggle:hover, .ml-toggle[aria-pressed='true'] { background: rgba(36, 82, 214, 0.08); }
+  .ml-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.28fr); align-items: center; gap: 8px; margin-top: 4px; }
+  .ml-chart { width: 100%; height: auto; overflow: visible; }
+  .ml-axis { fill: none; stroke: var(--ink); stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
+  .ml-mid { stroke: var(--line-strong); stroke-dasharray: 2 3; }
+  .ml-t { font-family: var(--font-serif-text); font-size: 8px; fill: var(--grey); text-anchor: middle; }
+  .ml-t--end { text-anchor: end; }
+  .ml-dots circle { fill: #A8A49C; transition: opacity 400ms var(--ease), fill 300ms; }
+  .ml-dots circle.hollow { fill: none; stroke: #A8A49C; }
+  :global(.js) .ml:not(.is-in) .ml-dots circle { opacity: 0; }
+  .ml-dots circle { transition-delay: calc(var(--i) * 18ms); }
+  .ml-zone { fill: rgba(242, 200, 75, 0.12); stroke: var(--yellow); stroke-width: 1; stroke-dasharray: 3 3; transition: fill 300ms, stroke-width 300ms; }
+  .ml-us-halo { fill: rgba(242, 200, 75, 0.7); }
+  .ml-us { fill: var(--cobalt); }
+  .ml-us-t { font-family: var(--font-serif-text); font-size: 8.5px; fill: var(--cobalt); }
+  .ml-note { font-size: 1rem; line-height: 1.2; transform: rotate(-12deg); }
+  [data-gap='on'] .ml-dots circle { opacity: 0.35; }
+  [data-gap='on'] .ml-zone { fill: rgba(242, 200, 75, 0.3); stroke-width: 1.6; }
+  @media (max-width: 640px) { .ml-row { grid-template-columns: 1fr; } }
+</style>

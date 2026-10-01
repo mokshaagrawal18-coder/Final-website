@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ArrowLink from '../components/ArrowLink.astro';
 import HomeRoute from '../components/HomeRoute.astro';
 import FeaturedStrip from '../components/FeaturedStrip.astro';
+import PaperFonts from '../components/PaperFonts.astro';
 
 const proof = [
   { name: 'D. E. Shaw', tags: 'financial research · automation · structured data', metric: '~5 hrs → ~2 mins', href: '/work/#de-shaw' },
@@ -40,11 +41,9 @@ const paper = [...edge(TL, TR, 28, 0.9), ...edge(TR, BR, 28, 0.9), ...edge(BR, B
 const personClip = ['-30% -40%', '130% -40%', ...edge(BR, BL, 28, 1.1)].join(', ');
 ---
 <BaseLayout description="Hi, I’m Moksha. I like making complicated things simpler: data, research, systems, and the occasional better question.">
-  <Fragment slot="head">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Kalam:wght@400&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" />
-  </Fragment>
+  <Fragment slot="head"><PaperFonts /></Fragment>
 
-  <div class="home">
+  <div class="home theme-paper">
     <!-- HOME 1 · HERO -->
     <section class="hh" aria-labelledby="hi">
       <div class="hh-stage" style={`--u:${U}cqw`}>
@@ -146,10 +145,6 @@ const personClip = ['-30% -40%', '130% -40%', ...edge(BR, BL, 28, 1.1)].join(', 
 <style>
   .home {
     overflow-x: clip;
-    --font-serif-display: 'DM Serif Display', 'Times New Roman', Georgia, serif;
-    --font-serif-text: 'Source Serif 4', Georgia, 'Times New Roman', serif;
-    --font-hand-print: 'Kalam', 'Comic Neue', 'Segoe Print', cursive;
-    --font-hand: var(--font-hand-print);
   }
 
   /* ---------- hero frame: everything placed in reference units ---------- */

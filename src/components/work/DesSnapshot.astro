@@ -1,0 +1,72 @@
+---
+import StatTiles from './StatTiles.astro';
+import type { Stat } from '../../data/work';
+interface Props { stats: Stat[] }
+const { stats } = Astro.props;
+---
+<div class="snap" data-before-after data-reveal>
+  <span class="snap-tape" aria-hidden="true"></span>
+  <h3 class="panel-title">Impact snapshot</h3>
+  <StatTiles stats={stats} variant="circles" />
+
+  <div class="snap-chart">
+    <div class="ba-toggle" role="group" aria-label="Show the research workflow">
+      <button type="button" data-mode="before" aria-pressed="false">before</button>
+      <button type="button" data-mode="after" aria-pressed="true">after</button>
+    </div>
+    <svg class="ba" viewBox="0 0 300 140" role="img" aria-labelledby="ba-desc">
+      <desc id="ba-desc">Manual research and monitoring took about 5 hours; the automated workflow takes about 2 minutes.</desc>
+      <line x1="10" y1="112" x2="290" y2="112" class="ba-axis" />
+      <defs>
+        <pattern id="baHatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" class="ba-hatch" /></pattern>
+      </defs>
+      <!-- manual bar -->
+      <rect x="40" y="22" width="34" height="90" class="ba-bar ba-bar--manual" />
+      <rect x="40" y="22" width="34" height="90" fill="url(#baHatch)" class="ba-bar-hatch" />
+      <text x="57" y="15" class="ba-num">~ 5 hrs</text>
+      <!-- automated bar -->
+      <rect x="222" y="103" width="38" height="9" class="ba-bar ba-bar--auto" />
+      <text x="241" y="96" class="ba-num">~2 mins</text>
+      <path d="M90 24 C 100 70, 140 92, 200 92" class="ba-arrow" />
+      <path d="M193 87 L 201 92 L 193 97" class="ba-arrow" />
+      <text x="57" y="128" class="ba-lbl">Manual research</text>
+      <text x="57" y="138" class="ba-lbl">and monitoring</text>
+      <text x="241" y="128" class="ba-lbl">Automated workflow</text>
+    </svg>
+    <p class="hand snap-mid" aria-hidden="true">Same work.<br />A simpler way.</p>
+    <p class="hand snap-quote">“Make complex things feel simple. That’s the real win.”</p>
+  </div>
+</div>
+
+<style>
+  .snap { position: relative; }
+  .snap-tape { position: absolute; top: -34px; left: 50%; width: 70px; height: 22px; margin-left: -35px; background: rgba(232, 214, 160, 0.85); transform: rotate(4deg); }
+  .snap-chart { position: relative; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr); align-items: center; gap: 12px; margin-top: 14px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .ba { width: 100%; height: auto; overflow: visible; }
+  .ba-axis { stroke: rgba(23, 23, 23, 0.4); stroke-width: 1; }
+  .ba-hatch { stroke: rgba(36, 82, 214, 0.45); stroke-width: 2; }
+  .ba-bar { stroke: var(--cobalt); stroke-width: 1.4; fill: #D5E0FA; }
+  .ba-bar--manual, .ba-bar-hatch { transform-box: fill-box; transform-origin: bottom; transition: transform 700ms var(--ease), opacity 400ms; }
+  .ba-num { font-family: var(--font-serif-text); font-size: 11px; font-weight: 600; text-anchor: middle; fill: var(--ink); }
+  .ba-lbl { font-family: var(--font-serif-text); font-size: 9px; text-anchor: middle; fill: var(--grey); }
+  .ba-arrow { fill: none; stroke: var(--cobalt); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; transition: opacity 400ms; }
+  .ba-bar--auto { transition: opacity 400ms; }
+
+  /* "after" is the resting state; "before" hides the automated side */
+  [data-state='before'] .ba-bar--auto, [data-state='before'] .ba-arrow { opacity: 0.12; }
+  [data-state='before'] .ba-bar--manual, [data-state='before'] .ba-bar-hatch { transform: none; }
+  :global(.js) .snap:not(.is-in) .ba-bar--manual, :global(.js) .snap:not(.is-in) .ba-bar-hatch { transform: scaleY(0); }
+
+  .ba-toggle { grid-column: 1 / -1; justify-self: start; z-index: 1; display: inline-flex; border: 1px solid var(--line-strong); border-radius: 999px; padding: 2px; background: var(--paper); }
+  .ba-toggle button { min-height: 30px; padding: 0 12px; border: 0; border-radius: 999px; background: none; font-family: var(--font-hand-print); font-size: 0.95rem; color: var(--grey); transition: background-color var(--t-micro), color var(--t-micro); }
+  .ba-toggle button[aria-pressed='true'] { background: var(--cobalt); color: #fff; }
+  .ba-toggle button:hover:not([aria-pressed='true']) { color: var(--cobalt); }
+
+  .snap-mid { position: absolute; left: 36%; top: 64px; font-size: 1rem; line-height: 1.2; transform: rotate(-8deg); pointer-events: none; }
+  .snap-quote { font-size: 1.05rem; line-height: 1.3; transform: rotate(-8deg); }
+
+  @media (max-width: 640px) {
+    .snap-chart { grid-template-columns: 1fr; }
+    .snap-mid { display: none; }
+  }
+</style>
