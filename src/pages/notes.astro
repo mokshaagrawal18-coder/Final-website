@@ -1,44 +1,251 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import NoteCard from '../components/NoteCard.astro';
-import { notesList } from '../data/notes';
+import FutureLetter from '../components/FutureLetter.astro';
 
-const sorted = [...notesList].sort((a, b) => b.date.localeCompare(a.date));
-const featured = sorted.filter((n) => n.featured).slice(0, 3);
-const rest = sorted.filter((n) => !featured.includes(n));
+const changed = [
+  { was: 'Being good at something means needing less help.', now: 'The better I get, the earlier I ask the question.' },
+  { was: 'The plan is the plan.', now: 'Until someone says, “should we just go?”' },
+  { was: 'A new hobby should at least lead somewhere.', now: 'Three weeks of unreasonable enthusiasm can be enough.' },
+];
+
+const current = [
+  { k: 'currently building', v: 'this website. still.' },
+  { k: 'current craving', v: 'cheesy fiesta potatoes.' },
+  { k: 'currently collecting', v: 'tiny UX choices.' },
+  { k: 'social media status', v: '“off social media.” allegedly.' },
+  { k: 'currently watching', v: 'business case breakdowns.' },
+  { k: 'unfinished ambition', v: 'learn Spanish properly.' },
+];
 ---
-<BaseLayout title="Notes" description="Things Moksha keeps noticing, questioning, or getting curious about.">
-  <section class="container notes-hero">
-    <h1 class="t-page">Notes</h1>
-    <p class="lede notes-sub">Things I keep noticing, questioning, or getting curious about.</p>
-  </section>
+<BaseLayout title="Notes" description="Things Moksha wanted to keep somewhere: some changed, some current, one for later.">
+  <div class="notes theme-paper">
+    <header class="container n-hero">
+      <h1 class="n-title">Notes</h1>
+      <p class="n-sub">things I wanted to keep somewhere.</p>
+      <p class="hand n-aside" aria-hidden="true">some changed. <br />some current. <br />one for later.</p>
+    </header>
 
-  <section class="section container" aria-label="Notes">
-    {sorted.length === 0 ? (
-      <div class="empty">
-        <p class="hand empty-soon">more soon.</p>
+    <div class="container n-body">
+      <!-- then → now → later rail -->
+      <ol class="rail" aria-hidden="true">
+        <li>then</li><li>now</li><li>later</li>
+      </ol>
+
+      <div class="n-sections">
+        <!-- 01 · CHANGED MY MIND -->
+        <section class="n-sec" id="changed" aria-labelledby="changed-title" data-changed>
+          <div class="n-head">
+            <h2 id="changed-title"><span class="n-num">01.</span> things I changed my mind about</h2>
+            <p class="n-count" aria-live="polite"><span data-pos>01</span> / {String(changed.length).padStart(2, '0')}</p>
+          </div>
+
+          <div class="cm-stage">
+            {changed.map((c, i) => (
+              <figure class="cm" data-slide hidden={i !== 0 ? true : undefined}>
+                <p class="cm-was"><span class="visually-hidden">I used to think: </span><span class="cm-strike">{c.was}</span></p>
+                <p class="cm-now"><span class="visually-hidden">Now: </span>{c.now}</p>
+              </figure>
+            ))}
+          </div>
+
+          <div class="cm-nav">
+            <button type="button" class="n-btn" data-prev aria-label="Previous note">← previous</button>
+            <span class="cm-dots" aria-hidden="true">{changed.map(() => <i></i>)}</span>
+            <button type="button" class="n-btn" data-next aria-label="Next note">next →</button>
+          </div>
+          <p class="hand n-tiny">subject to further revision.</p>
+        </section>
+
+        <!-- 02 · CURRENT VERSION OF ME -->
+        <section class="n-sec" id="now" aria-labelledby="now-title" data-now>
+          <div class="n-head">
+            <h2 id="now-title"><span class="n-num">02.</span> current version of me — oct 2026</h2>
+            <button type="button" class="n-btn n-refresh" data-refresh>refresh <span aria-hidden="true">↻</span></button>
+          </div>
+
+          <div class="exe">
+            <div class="exe-bar">
+              <span class="exe-light" aria-hidden="true"></span>
+              <span class="exe-name">moksha.exe</span>
+              <span class="exe-upd">last updated: oct 2026</span>
+            </div>
+            <dl class="exe-rows">
+              {current.map((r, i) => (
+                <div class="exe-row" style={`--i:${i}`}>
+                  <dt>{r.k}</dt>
+                  <dd data-type={r.v}>{r.v}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+
+        <!-- 03 · FOR FUTURE ME -->
+        <section class="n-sec" id="later" aria-labelledby="later-title">
+          <div class="n-head">
+            <h2 id="later-title"><span class="n-num">03.</span> for future me</h2>
+          </div>
+          <p class="n-meta">written: 2026 <br />open: whenever</p>
+          <div class="n-letter">
+            <FutureLetter />
+          </div>
+        </section>
       </div>
-    ) : (
-      <>
-        {featured.length > 0 && (
-          <ul class="featured" role="list">
-            {featured.map((n) => <li><NoteCard note={n} featured /></li>)}
-          </ul>
-        )}
-        {rest.length > 0 && (
-          <ul class="rest" role="list">
-            {rest.map((n) => <li><NoteCard note={n} /></li>)}
-          </ul>
-        )}
-      </>
-    )}
-  </section>
+    </div>
+  </div>
 </BaseLayout>
 
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // 01 · step through the changed-my-mind notes; the old line gets crossed out each time
+  document.querySelectorAll<HTMLElement>('[data-changed]').forEach((root) => {
+    const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-slide]'));
+    const dots = Array.from(root.querySelectorAll<HTMLElement>('.cm-dots i'));
+    const pos = root.querySelector<HTMLElement>('[data-pos]')!;
+    let i = 0;
+    const show = (n: number) => {
+      i = (n + slides.length) % slides.length;
+      slides.forEach((s, j) => {
+        s.hidden = j !== i;
+        s.classList.remove('is-live');
+      });
+      void slides[i].offsetWidth;
+      slides[i].classList.add('is-live');
+      dots.forEach((d, j) => d.classList.toggle('is-on', j === i));
+      pos.textContent = String(i + 1).padStart(2, '0');
+    };
+    root.querySelector('[data-prev]')!.addEventListener('click', () => show(i - 1));
+    root.querySelector('[data-next]')!.addEventListener('click', () => show(i + 1));
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') show(i + 1);
+      if (e.key === 'ArrowLeft') show(i - 1);
+    });
+    // first strike happens when the section scrolls into view
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((es) => es.forEach((e) => {
+        if (e.isIntersecting) { show(0); io.disconnect(); }
+      }), { threshold: 0.4 });
+      io.observe(root);
+    } else show(0);
+  });
+
+  // 02 · "refresh" re-types the status rows
+  document.querySelectorAll<HTMLElement>('[data-now]').forEach((root) => {
+    const cells = Array.from(root.querySelectorAll<HTMLElement>('[data-type]'));
+    const light = root.querySelector<HTMLElement>('.exe-light')!;
+    let running = false;
+    const type = async () => {
+      if (running) return;
+      running = true;
+      light.classList.add('is-busy');
+      if (reduce) { await new Promise((r) => setTimeout(r, 300)); }
+      else {
+        cells.forEach((c) => { c.textContent = ''; c.classList.add('is-typing'); });
+        for (const c of cells) {
+          const full = c.dataset.type!;
+          for (let k = 1; k <= full.length; k++) {
+            c.textContent = full.slice(0, k);
+            await new Promise((r) => setTimeout(r, 18));
+          }
+          c.classList.remove('is-typing');
+        }
+      }
+      light.classList.remove('is-busy');
+      running = false;
+    };
+    root.querySelector('[data-refresh]')!.addEventListener('click', type);
+    if ('IntersectionObserver' in window && !reduce) {
+      const io = new IntersectionObserver((es) => es.forEach((e) => {
+        if (e.isIntersecting) { type(); io.disconnect(); }
+      }), { threshold: 0.5 });
+      io.observe(root);
+    }
+  });
+</script>
+
 <style>
-  .notes-hero { padding-top: clamp(40px, 6vw, 96px); }
-  .notes-sub { margin-top: 24px; }
-  .featured { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-  .rest { margin-top: 64px; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0 32px; }
-  .empty-soon { font-size: 2rem; color: var(--ink); transform: rotate(-2deg); transform-origin: left; display: inline-block; }
+  .notes { --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; }
+
+  /* hero */
+  .n-hero { position: relative; padding-top: clamp(32px, 5vw, 72px); }
+  .n-title { font-family: var(--font-serif-display); font-weight: 400; font-size: clamp(3.4rem, 2.4rem + 3.6vw, 5.6rem); line-height: 0.95; letter-spacing: -0.02em; }
+  .n-sub { margin-top: 10px; font-family: var(--font-serif-text); font-size: clamp(1.05rem, 0.95rem + 0.4vw, 1.3rem); color: #3b3833; }
+  .n-aside { position: absolute; right: var(--gutter); top: clamp(40px, 6vw, 84px); font-size: 1.15rem; line-height: 1.2; color: var(--cobalt); transform: rotate(-8deg); }
+
+  /* layout: rail + sections */
+  .n-body { display: grid; grid-template-columns: 70px minmax(0, 760px); column-gap: clamp(20px, 3vw, 48px); margin-top: clamp(48px, 5vw, 72px); }
+  .rail { list-style: none; margin: 0; padding: 0; position: relative; display: flex; flex-direction: column; justify-content: space-between; align-items: center; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--grey); }
+  .rail::before { content: ''; position: absolute; top: 22px; bottom: 22px; left: 50%; width: 1px; background: linear-gradient(var(--line-strong), var(--cobalt-line), var(--line-strong)); }
+  .rail li { position: relative; padding: 4px 0; background: var(--cream); }
+
+  .n-sections { display: grid; gap: clamp(72px, 7vw, 104px); }
+  .n-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .n-head h2 { font-family: var(--font-serif-text); font-weight: 400; font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem); color: var(--ink); }
+  .n-num { font-family: var(--mono); font-size: 0.8em; color: var(--grey); margin-right: 6px; }
+  .n-count { font-family: var(--mono); font-size: 0.8rem; color: var(--grey); }
+  .n-btn {
+    min-height: 40px; padding: 0 4px; border: 0; background: none;
+    font-family: var(--mono); font-size: 0.8rem; color: var(--grey);
+    transition: color var(--t-micro);
+  }
+  .n-btn:hover, .n-btn:focus-visible { color: var(--cobalt); }
+  .n-tiny { margin-top: 6px; font-size: 1rem; color: var(--cobalt); transform: rotate(-1.5deg); transform-origin: left; display: inline-block; }
+
+  /* 01 · changed my mind */
+  .cm-stage { margin-top: 28px; min-height: 120px; }
+  .cm { margin: 0; }
+  .cm-was { font-family: var(--font-serif-text); font-size: clamp(1.15rem, 1rem + 0.6vw, 1.45rem); color: var(--grey); }
+  .cm-strike {
+    background-image: linear-gradient(var(--ink), var(--ink));
+    background-size: 100% 1.5px; background-position: 0 58%; background-repeat: no-repeat;
+  }
+  .cm-now { margin-top: 10px; font-family: var(--font-serif-text); font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.65rem); line-height: 1.35; color: var(--cobalt); }
+  :global(.js) .cm-strike { background-size: 0% 1.5px; }
+  :global(.js) .cm.is-live .cm-strike { animation: strike 520ms var(--ease) 250ms forwards; }
+  :global(.js) .cm .cm-now { opacity: 0; transform: translateY(6px); }
+  :global(.js) .cm.is-live .cm-now { animation: rise 420ms var(--ease) 720ms forwards; }
+  @keyframes strike { to { background-size: 100% 1.5px; } }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+
+  .cm-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; padding-top: 10px; border-top: 1px solid var(--line); }
+  .cm-dots { display: flex; gap: 8px; }
+  .cm-dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line-strong); transition: background-color var(--t-micro), transform var(--t-micro); }
+  .cm-dots i.is-on { background: var(--cobalt); transform: scale(1.25); }
+
+  /* 02 · moksha.exe */
+  .n-refresh span { display: inline-block; transition: transform 400ms var(--ease); }
+  .n-refresh:hover span { transform: rotate(180deg); }
+  .exe { margin-top: 20px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--paper); overflow: hidden; }
+  .exe-bar { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 0.78rem; }
+  .exe-light { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid #D4A82A; background: var(--yellow); }
+  .exe-light.is-busy { animation: blink 500ms steps(2) infinite; }
+  @keyframes blink { 50% { opacity: 0.25; } }
+  .exe-name { font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+  .exe-upd { margin-left: auto; color: var(--grey); letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.7rem; }
+  .exe-rows { margin: 0; padding: 10px 18px 14px; }
+  .exe-row { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 16px; padding: 7px 0; font-family: var(--mono); font-size: 0.85rem; }
+  .exe-row + .exe-row { border-top: 1px dashed var(--line); }
+  .exe-row dt { color: var(--grey); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.72rem; padding-top: 2px; }
+  .exe-row dd { margin: 0; color: var(--ink); min-height: 1.4em; }
+  .exe-row dd.is-typing::after { content: '▍'; color: var(--cobalt); margin-left: 1px; }
+  .exe-row:hover dd { color: var(--cobalt); }
+
+  /* 03 · for future me */
+  .n-meta { margin-top: 10px; font-family: var(--mono); font-size: 0.78rem; line-height: 1.6; color: var(--grey); }
+  .n-letter { margin-top: 18px; }
+
+  @media (max-width: 760px) {
+    .n-body { grid-template-columns: 1fr; }
+    .rail { display: none; }
+    .n-aside { position: static; margin-top: 14px; display: inline-block; transform: rotate(-3deg); }
+    .n-aside br { display: none; }
+    .exe-row { grid-template-columns: 1fr; gap: 2px; }
+    .exe-upd { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .cm-strike { background-size: 100% 1.5px; }
+    :global(.js) .cm .cm-now { opacity: 1; transform: none; }
+    .exe-light.is-busy { animation: none; }
+  }
 </style>

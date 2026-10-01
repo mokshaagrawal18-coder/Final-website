@@ -29,9 +29,9 @@ export const site = {
   healthcareReport: '/reports/Healthcare-Expenditure-Gender-Analysis.pdf',
 };
 
-// Notes stays reachable at /notes/ but is out of the main navigation until a first article exists.
 export const nav = [
   { label: 'About', href: '/about/' },
   { label: 'Work', href: '/work/' },
   { label: 'Projects', href: '/projects/' },
+  { label: 'Notes', href: '/notes/' },
 ];

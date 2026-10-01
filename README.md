@@ -24,7 +24,7 @@ All links live in `src/data/site.ts`. An empty value hides that link everywhere 
 | Healthcare full report | `site.healthcareReport` | optional |
 | Final domain | `site` in `astro.config.mjs` | set when known |
 
-Notes is out of the main navigation until a first article exists; `/notes/` still works if visited directly.
+
 
 ## Where things live
 
@@ -34,6 +34,6 @@ Notes is out of the main navigation until a first article exists; `/notes/` stil
 - `src/components/visuals/`: the diagrams (explanatory illustrations are labelled as such)
 - `src/pages/`: one file per route
 
-## Adding a note
+## Notes page
 
-Add an entry to `notesList` in `src/data/notes.ts`. Set `featured: true` for the top slots (max 3). The empty state disappears automatically.
+Notes content lives directly in `src/pages/notes.astro` (the `changed` and `current` lists at the top).

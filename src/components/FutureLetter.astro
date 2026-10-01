@@ -24,6 +24,7 @@ const lines = [
     <div class="fl-flap"></div>
     <div class="fl-front">
       <span class="fl-to hand">for future me</span>
+      <span class="fl-date hand">2026 → ?</span>
     </div>
     <span class="fl-seal"></span>
   </div>
@@ -63,7 +64,7 @@ const lines = [
     overflow: hidden;
     padding: 36px 40px 30px;
     background-color: var(--paper);
-    border-top: 2px solid var(--cobalt);
+    border-top: 2px solid transparent;
     color: var(--ink);
     font-size: 1.075rem;
     line-height: 1.6;
@@ -76,7 +77,9 @@ const lines = [
   .is-enhanced .fl-letter { min-height: 0; transform: translateY(60px); transition: transform 620ms var(--ease) 180ms, padding 620ms var(--ease) 180ms; padding-block: 0; }
   .is-enhanced .fl-letter p { opacity: 0; transform: translateY(6px); transition: opacity 360ms var(--ease), transform 360ms var(--ease); }
   .is-enhanced.is-open .fl-letter-wrap { grid-template-rows: 1fr; z-index: 3; }
-  .is-enhanced.is-open .fl-letter { transform: none; padding-block: 36px 30px; }
+  .is-enhanced.is-open .fl-letter { transform: none; padding-block: 36px 30px; border-top-color: var(--cobalt); }
+  .future:not(.is-enhanced) .fl-letter { border-top-color: var(--cobalt); }
+  .is-enhanced:not(.is-open) .fl-letter { box-shadow: none; border-top-width: 0; }
   .is-enhanced.is-open .fl-letter p { opacity: 1; transform: none; transition-delay: calc(560ms + var(--i) * 110ms); }
 
   /* envelope */
@@ -92,6 +95,7 @@ const lines = [
     display: flex; align-items: flex-end; justify-content: center; padding-bottom: 26px;
   }
   .fl-to { font-size: 1.5rem; transform: rotate(-3deg); }
+  .fl-date { position: absolute; right: 16px; bottom: 10px; font-size: 0.95rem; color: var(--grey); }
   .fl-flap {
     top: 0; height: 104px;
     background: linear-gradient(to bottom, #F4ECDB, #EFE5D1);
