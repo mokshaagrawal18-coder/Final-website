@@ -19,10 +19,10 @@ All links live in `src/data/site.ts`. An empty value hides that link everywhere 
 | Email | `site.email` | set |
 | LinkedIn profile URL | `site.linkedin` | **needed** |
 | GitHub profile URL | `site.github` | **needed** |
-| Résumé PDF | `public/resume/Moksha-Agrawal-Resume.pdf` | **needed** (buttons appear automatically once the file exists) |
+| Résumé PDF | `public/resume/Moksha-Agrawal-Resume.pdf` | set |
 | Random Drift link | `site.randomDrift` | optional |
 | Healthcare full report | `site.healthcareReport` | optional |
-| Final domain | `site` in `astro.config.mjs` | set when known |
+| Final domain | `site` in `astro.config.mjs` | set (mokshaagrawal.vercel.app) |
 
 
 

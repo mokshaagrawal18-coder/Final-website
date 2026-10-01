@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 
 export default defineConfig({
   // Set this to the final domain before deploying (used for canonical URLs).
-  site: 'https://mokshaagrawal.com',
+  site: 'https://mokshaagrawal.vercel.app',
   trailingSlash: 'ignore',
   build: { format: 'directory' },
 });
