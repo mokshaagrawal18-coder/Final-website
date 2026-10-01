@@ -1,49 +1,73 @@
 ---
 import { site } from '../data/site';
+
+const links = [
+  { label: 'Email', href: `mailto:${site.email}` },
+  site.linkedin && { label: 'LinkedIn', href: site.linkedin, external: true },
+  site.github && { label: 'GitHub', href: site.github, external: true },
+  site.resume && { label: 'Résumé', href: site.resume, external: true },
+].filter(Boolean) as { label: string; href: string; external?: boolean }[];
 ---
 <footer class="site-footer">
-  <div class="container">
-    <hr class="footer-rule" />
-    <div class="footer-grid">
-      <p class="footer-main head">Thanks for looking a little closer.</p>
-      <ul class="footer-links" role="list">
-        <li><a href={`mailto:${site.email}`}>Email</a></li>
-        {site.linkedin && <li><a href={site.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></li>}
-        {site.github && <li><a href={site.github} target="_blank" rel="noopener noreferrer">GitHub</a></li>}
-        {site.resume && <li><a href={site.resume} target="_blank" rel="noopener">Résumé</a></li>}
-      </ul>
-    </div>
-    <div class="footer-base">
-      <p class="hand hand--grey built">Built with too many tabs open.</p>
-      <a href="#top" class="arrow-link arrow-link--ink to-top" data-to-top><span class="al-text">Back to top</span> <span class="al-arrow al-arrow--up" aria-hidden="true">↑</span></a>
-      <p class="copy">© 2026 Moksha Agrawal</p>
-    </div>
+  <div class="container footer-inner">
+    <svg class="footer-squiggle" viewBox="0 0 60 12" aria-hidden="true"><path d="M2 8 C 10 2, 16 2, 22 6 S 34 11, 40 6 S 52 2, 58 6" /></svg>
+    <p class="footer-main">Thanks for looking a little closer.</p>
+    <ul class="footer-links" role="list">
+      {links.map((l) => (
+        <li>
+          <a href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{l.label}</a>
+        </li>
+      ))}
+    </ul>
+    <p class="footer-built">
+      built with too many tabs open.
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" /><path d="M8.5 14.5 C 10 16.5, 14 16.5, 15.5 14.5 M 9 9.5 h.01 M 15 9.5 h.01" /></svg>
+    </p>
+    <p class="footer-copy">© 2026 Moksha Agrawal</p>
+
+    <a href="#top" class="to-top">
+      <svg viewBox="0 0 16 24" aria-hidden="true"><path d="M8 22 V 3 M 2 9 L 8 2 L 14 9" /></svg>
+      <span>Back to top</span>
+    </a>
   </div>
 </footer>
 
 <style>
-  .site-footer { margin-top: auto; padding: clamp(72px, 8vw, 120px) 0 28px; }
-  .footer-rule { border: 0; height: 1.5px; background: var(--cobalt); margin: 0 0 clamp(36px, 4vw, 56px); }
-  .footer-grid { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 24px 48px; }
-  .footer-main { font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.4rem); font-weight: 600; max-width: 18ch; }
-  .footer-links { display: flex; flex-wrap: wrap; gap: 4px 28px; }
+  .site-footer { margin-top: auto; padding: clamp(36px, 4vw, 60px) 0 28px; }
+  .footer-inner { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; border-top: 1px solid var(--line); padding-top: 34px; }
+
+  .footer-squiggle { width: 44px; height: 10px; margin-bottom: 4px; overflow: visible; }
+  .footer-squiggle path { fill: none; stroke: var(--cobalt); stroke-width: 1.8; stroke-linecap: round; }
+  .footer-main { font-family: var(--font-serif-text); font-weight: 600; font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); letter-spacing: -0.005em; color: var(--ink); }
+
+  .footer-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; }
+  .footer-links li + li::before { content: '·'; color: var(--grey); margin: 0 12px; }
   .footer-links a {
     display: inline-flex; align-items: center; min-height: 44px;
-    font-weight: 500;
+    font-size: 0.95rem; color: #3b3833;
     background-image: linear-gradient(var(--cobalt), var(--cobalt));
     background-size: 0 1.5px; background-position: 0 78%; background-repeat: no-repeat;
-    transition: background-size var(--t-micro) var(--ease), color var(--t-micro) var(--ease);
+    transition: background-size var(--t-micro) var(--ease), color var(--t-micro);
   }
-  .footer-links a:hover { color: var(--cobalt); background-size: 100% 1.5px; }
-  .footer-base {
-    margin-top: clamp(40px, 5vw, 64px);
-    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px;
-    font-size: 0.875rem; color: var(--grey);
+  .footer-links a:hover, .footer-links a:focus-visible { color: var(--cobalt); background-size: 100% 1.5px; }
+
+  .footer-built { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-hand-print); font-size: 1rem; color: var(--cobalt); transform: rotate(-1deg); }
+  .footer-built svg { width: 20px; height: 20px; }
+  .footer-built path, .footer-built circle { fill: none; stroke: var(--cobalt); stroke-width: 1.5; stroke-linecap: round; }
+  .footer-copy { margin-top: 6px; font-size: 0.78rem; color: var(--grey); }
+
+  .to-top {
+    position: absolute; right: var(--gutter); top: 50%; transform: translateY(-30%);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    min-width: 44px; min-height: 44px; padding: 4px;
+    font-size: 0.85rem; color: var(--ink);
   }
-  .built { font-size: 1.15rem; }
-  .to-top { font-size: 0.9rem; }
-  .copy { font-size: 0.8125rem; }
+  .to-top svg { width: 14px; height: 22px; transition: transform var(--t-micro) var(--ease); }
+  .to-top path { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .to-top:hover { color: var(--cobalt); }
+  .to-top:hover svg { transform: translateY(-3px); }
+
   @media (max-width: 640px) {
-    .footer-base { flex-direction: column; align-items: flex-start; }
+    .to-top { position: static; transform: none; margin-top: 14px; flex-direction: row; }
   }
 </style>

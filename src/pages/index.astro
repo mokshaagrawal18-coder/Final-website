@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ArrowLink from '../components/ArrowLink.astro';
 import HomeRoute from '../components/HomeRoute.astro';
 import FeaturedStrip from '../components/FeaturedStrip.astro';
-import PaperFonts from '../components/PaperFonts.astro';
+import AlsoTrue from '../components/AlsoTrue.astro';
 
 const proof = [
   { name: 'D. E. Shaw', tags: 'research · financial data · automation', metric: '2 hrs → 30 mins', href: '/work/#de-shaw' },
@@ -11,13 +11,6 @@ const proof = [
   { name: 'Mensa Brands', tags: 'marketplace growth · consumer choice', metric: '300+ competitor products', href: '/work/#mensa' },
 ];
 
-const truths = [
-  '16+ years of dancing and still counting',
-  'wants the backstory',
-  'ETA: early',
-  'will happily explain it 10 different ways',
-  'pasta opinions: firm',
-];
 
 /*
  * Hero geometry comes straight from the reference layout, which is 556 units wide.
@@ -41,7 +34,6 @@ const paper = [...edge(TL, TR, 28, 0.9), ...edge(TR, BR, 28, 0.9), ...edge(BR, B
 const personClip = ['-30% -40%', '130% -40%', ...edge(BR, BL, 28, 1.1)].join(', ');
 ---
 <BaseLayout description="Hi, I’m Moksha. I like making complicated things simpler: data, research, systems, and the occasional better question.">
-  <Fragment slot="head"><PaperFonts /></Fragment>
 
   <div class="home theme-paper">
     <!-- HOME 1 · HERO -->
@@ -115,18 +107,8 @@ const personClip = ['-30% -40%', '130% -40%', ...edge(BR, BL, 28, 1.1)].join(', 
       <ArrowLink href="/work/" class="proof-cta-sm">see the work</ArrowLink>
     </section>
 
-    <!-- HOME 4 · PERSONAL STRIP -->
-    <section class="section container" aria-labelledby="also-title">
-      <div class="also-head">
-        <h2 class="t-h3" id="also-title">Also true about me</h2>
-        <ArrowLink href="/about/">the slightly more personal version</ArrowLink>
-      </div>
-      <ul class="also-strip reveal" role="list">
-        {truths.map((t) => (
-          <li>{t === 'pasta opinions: firm' ? <span class="hl">{t}</span> : t}</li>
-        ))}
-      </ul>
-    </section>
+    <!-- HOME 4 · ALSO TRUE ABOUT ME -->
+    <AlsoTrue />
 
     <!-- HOME 5 · CLOSE -->
     <section class="section container close" aria-labelledby="close-title">
@@ -136,7 +118,6 @@ const personClip = ['-30% -40%', '130% -40%', ...edge(BR, BL, 28, 1.1)].join(', 
         <li><ArrowLink href="/work/" variant="ink">Work</ArrowLink></li>
         <li><ArrowLink href="/projects/" variant="ink">Projects</ArrowLink></li>
       </ul>
-      <p class="hand close-note">thanks for looking a little closer.</p>
     </section>
   </div>
 </BaseLayout>
@@ -223,23 +204,9 @@ const personClip = ['-30% -40%', '130% -40%', ...edge(BR, BL, 28, 1.1)].join(', 
   .proof-metric { font-size: 1.35rem; margin-top: 10px; }
   :global(.proof-cta-sm) { display: none; }
 
-  /* ---------- personal strip ---------- */
-  .also-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 22px; }
-  .also-strip {
-    display: flex; flex-wrap: wrap; align-items: center; gap: 10px 0;
-    padding: 18px 26px;
-    background: var(--paper);
-    box-shadow: var(--shadow-paper);
-    border-radius: 3px;
-    transform: rotate(-0.6deg);
-    font-size: 1.05rem;
-  }
-  .also-strip li { display: inline-flex; align-items: center; }
-  .also-strip li + li::before { content: '✦'; color: var(--cobalt); font-size: 0.7rem; margin: 0 18px; }
 
   /* ---------- close ---------- */
   .close-links { display: flex; flex-wrap: wrap; gap: 4px 36px; margin-top: 20px; font-size: 1.25rem; }
-  .close-note { margin-top: 28px; transform: rotate(-1.5deg); transform-origin: left; display: inline-block; font-size: 1.15rem; }
 
   /* ---------- below ~900px: stack the hero ---------- */
   @media (max-width: 900px) {
@@ -263,7 +230,5 @@ const personClip = ['-30% -40%', '130% -40%', ...edge(BR, BL, 28, 1.1)].join(', 
     .proof-item + .proof-item { border-left: 0; border-top: 1px solid var(--line); }
     .proof-link { padding-left: 0; }
     :global(.proof-cta-sm) { display: inline-flex; margin-top: 12px; }
-    .also-strip { flex-direction: column; align-items: flex-start; gap: 8px; }
-    .also-strip li::before { content: '✦' !important; color: var(--cobalt); font-size: 0.7rem; margin: 0 10px 0 0 !important; }
   }
 </style>

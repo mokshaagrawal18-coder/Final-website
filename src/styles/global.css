@@ -321,9 +321,9 @@ main { animation: page-in 380ms var(--ease) backwards; }
 }
 
 /* ---------- editorial paper theme (Home, Work): serif + print handwriting ---------- */
-.theme-paper {
+:root {
   --font-serif-display: 'DM Serif Display', 'Times New Roman', Georgia, serif;
   --font-serif-text: 'Source Serif 4', Georgia, 'Times New Roman', serif;
   --font-hand-print: 'Kalam', 'Comic Neue', 'Segoe Print', cursive;
-  --font-hand: var(--font-hand-print);
 }
+.theme-paper { --font-hand: var(--font-hand-print); }

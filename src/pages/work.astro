@@ -2,7 +2,6 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArrowLink from '../components/ArrowLink.astro';
 import Toolkit from '../components/Toolkit.astro';
-import PaperFonts from '../components/PaperFonts.astro';
 import DesSnapshot from '../components/work/DesSnapshot.astro';
 import GrowwJourneyPanel from '../components/work/GrowwJourneyPanel.astro';
 import MensaLandscape from '../components/work/MensaLandscape.astro';
@@ -12,7 +11,6 @@ import { companies } from '../data/work';
 const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourneyPanel, mensa: MensaLandscape };
 ---
 <BaseLayout title="Work" description="Financial research, customer operations and e-commerce: what Moksha was actually figuring out, what she worked on, and what changed.">
-  <Fragment slot="head"><PaperFonts /></Fragment>
 
   <div class="work theme-paper">
     <!-- HERO -->
