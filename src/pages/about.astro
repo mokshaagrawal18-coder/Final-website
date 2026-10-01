@@ -2,7 +2,6 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import AboutHero from '../components/AboutHero.astro';
 import AboutNotes from '../components/AboutNotes.astro';
-import FutureLetter from '../components/FutureLetter.astro';
 ---
 <BaseLayout title="About" description="It’s me, in context: a few things that explain how Moksha thinks, shows up, and makes her way through things.">
   <!-- ABOUT 1 · PORTRAIT + ANNOTATIONS -->
@@ -16,15 +15,10 @@ import FutureLetter from '../components/FutureLetter.astro';
     <AboutNotes />
     <div class="truths-close">
       <p class="hand hand--ink">that’s enough self-analysis for one section.</p>
-      <a href="#future" class="arrow-link"><span class="al-text">keep going</span> <span class="al-arrow al-arrow--down" aria-hidden="true">↓</span></a>
+      <a href="/notes/#later" class="arrow-link"><span class="al-text">there’s a letter for later in Notes</span> <span class="al-arrow al-arrow--right" aria-hidden="true">→</span></a>
     </div>
   </section>
 
-  <!-- ABOUT 3 · FUTURE ME -->
-  <section class="section container future-sec" id="future" aria-labelledby="future-title">
-    <h2 class="t-h3" id="future-title">For future me</h2>
-    <FutureLetter />
-  </section>
 </BaseLayout>
 
 <style>
@@ -32,7 +26,5 @@ import FutureLetter from '../components/FutureLetter.astro';
   .truths-close { margin-top: 64px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
   .truths-close .hand { transform: rotate(-1deg); }
 
-  .future-sec { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 36px; }
-  .future-sec :global(.fl-letter) { text-align: left; }
 
 </style>
