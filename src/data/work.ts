@@ -40,16 +40,16 @@ export const companies: Company[] = [
     areas: ['Institutional holdings', 'Data analytics', 'Automation', 'Research infrastructure'],
     note: 'From complex data to clearer decisions.',
     question: 'How might we turn complex research workflows into simpler, scalable tools?',
-    bullets: ['350+ institutional funds', '~5 hrs → ~2 mins', 'Internal adoption'],
+    bullets: ['350+ institutional funds', '5 hrs → 2 mins', 'Internal adoption'],
     items: [
       { title: '13F holdings analysis', body: 'Structured and tracked holdings across 350+ institutional funds.' },
       { title: 'Research infrastructure', body: 'Standardised data across 150+ funds and benchmarks, 50+ papers, 20+ hedge funds, and 15 years of EM turnover data.' },
-      { title: 'Workflow automation', body: 'Automated newsletter and research-monitoring workflows, reducing a ~5-hour manual process to ~2 minutes.' },
+      { title: 'Workflow automation', body: 'Automated newsletter and research-monitoring workflows, reducing a 5-hour manual process to 2 minutes.' },
     ],
     outcomes: [
       { value: '350+', label: 'institutional funds', icon: 'chart' },
       { value: '150+', label: 'funds & benchmarks', icon: 'stack' },
-      { value: '~5 hrs → ~2 mins', label: 'manual process to automated', icon: 'clock' },
+      { value: '5\u00a0hrs → 2\u00a0mins', label: 'manual process to automated', icon: 'clock' },
       { value: '10–15', label: 'workflows documented', icon: 'doc' },
     ],
   },
@@ -60,7 +60,7 @@ export const companies: Company[] = [
     areas: ['Customer operations', 'User research', 'Support workflows'],
     note: 'Where were people getting stuck?',
     question: 'How might we help more people invest with confidence?',
-    bullets: ['5,000+ queries', '~25% faster activation', 'Smoother onboarding'],
+    bullets: ['5,000+ queries', '25% faster activation', 'Smoother onboarding'],
     items: [
       { title: 'KYC and activation analysis', body: 'Analysed 5,000+ activation queries to identify recurring friction points.' },
       { title: 'Chatbot and escalation patterns', body: 'Studied interactions and support cases to identify drivers of escalations.' },
@@ -68,9 +68,9 @@ export const companies: Company[] = [
     ],
     outcomes: [
       { value: '5,000+', label: 'queries analysed', icon: 'chat' },
-      { value: '~25%', label: 'faster activation', icon: 'bolt' },
-      { value: '~20%', label: 'fewer escalations', icon: 'people' },
-      { value: '~30%', label: 'better onboarding efficiency', icon: 'bars' },
+      { value: '25%', label: 'faster activation', icon: 'bolt' },
+      { value: '20%', label: 'fewer escalations', icon: 'people' },
+      { value: '30%', label: 'better onboarding efficiency', icon: 'bars' },
     ],
   },
   {
@@ -80,7 +80,7 @@ export const companies: Company[] = [
     areas: ['Growth', 'Marketplace strategy', 'Content & listings', 'Competitor analysis'],
     note: 'Understand the market. Find the gaps.',
     question: 'How might we grow presence and engagement in a highly competitive space?',
-    bullets: ['300+ competitor products', '~60% higher impressions', 'Ad spend ↓ ~40%'],
+    bullets: ['300+ competitor products', '60% higher impressions', 'Ad spend ↓ 40%'],
     items: [
       { title: 'Marketplace analysis', body: 'Studied 300+ competitor products across 5–6 brands.' },
       { title: 'Listing and content strategy', body: 'Improved positioning, keywords, and listing performance.' },
@@ -89,9 +89,9 @@ export const companies: Company[] = [
     outcomes: [
       { value: '300+', label: 'products analysed', icon: 'cart' },
       { value: '5–6', label: 'brands studied', icon: 'layers' },
-      { value: '~60%', label: 'higher impressions', icon: 'bars' },
-      { value: '↓ ~40%', label: 'ad spend', icon: 'tag' },
-      { value: 'Sales doubled', label: 'across ~80% of products', icon: 'trophy' },
+      { value: '60%', label: 'higher impressions', icon: 'bars' },
+      { value: '↓ 40%', label: 'ad spend', icon: 'tag' },
+      { value: 'Sales doubled', label: 'across 80% of products', icon: 'trophy' },
     ],
   },
 ];
@@ -124,17 +124,34 @@ export const toolkitSteps = [
   {
     n: '05', title: 'Leave it better',
     body: 'Document it, make it repeatable, and reduce how much knowledge has to live in someone’s head.',
-    examples: ['5 hrs → ~2 mins', '2–3 hrs → ~30 mins', 'onboarding 4 weeks → 2 weeks', 'reusable knowledge'],
+    examples: ['5 hrs → 2 mins', '2–3 hrs → 30 mins', 'onboarding 4 weeks → 2 weeks', 'reusable knowledge'],
     icon: 'better',
   },
 ];
 
 export const practice = [
-  { title: 'Automated research newsletters', where: 'D. E. Shaw', body: 'Python + Claude workflows for extraction, flagging, categorising and formatting.', metric: '~5 hrs → ~2 mins', viz: 'pipeline' },
+  { title: 'Automated research newsletters', where: 'D. E. Shaw', body: 'Python + Claude workflows for extraction, flagging, categorising and formatting.', metric: '5 hrs → 2 mins', viz: 'pipeline' },
   { title: 'Rider fairness analysis', where: '', body: 'Reverse-engineered scoring and analysed 15,000 records.', metric: '99.9% reconstructed fit', viz: 'fit', href: '/projects/rider-fairness/' },
   { title: 'Healthcare expenditure research', where: '', body: 'Regression analysis in Jamovi.', metric: '370 responses · 63.1% variance explained', viz: 'r2', href: '/projects/healthcare-expenditure/' },
   { title: 'Customer friction analysis', where: 'Groww', body: '5,000+ customer queries analysed.', metric: '5,000+ queries', viz: 'buckets' },
   { title: 'Marketplace / competitor research', where: 'Mensa', body: '300+ products studied.', metric: '300+ products', viz: 'grid' },
 ];
 
-export const tools = ['Python', 'SQL / MySQL', 'Power BI', 'Excel', 'Jamovi', 'EViews', 'Tableau', 'Claude', 'Cursor'];
+// logo: file in public/logos/ (official marks); mono: plain text tile where no official mark is available
+export const toolGroups = [
+  { name: 'Analysis & statistics', tools: [
+    { name: 'Python', logo: 'python.svg' },
+    { name: 'Excel', logo: 'excel.svg' },
+    { name: 'Jamovi', mono: 'jmv' },
+    { name: 'EViews', mono: 'EV' },
+  ] },
+  { name: 'Data & dashboards', tools: [
+    { name: 'SQL / MySQL', logo: 'mysql.svg' },
+    { name: 'Power BI', logo: 'powerbi.svg' },
+    { name: 'Tableau', logo: 'tableau.svg' },
+  ] },
+  { name: 'Building with AI', tools: [
+    { name: 'Claude', logo: 'claude.svg' },
+    { name: 'Cursor', logo: 'cursor.svg' },
+  ] },
+];

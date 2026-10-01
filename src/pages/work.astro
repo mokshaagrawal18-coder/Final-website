@@ -6,6 +6,7 @@ import PaperFonts from '../components/PaperFonts.astro';
 import DesSnapshot from '../components/work/DesSnapshot.astro';
 import GrowwJourneyPanel from '../components/work/GrowwJourneyPanel.astro';
 import MensaLandscape from '../components/work/MensaLandscape.astro';
+import CompanyMark from '../components/work/CompanyMark.astro';
 import { companies } from '../data/work';
 
 const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourneyPanel, mensa: MensaLandscape };
@@ -44,7 +45,7 @@ const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourne
           {companies.map((c) => (
             <li>
               <a href={`#${c.id}`} class="sum-card">
-                <span class:list={['wordmark', `wm-${c.id}`]}>{c.name}</span>
+                <CompanyMark id={c.id} name={c.name} />
                 <span class="sum-body">
                   <span class="sum-q">{c.question}</span>
                   <span class="sum-bullets">{c.bullets.map((b) => <span>{b}</span>)}</span>
@@ -65,7 +66,7 @@ const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourne
           <p class="co-n hand" aria-hidden="true">{c.n}</p>
           <article class="co">
             <div class="co-left">
-              <h2 class:list={['wordmark wordmark--lg', `wm-${c.id}`]} id={`${c.id}-name`}>{c.name}</h2>
+              <CompanyMark id={c.id} name={c.name} size="lg" as="h2" titleId={`${c.id}-name`} />
               <p class="co-role">{c.role}</p>
               <p class="co-meta">{c.place} <span aria-hidden="true">·</span> {c.dates}</p>
               <p class="co-intro">{c.intro}</p>
@@ -199,14 +200,6 @@ const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourne
   .sum-bullets span::before { content: '•'; color: var(--cobalt); margin-right: 8px; }
   .sum-go { position: absolute; right: 18px; top: 20px; font-size: 0.95rem; color: var(--cobalt); opacity: 0; transform: translateY(-3px); transition: opacity var(--t-micro), transform var(--t-micro) var(--ease); }
   .sum-card:hover .sum-go, .sum-card:focus-visible .sum-go { opacity: 1; transform: none; }
-
-  /* company names, set as type (no logos redrawn) */
-  .wordmark { display: block; width: fit-content; font-size: 1.9rem; line-height: 1.05; letter-spacing: -0.02em; }
-  .wordmark--lg { font-size: clamp(2.1rem, 1.6rem + 1.4vw, 2.8rem); }
-  .wm-de-shaw { font-family: var(--font-serif-display); color: #1F2F6B; font-weight: 400; }
-  .wm-groww { font-family: var(--font-body); font-weight: 600; color: #111; letter-spacing: -0.035em; }
-  .wm-mensa { font-family: var(--font-body); font-weight: 600; text-transform: uppercase; color: #111; letter-spacing: 0.02em; font-size: 1.6rem; max-width: 7ch; line-height: 1.02; }
-  .wordmark--lg.wm-mensa { font-size: clamp(1.8rem, 1.4rem + 1.2vw, 2.4rem); }
 
   /* ---------- company blocks ---------- */
   .co-wrap { position: relative; margin-top: 34px; }
