@@ -129,7 +129,8 @@ const personClip = ['-30% -40%', '130% -40%', ...edge(BR, BL, 28, 1.1)].join(', 
   }
 
   /* ---------- hero frame: everything placed in reference units ---------- */
-  .hh { width: 100%; max-width: 1440px; margin: 0 auto; container-type: inline-size; padding-top: 8px; }
+  /* 302 reference units tall (stage 190 + route 112): cap the width so it fits the screen height too */
+  .hh { width: 100%; max-width: min(1440px, calc((100svh - 104px) * 556 / 302)); margin: 0 auto; container-type: inline-size; padding-top: 8px; }
   .hh-stage { position: relative; height: calc(var(--u) * 190); }
 
   .hh-text { position: absolute; left: calc(var(--u) * 45); top: calc(var(--u) * 25); z-index: 2; }
@@ -138,7 +139,7 @@ const personClip = ['-30% -40%', '130% -40%', ...edge(BR, BL, 28, 1.1)].join(', 
 
   .hh-title {
     font-family: var(--font-serif-display); font-weight: 400;
-    font-size: calc(var(--u) * 50.5);
+    font-size: calc(var(--u) * 45);
     line-height: 1.055; letter-spacing: -0.012em;
     color: #121212;
   }
