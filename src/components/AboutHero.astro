@@ -1,0 +1,180 @@
+---
+/**
+ * About hero: "It's me, in context."
+ * A cut-out portrait on a cobalt circle, with ten handwritten notes pinned around it.
+ * On small screens the notes drop below the photo as a loose list (no arrows).
+ */
+interface Ann {
+  text: string;
+  x: number; // % of stage width (left edge)
+  y: number; // % of stage height (top edge)
+  r: number; // rotation, deg
+  style?: 'tag' | 'sticky' | 'plain';
+  mark?: string; // words to highlight in yellow
+  icon?: string; // 24x24 line path
+  iconPos?: 'after' | 'below';
+  arrow?: number; // arrow angle in deg (0 = points right), omitted = no arrow
+  arrowAt?: 'start' | 'end';
+  w?: number; // max width, px
+}
+
+const anns: Ann[] = [
+  { text: 'ETA: early', x: 5, y: 5, r: -4, style: 'tag' },
+  { text: 'not satisfied with “that’s just how it is”', x: 2, y: 25, r: -3, arrow: 20, w: 160 },
+  { text: 'wants the backstory', x: 3, y: 50, r: -6, style: 'sticky', arrow: -10, w: 120 },
+  { text: 'quietly sentimental', x: 0, y: 74, r: -8, icon: 'M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z', iconPos: 'below', w: 110 },
+  { text: 'pasta opinions: firm', x: 50, y: 2, r: -3, mark: 'firm', icon: 'M3 11h18c0 5-4 8-9 8s-9-3-9-8zM7 8c1-2 3-2 4 0s3 2 4 0 3-2 4 0', iconPos: 'below', w: 130 },
+  { text: 'petrol is not a frivolous expense', x: 74, y: 11, r: 4, style: 'tag', icon: 'M5 20V5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v15M4 20h11M7 8h5M14 10h2a2 2 0 0 1 2 2v4a1 1 0 0 0 2 0V9l-2-3', w: 190 },
+  { text: 'elder sister', x: 68, y: 34, r: -2, icon: 'M8 9a3 3 0 1 0 0.01 0M16 10a2.5 2.5 0 1 0 0.01 0M3 20c0-3 2.2-5 5-5s5 2 5 5M13 20c0-2.4 1.4-4 3.5-4s3.5 1.6 3.5 4', arrow: 195, arrowAt: 'start' },
+  { text: 'somewhere between organised and “where is my charger?”', x: 72, y: 49, r: -3, mark: 'somewhere between organised and', icon: 'M9 3v5M15 3v5M7 8h10v3a5 5 0 0 1-10 0zM12 16v5', arrow: 190, arrowAt: 'start', w: 250 },
+  { text: 'will happily explain it 10 different ways', x: 70, y: 70, r: -4, arrow: 200, arrowAt: 'start', w: 220 },
+  { text: '16 years of dancing and still counting', x: 74, y: 86, r: -3, mark: 'still counting', icon: 'M13 4a1.6 1.6 0 1 0 0.01 0M12 7l-3 5 4 1-1 8M12 7l4 3 3-2M13 13l4 3', w: 210 },
+];
+
+const hi = (a: Ann) => {
+  if (!a.mark) return a.text;
+  const i = a.text.indexOf(a.mark);
+  return `${a.text.slice(0, i)}<mark>${a.mark}</mark>${a.text.slice(i + a.mark.length)}`;
+};
+---
+<section class="about-hero container" aria-labelledby="about-title">
+  <div class="ah-text">
+    <p class="ah-eyebrow"><span class="num">02</span><span class="ah-dash" aria-hidden="true"></span>About</p>
+    <h1 class="ah-title t-page" id="about-title">It’s me,<br /> in <span class="ah-mark">context.</span></h1>
+    <svg class="ah-squiggle draw" data-reveal viewBox="0 0 120 14" aria-hidden="true">
+      <path d="M3 9c14-6 24 4 38-1s24-5 38 0 22 3 38-3" style="--len:130;--delay:400ms" />
+    </svg>
+    <p class="ah-copy">Not a bio. Not a résumé.<br /> Just the things that shape how I think, work and show up.</p>
+    <a href="#notes" class="ah-btn">Explore my notes <span aria-hidden="true">→</span></a>
+    <p class="ah-aside hand hand--ink">
+      Same person.<br /> Slightly more context.
+      <svg viewBox="0 0 60 40" aria-hidden="true"><path d="M4 30c16 4 34-2 48-20M44 8l9 1-2 9" /></svg>
+    </p>
+  </div>
+
+  <div class="ah-stage">
+    <div class="ah-photo">
+      <span class="ah-circle" aria-hidden="true"></span>
+      <img src="/images/about-cutout.webp" alt="Moksha Agrawal, smiling, in a black top" width="348" height="458" fetchpriority="high" decoding="async" />
+    </div>
+
+    <ul class="ah-anns" role="list" aria-label="A few things about me">
+      {anns.map((a, i) => (
+        <li
+          class:list={['ann reveal', `ann--${a.style ?? 'plain'}`, { 'has-icon-below': a.iconPos === 'below' }]}
+          style={`--x:${a.x}%;--y:${a.y}%;--r:${a.r}deg;--delay:${150 + i * 70}ms;${a.w ? `--w:${a.w}px;` : ''}`}
+        >
+          {a.arrow !== undefined && a.arrowAt === 'start' && (
+            <svg class="ann-arrow" viewBox="0 0 40 20" style={`--a:${a.arrow}deg`} aria-hidden="true"><path d="M2 12c10-6 22-7 34-3M30 4l6 5-7 4" /></svg>
+          )}
+          <span class="ann-text" set:html={hi(a)} />
+          {a.icon && <svg class="ann-icon" viewBox="0 0 24 24" aria-hidden="true"><path d={a.icon} /></svg>}
+          {a.arrow !== undefined && a.arrowAt !== 'start' && (
+            <svg class="ann-arrow" viewBox="0 0 40 20" style={`--a:${a.arrow}deg`} aria-hidden="true"><path d="M2 12c10-6 22-7 34-3M30 4l6 5-7 4" /></svg>
+          )}
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .about-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    column-gap: 24px;
+    align-items: center;
+    padding-top: clamp(24px, 3vw, 48px);
+  }
+
+  /* ---------- text column ---------- */
+  .ah-eyebrow { display: flex; align-items: center; gap: 10px; font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cobalt); }
+  .ah-eyebrow .num { font-size: 0.8125rem; }
+  .ah-dash { width: 18px; height: 1.5px; background: var(--cobalt); }
+  .ah-title { margin-top: 18px; font-size: clamp(3rem, 1.8rem + 3.6vw, 5.25rem); line-height: 0.98; }
+  .ah-mark { background: linear-gradient(transparent 52%, var(--yellow) 52%, var(--yellow) 90%, transparent 90%); padding: 0 0.06em; margin: 0 -0.03em; }
+  .ah-squiggle { width: 120px; height: 14px; margin-top: 10px; overflow: visible; }
+  .ah-squiggle path { fill: none; stroke: var(--cobalt); stroke-width: 2.5; stroke-linecap: round; }
+  .ah-copy { margin-top: 22px; color: var(--grey); max-width: 30ch; font-size: 1.075rem; }
+  .ah-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-top: 26px; min-height: 48px; padding: 0 22px;
+    background: var(--cobalt); color: #fff; border-radius: 3px;
+    font-weight: 500; font-size: 0.975rem;
+    transition: background-color var(--t-micro) var(--ease), transform 120ms var(--ease);
+  }
+  .ah-btn span { transition: transform var(--t-micro) var(--ease); }
+  .ah-btn:hover { background: #1d45ba; }
+  .ah-btn:hover span { transform: translateX(3px); }
+  .ah-btn:active { transform: scale(0.98); }
+  .ah-aside { position: relative; margin-top: 44px; font-size: 1.35rem; line-height: 1.15; transform: rotate(-4deg); transform-origin: left; width: fit-content; }
+  .ah-aside svg { position: absolute; right: -66px; top: -18px; width: 60px; height: 40px; overflow: visible; }
+  .ah-aside path { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ---------- stage ---------- */
+  .ah-stage { position: relative; aspect-ratio: 1.42; width: 100%; }
+  .ah-photo {
+    position: absolute;
+    left: 21%; bottom: 0;
+    width: 45%;
+    display: flex; justify-content: center; align-items: flex-end;
+  }
+  .ah-photo img { position: relative; z-index: 1; width: 100%; height: auto; display: block; }
+  .ah-circle {
+    position: absolute; z-index: 0;
+    width: 60%; aspect-ratio: 1; border-radius: 50%;
+    left: 58%; top: 22%;
+    background: var(--cobalt);
+  }
+
+  .ah-anns { list-style: none; margin: 0; padding: 0; }
+  .ann {
+    position: absolute; left: var(--x); top: var(--y);
+    max-width: var(--w, 180px);
+    font-family: var(--font-hand); font-size: 1.4rem; line-height: 1.1; color: var(--ink);
+    transform: rotate(var(--r));
+    display: flex; align-items: center; gap: 8px;
+  }
+  :global(.js) .ann.reveal { transform: rotate(var(--r)) translateY(8px); }
+  :global(.js) .ann.reveal.is-in { transform: rotate(var(--r)); }
+  .ann.has-icon-below { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .ann :global(mark) { background: linear-gradient(transparent 45%, var(--yellow-soft) 45%, var(--yellow-soft) 92%, transparent 92%); color: inherit; padding: 0 2px; }
+  .ann-icon { flex: none; width: 24px; height: 24px; fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+  .ann-arrow { flex: none; width: 34px; height: 17px; transform: rotate(var(--a)); overflow: visible; }
+  .ann-arrow path { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+
+  .ann--tag {
+    padding: 8px 14px 7px;
+    background: var(--paper);
+    box-shadow: var(--shadow-paper);
+    border-radius: 2px;
+  }
+  .ann--tag::before {
+    content: ''; position: absolute; top: -7px; left: 50%; width: 38px; height: 13px; margin-left: -19px;
+    background: rgba(226, 214, 186, 0.75); transform: rotate(-3deg);
+  }
+  .ann--sticky {
+    padding: 10px 14px;
+    background: var(--yellow);
+    box-shadow: 0 6px 14px -10px rgba(120, 90, 10, 0.5);
+    border-radius: 2px;
+  }
+  .ann--sticky .ann-arrow { position: absolute; right: -40px; top: 50%; margin-top: -8px; }
+
+  /* ---------- tablet: text above, stage below ---------- */
+  @media (max-width: 1100px) {
+    .about-hero { grid-template-columns: 1fr; row-gap: 32px; }
+    .ah-aside { display: none; }
+    .ah-stage { max-width: 860px; justify-self: center; }
+  }
+
+  /* ---------- phone: photo, then notes as a loose list ---------- */
+  @media (max-width: 700px) {
+    .ah-stage { aspect-ratio: auto; display: grid; gap: 28px; }
+    .ah-photo { position: relative; left: auto; width: 72%; max-width: 300px; justify-self: center; }
+    .ah-anns { display: flex; flex-wrap: wrap; gap: 14px 18px; justify-content: center; }
+    .ann { position: relative; left: auto; top: auto; max-width: 46%; font-size: 1.2rem; }
+    .ann-arrow { display: none; }
+    .ann.has-icon-below { flex-direction: row; align-items: center; }
+  }
+</style>
