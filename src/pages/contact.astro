@@ -14,9 +14,9 @@ import { site } from '../data/site';
     </div>
     <ul class="c-links" role="list">
       <li><ArrowLink href={`mailto:${site.email}`} dir="right">Email</ArrowLink> <span class="c-detail">{site.email}</span></li>
-      <li><ArrowLink href={site.linkedin} dir="ext" external>LinkedIn</ArrowLink></li>
-      <li><ArrowLink href={site.github} dir="ext" external>GitHub</ArrowLink></li>
-      <li><ArrowLink href={site.resume} dir="down" download>Résumé</ArrowLink></li>
+      {site.linkedin && <li><ArrowLink href={site.linkedin} dir="ext" external>LinkedIn</ArrowLink></li>}
+      {site.github && <li><ArrowLink href={site.github} dir="ext" external>GitHub</ArrowLink></li>}
+      {site.resume && <li><ArrowLink href={site.resume} dir="down" download>Résumé</ArrowLink></li>}
     </ul>
     <HandNote arrow="up" rotate={-3} class="c-note">I do, in fact, reply.</HandNote>
   </section>

@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NoteCard from '../components/NoteCard.astro';
-import { notesList, upcomingThemes } from '../data/notes';
+import { notesList } from '../data/notes';
 
 const sorted = [...notesList].sort((a, b) => b.date.localeCompare(a.date));
 const featured = sorted.filter((n) => n.featured).slice(0, 3);
@@ -16,13 +16,7 @@ const rest = sorted.filter((n) => !featured.includes(n));
   <section class="section container" aria-label="Notes">
     {sorted.length === 0 ? (
       <div class="empty">
-        <div class="empty-memo paper">
-          <p class="hand hand--ink empty-soon">more soon.</p>
-          <p class="empty-label">currently on the list</p>
-          <ul class="empty-list" role="list">
-            {upcomingThemes.map((t) => <li>{t}</li>)}
-          </ul>
-        </div>
+        <p class="hand empty-soon">more soon.</p>
       </div>
     ) : (
       <>
@@ -46,9 +40,5 @@ const rest = sorted.filter((n) => !featured.includes(n));
   .notes-sub { margin-top: 24px; }
   .featured { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
   .rest { margin-top: 64px; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0 32px; }
-  .empty-memo { max-width: 520px; padding: 20px 36px 28px; transform: rotate(-0.6deg); --line-offset: 22px; }
-  .empty-soon { font-size: 2rem; line-height: 44px; }
-  .empty-label { font-size: 0.8125rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--grey); line-height: 32px; margin-top: 12px; }
-  .empty-list { line-height: 32px; }
-  .empty-list li::before { content: '·'; color: var(--cobalt); font-weight: 700; margin-right: 10px; }
+  .empty-soon { font-size: 2rem; color: var(--ink); transform: rotate(-2deg); transform-origin: left; display: inline-block; }
 </style>

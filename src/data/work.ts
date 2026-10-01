@@ -1,9 +1,10 @@
-export type Item = { title: string; body: string };
+export type Item = { title: string; body: string; evidence?: string[]; hand?: string; quote?: string };
 export type Stat = { value: string; label: string; icon: string };
 export type Company = {
   id: string;
   n: string;
   name: string;
+  company?: string;
   role: string;
   place: string;
   dates: string;
@@ -11,9 +12,11 @@ export type Company = {
   areas: string[];
   note: string;
   question: string;
+  keyword: string;
   bullets: string[];
   items: Item[];
   outcomes: Stat[];
+  closing: string;
 };
 
 // 24×24 line icons used by the stat tiles
@@ -35,64 +38,111 @@ export const icons = {
 export const companies: Company[] = [
   {
     id: 'de-shaw', n: '01', name: 'D. E. Shaw & Co',
-    role: 'Research Associate — Data Analytics', place: 'Hyderabad, India', dates: 'June 2025 – Present',
-    intro: 'Worked across investment research, financial datasets, and recurring workflows, with a focus on making complex information easier to compare, analyse, and reuse.',
+    role: 'Research Associate', place: 'Hyderabad, India', dates: 'June 2025 – Present',
+    intro: 'A lot of my work here begins with information that is recurring, scattered, or difficult to compare. I work on turning it into structured analysis, reusable data, or a process that is easier to run the next time.',
     areas: ['Institutional holdings', 'Data analytics', 'Automation', 'Research infrastructure'],
     note: 'From complex data to clearer decisions.',
-    question: 'How might we turn complex research workflows into simpler, scalable tools?',
-    bullets: ['350+ institutional funds', '5 hrs → 2 mins', 'Internal adoption'],
+    question: 'How do you make recurring research easier to compare, update and use?',
+    keyword: 'clarity',
+    bullets: ['33–40 funds / quarter', '2 hrs → 30 mins'],
     items: [
-      { title: '13F holdings analysis', body: 'Structured and tracked holdings across 350+ institutional funds.' },
-      { title: 'Research infrastructure', body: 'Standardised data across 150+ funds and benchmarks, 50+ papers, 20+ hedge funds, and 15 years of EM turnover data.' },
-      { title: 'Workflow automation', body: 'Automated newsletter and research-monitoring workflows, reducing a 5-hour manual process to 2 minutes.' },
+      {
+        title: 'Track what changed',
+        body: 'I analyse quarterly SEC 13F filings across 33–40 institutional funds, structuring holdings in Power BI to track new positions, exits, and changes in position size across quarters.',
+        evidence: ['33–40 funds', 'quarterly holdings analysis', 'Power BI'],
+        hand: 'the number matters. the change usually matters more.',
+      },
+      {
+        title: 'Make unlike markets comparable',
+        body: 'I standardised 15 years of emerging-markets turnover data across countries and exchanges, creating a consistent benchmark for comparing liquidity and trading activity over time.',
+        evidence: ['15 years', 'countries + exchanges', 'one comparable benchmark'],
+        hand: 'same metric. different markets.',
+      },
+      {
+        title: 'Turn filings into something you can actually screen',
+        body: 'Using 10+ years of DRHP data across 60+ sub-$100M companies, I built a recurring analytics database and dashboard that standardised financial metrics and made companies easier to compare by industry and profitability.',
+        evidence: ['10+ years', '60+ companies', 'database + dashboard'],
+      },
+      {
+        title: 'Automate the repeatable part',
+        body: 'I built automation for recurring intelligence and disclosure workflows rather than treating every update as a fresh manual task.',
+        evidence: ['daily intelligence tracking: 2 hrs → 30 mins', 'shareholding disclosures: 30–40 mins → 2–3 mins'],
+        hand: 'if it happens every day, I’m probably wondering why it still happens manually.',
+      },
     ],
     outcomes: [
-      { value: '350+', label: 'institutional funds', icon: 'chart' },
-      { value: '150+', label: 'funds & benchmarks', icon: 'stack' },
-      { value: '5\u00a0hrs → 2\u00a0mins', label: 'manual process to automated', icon: 'clock' },
-      { value: '10–15', label: 'workflows documented', icon: 'doc' },
+      { value: '33–40', label: 'institutional funds each quarter', icon: 'chart' },
+      { value: '15 years', label: 'EM turnover data standardised', icon: 'stack' },
+      { value: '60+', label: 'companies, 10+ years of DRHP data', icon: 'doc' },
+      { value: '75%', label: 'less time on daily tracking', icon: 'clock' },
     ],
+    closing: 'I started caring as much about the system around the analysis as the analysis itself.',
   },
   {
     id: 'groww', n: '02', name: 'Groww',
-    role: 'Customer Analyst', place: 'Bengaluru, India', dates: 'May 2024 – Jul 2024',
-    intro: 'Worked on customer onboarding, KYC, activation, and query-resolution workflows to understand where users got stuck and how support could be made smoother.',
+    role: 'Customer Analyst Intern', place: 'Bengaluru, India', dates: 'May 2024 – July 2024',
+    intro: 'At Groww, the data was much closer to the customer. The interesting question was not just what people were asking, but why the same problems kept bringing them back.',
     areas: ['Customer operations', 'User research', 'Support workflows'],
     note: 'Where were people getting stuck?',
-    question: 'How might we help more people invest with confidence?',
-    bullets: ['5,000+ queries', '25% faster activation', 'Smoother onboarding'],
+    question: 'Where are customers getting stuck — and why?',
+    keyword: 'friction',
+    bullets: ['5,000+ queries', 'activation time ↓20%'],
     items: [
-      { title: 'KYC and activation analysis', body: 'Analysed 5,000+ activation queries to identify recurring friction points.' },
-      { title: 'Chatbot and escalation patterns', body: 'Studied interactions and support cases to identify drivers of escalations.' },
-      { title: 'Resolution workflows', body: 'Helped structure templates and workflows to improve onboarding consistency.' },
+      {
+        title: 'Where activation slowed down',
+        body: 'I analysed 5,000+ stock-trading and F&O activation queries to identify documentation and verification bottlenecks in the KYC journey.',
+        evidence: ['activation time ↓20%'],
+        hand: 'where exactly does “this is taking too long” begin?',
+      },
+      {
+        title: 'Why self-service still became an escalation',
+        body: 'I studied chatbot and customer-query patterns to identify what was driving support escalations, then helped standardise response templates and resolution steps.',
+        evidence: ['customer escalations ↓20%'],
+        quote: 'A customer rarely says “your process has a bottleneck.” They just tell you they’re stuck.',
+      },
     ],
     outcomes: [
-      { value: '5,000+', label: 'queries analysed', icon: 'chat' },
-      { value: '25%', label: 'faster activation', icon: 'bolt' },
-      { value: '20%', label: 'fewer escalations', icon: 'people' },
-      { value: '30%', label: 'better onboarding efficiency', icon: 'bars' },
+      { value: '5,000+', label: 'stock-trading and F&O activation queries', icon: 'chat' },
+      { value: '20%', label: 'reduction in activation time', icon: 'bolt' },
+      { value: '20%', label: 'reduction in customer escalations', icon: 'people' },
     ],
+    closing: 'This was where customer friction stopped feeling abstract. Repeated patterns showed up clearly across thousands of individual conversations.',
   },
   {
-    id: 'mensa', n: '03', name: 'Mensa Brands',
-    role: 'Growth Analyst — TrustBasket', place: 'Bengaluru, India', dates: 'June 2023 – Aug 2023',
-    intro: 'Worked on Amazon advertising, marketplace growth, competitor analysis, and listing optimisation for TrustBasket’s home and garden range.',
+    id: 'mensa', n: '03', name: 'Mensa Brands', company: 'Mensa Brands (now BRND.ME)',
+    role: 'Growth Analyst Intern', place: 'Bengaluru, India', dates: 'June 2023 – August 2023',
+    intro: 'Mensa was my first close look at how small marketplace decisions — a keyword, bid, listing, or positioning choice — could change what people noticed and bought.',
     areas: ['Growth', 'Marketplace strategy', 'Content & listings', 'Competitor analysis'],
     note: 'Understand the market. Find the gaps.',
-    question: 'How might we grow presence and engagement in a highly competitive space?',
-    bullets: ['300+ competitor products', '60% higher impressions', 'Ad spend ↓ 40%'],
+    question: 'What makes one product easier to find and choose?',
+    keyword: 'choice',
+    bullets: ['300+ competitor products', 'ad spend ↓40%'],
     items: [
-      { title: 'Marketplace analysis', body: 'Studied 300+ competitor products across 5–6 brands.' },
-      { title: 'Listing and content strategy', body: 'Improved positioning, keywords, and listing performance.' },
-      { title: 'Campaign optimisation', body: 'Refined advertising to improve sales while lowering ad spend.' },
+      {
+        title: 'Make ad spend work harder',
+        body: 'I worked across a 40–60 product Amazon portfolio, adjusting bids and reallocating spend using Amazon Ads and Helium 10.',
+        evidence: ['sales doubled across 80% of products', 'ad spend ↓40%'],
+      },
+      {
+        title: 'Understand the shelf around the product',
+        body: 'I analysed 300+ competing products across 5–6 gardening brands to understand what competitors were ranking for, which high-search keywords they were underusing, and where positioning opportunities existed.',
+        evidence: ['300+ products', '5–6 brands'],
+        hand: 'what are they calling it? what are customers actually searching for? what’s missing from the shelf?',
+      },
+      {
+        title: 'Turn the research into positioning',
+        body: 'Those competitor and search insights fed into listing optimisation and new-product positioning rather than staying as a research exercise.',
+        quote: 'The product is only part of the decision. First, someone has to notice it.',
+      },
     ],
     outcomes: [
-      { value: '300+', label: 'products analysed', icon: 'cart' },
-      { value: '5–6', label: 'brands studied', icon: 'layers' },
-      { value: '60%', label: 'higher impressions', icon: 'bars' },
-      { value: '↓ 40%', label: 'ad spend', icon: 'tag' },
+      { value: '40–60', label: 'product Amazon portfolio', icon: 'cart' },
       { value: 'Sales doubled', label: 'across 80% of products', icon: 'trophy' },
+      { value: '↓40%', label: 'ad spend', icon: 'tag' },
+      { value: '300+', label: 'competing products analysed', icon: 'bars' },
+      { value: '5–6', label: 'gardening brands', icon: 'layers' },
     ],
+    closing: 'This was probably where my curiosity about consumer choice became much more concrete.',
   },
 ];
 
@@ -100,53 +150,53 @@ export const toolkitSteps = [
   {
     n: '01', title: 'Understand the mess',
     body: 'What’s here, what’s missing, and what can actually be compared?',
-    examples: ['13F filings', 'survey responses', 'customer queries', 'marketplace data'],
+    examples: ['13F filings', '5,000+ customer queries', '370 healthcare responses'],
     icon: 'mess',
   },
   {
     n: '02', title: 'Give it structure',
     body: 'Clean it, standardise it, join sources, categorise it, and make assumptions explicit.',
-    examples: ['DRHP data (10+ years)', 'research databases', 'multilingual content', 'competitor data'],
+    examples: ['15 years of EM turnover data', '10+ years of DRHP data', '60+ companies'],
     icon: 'structure',
   },
   {
     n: '03', title: 'Test what matters',
     body: 'Use the right analysis to separate signal from noise and understand what is driving the outcome.',
-    examples: ['regression + correlation', 'time-series analysis', 'pattern analysis', 'benchmarks'],
+    examples: ['15,000 rider records', 'regression', 'R² 0.631'],
     icon: 'test',
   },
   {
     n: '04', title: 'Build the answer',
     body: 'Turn it into a dashboard, automation, database, framework or clearer workflow.',
-    examples: ['newsletter automation', 'Power BI dashboards', 'Python workflows', 'SOPs + research repository'],
+    examples: ['Power BI dashboards', 'Python + Claude automation', 'email-to-database pipeline'],
     icon: 'build',
   },
   {
-    n: '05', title: 'Leave it better',
+    n: '05', title: 'Leave it easier than you found it',
     body: 'Document it, make it repeatable, and reduce how much knowledge has to live in someone’s head.',
-    examples: ['5 hrs → 2 mins', '2–3 hrs → 30 mins', 'onboarding 4 weeks → 2 weeks', 'reusable knowledge'],
+    examples: ['2 hrs → 30 mins', '30–40 mins → 2–3 mins', 'reusable database + dashboard'],
     icon: 'better',
   },
 ];
 
 export const practice = [
-  { title: 'Automated research newsletters', where: 'D. E. Shaw', body: 'Python + Claude workflows for extraction, flagging, categorising and formatting.', metric: '5 hrs → 2 mins', viz: 'pipeline' },
-  { title: 'Rider fairness analysis', where: '', body: 'Reverse-engineered scoring and analysed 15,000 records.', metric: '99.9% reconstructed fit', viz: 'fit', href: '/projects/rider-fairness/' },
-  { title: 'Healthcare expenditure research', where: '', body: 'Regression analysis in Jamovi.', metric: '370 responses · 63.1% variance explained', viz: 'r2', href: '/projects/healthcare-expenditure/' },
-  { title: 'Customer friction analysis', where: 'Groww', body: '5,000+ customer queries analysed.', metric: '5,000+ queries', viz: 'buckets' },
-  { title: 'Marketplace / competitor research', where: 'Mensa', body: '300+ products studied.', metric: '300+ products', viz: 'grid' },
+  { title: 'Daily intelligence tracking', where: 'D. E. Shaw', body: 'Python, Claude and Cursor automation across LinkedIn, Reddit and other sources.', metric: '2 hrs → 30 mins', viz: 'pipeline' },
+  { title: 'Shareholding disclosure pipeline', where: 'D. E. Shaw', body: 'Event-driven email-to-database pipeline for 4%/5% shareholding disclosures.', metric: '30–40 mins → 2–3 mins', viz: 'grid' },
+  { title: 'Rider fairness analysis', where: '', body: 'Reverse-engineered scoring across 15,000 delivery records.', metric: '99.9% model fit', viz: 'fit', href: '/projects/rider-fairness/' },
+  { title: 'Healthcare expenditure research', where: '', body: 'Regression and statistical analysis in Jamovi.', metric: 'R² 0.631', viz: 'r2', href: '/projects/healthcare-expenditure/' },
+  { title: 'Customer friction analysis', where: 'Groww', body: '5,000+ stock-trading and F&O activation queries.', metric: 'activation time ↓20%', viz: 'buckets' },
 ];
 
 // logo: file in public/logos/ (official marks); mono: plain text tile where no official mark is available
 export const toolGroups = [
   { name: 'Analysis & statistics', tools: [
     { name: 'Python', logo: 'python.svg' },
-    { name: 'Excel', logo: 'excel.svg' },
+    { name: 'Advanced Excel', logo: 'excel.svg' },
     { name: 'Jamovi', mono: 'jmv' },
-    { name: 'EViews', mono: 'EV' },
   ] },
   { name: 'Data & dashboards', tools: [
-    { name: 'SQL / MySQL', logo: 'mysql.svg' },
+    { name: 'SQL', mono: 'SQL' },
+    { name: 'MySQL', logo: 'mysql.svg' },
     { name: 'Power BI', logo: 'powerbi.svg' },
     { name: 'Tableau', logo: 'tableau.svg' },
   ] },

@@ -12,17 +12,19 @@ npm run build    # outputs static files to dist/
 
 ## Before publishing
 
-| What | Where |
-| --- | --- |
-| Email, LinkedIn, GitHub URLs | `src/data/site.ts` |
-| Résumé PDF | `public/resume/Moksha-Agrawal-Resume.pdf` |
-| Home portrait | `public/images/portrait.jpg` |
-| About portrait (optional, falls back to the Home one) | `public/images/portrait-about.jpg` |
-| Random Drift link | `site.randomDrift` in `src/data/site.ts` |
-| Healthcare full report (optional) | `site.healthcareReport` in `src/data/site.ts` |
-| Final domain | `site` in `astro.config.mjs` |
+All links live in `src/data/site.ts`. An empty value hides that link everywhere (nav, footer, contact) instead of showing a broken or generic one.
 
-Until a portrait exists, a labelled placeholder frame holds its space.
+| What | Where | Status |
+| --- | --- | --- |
+| Email | `site.email` | set |
+| LinkedIn profile URL | `site.linkedin` | **needed** |
+| GitHub profile URL | `site.github` | **needed** |
+| Résumé PDF | `public/resume/Moksha-Agrawal-Resume.pdf` | **needed** (buttons appear automatically once the file exists) |
+| Random Drift link | `site.randomDrift` | optional |
+| Healthcare full report | `site.healthcareReport` | optional |
+| Final domain | `site` in `astro.config.mjs` | set when known |
+
+Notes is out of the main navigation until a first article exists; `/notes/` still works if visited directly.
 
 ## Where things live
 

@@ -48,7 +48,10 @@ const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourne
                 <CompanyMark id={c.id} name={c.name} />
                 <span class="sum-body">
                   <span class="sum-q">{c.question}</span>
-                  <span class="sum-bullets">{c.bullets.map((b) => <span>{b}</span>)}</span>
+                  <span class="sum-bullets">
+                    <span class="sum-key hand">{c.keyword}</span>
+                    {c.bullets.map((b) => <span class="sum-b">{b}</span>)}
+                  </span>
                 </span>
                 <span class="sum-go hand" aria-hidden="true">see how ↓</span>
               </a>
@@ -66,7 +69,8 @@ const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourne
           <p class="co-n hand" aria-hidden="true">{c.n}</p>
           <article class="co">
             <div class="co-left">
-              <CompanyMark id={c.id} name={c.name} size="lg" as="h2" titleId={`${c.id}-name`} />
+              <CompanyMark id={c.id} name={c.company ?? c.name} size="lg" as="h2" titleId={`${c.id}-name`} />
+              {c.company && <p class="co-now">{c.company}</p>}
               <p class="co-role">{c.role}</p>
               <p class="co-meta">{c.place} <span aria-hidden="true">·</span> {c.dates}</p>
               <p class="co-intro">{c.intro}</p>
@@ -87,6 +91,13 @@ const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourne
                     <div>
                       <h4 class="item-title">{it.title}</h4>
                       <p class="item-body">{it.body}</p>
+                      {it.evidence && (
+                        <ul class="item-ev" role="list" aria-label="Evidence">
+                          {it.evidence.map((e) => <li>{e}</li>)}
+                        </ul>
+                      )}
+                      {it.hand && <p class="hand item-hand">{it.hand}</p>}
+                      {it.quote && <blockquote class="item-quote">{it.quote}</blockquote>}
                     </div>
                   </li>
                 ))}
@@ -97,6 +108,7 @@ const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourne
               <Panel stats={c.outcomes} />
             </div>
           </article>
+          <p class="co-closing">{c.closing}</p>
         </section>
       );
     })}
@@ -138,6 +150,16 @@ const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourne
       if (e.isIntersecting) { run(e.target as HTMLElement); io.unobserve(e.target); }
     }), { threshold: 0.6 });
     els.forEach((el) => io.observe(el));
+  }
+
+  // 01 / 02 / 03 marker highlights for the company in view
+  const markers = document.querySelectorAll<HTMLElement>('.co-n');
+  if (markers.length && 'IntersectionObserver' in window) {
+    const so = new IntersectionObserver((entries) => entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      markers.forEach((m) => m.classList.toggle('is-current', m.parentElement === e.target));
+    }), { rootMargin: '-45% 0px -50% 0px' });
+    document.querySelectorAll('.co-wrap').forEach((sec) => so.observe(sec));
   }
 
   // D. E. Shaw: before / after toggle
@@ -197,7 +219,8 @@ const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourne
   .sum-body { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 16px; }
   .sum-q { font-family: var(--font-serif-text); font-size: 1rem; line-height: 1.45; color: #2c2a27; padding-right: 14px; border-right: 1px solid var(--line-strong); }
   .sum-bullets { display: grid; gap: 4px; align-content: start; font-family: var(--font-serif-text); font-size: 0.9rem; color: #3b3833; }
-  .sum-bullets span::before { content: '•'; color: var(--cobalt); margin-right: 8px; }
+  .sum-b::before { content: '•'; color: var(--cobalt); margin-right: 8px; }
+  .sum-key { margin-bottom: 2px; font-size: 1.15rem; color: var(--cobalt); line-height: 1; }
   .sum-go { position: absolute; right: 18px; top: 20px; font-size: 0.95rem; color: var(--cobalt); opacity: 0; transform: translateY(-3px); transition: opacity var(--t-micro), transform var(--t-micro) var(--ease); }
   .sum-card:hover .sum-go, .sum-card:focus-visible .sum-go { opacity: 1; transform: none; }
 
@@ -206,7 +229,7 @@ const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourne
   .co-n { position: absolute; left: calc(var(--gutter) - 34px); top: -14px; margin: 0; font-size: 1.4rem; color: var(--cobalt); }
   .co {
     display: grid;
-    grid-template-columns: minmax(0, 0.95fr) minmax(0, 0.85fr) minmax(0, 1.35fr);
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.05fr) minmax(0, 1.2fr);
     border: 1px solid var(--line); border-radius: 8px;
     background: rgba(252, 249, 242, 0.55);
   }
@@ -231,7 +254,18 @@ const panels: Record<string, any> = { 'de-shaw': DesSnapshot, groww: GrowwJourne
   .work :global(.ko-label) { display: inline-block; margin: 16px 0 8px; padding: 2px 12px; font-family: var(--font-hand-print); font-size: 1rem; background: #F8E3A0; border-radius: 5px; transform: rotate(-1deg); }
 
   .items { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 30px; }
-  .item { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 16px; align-items: start; }
+  .item { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 16px; align-items: start; padding: 10px; margin: -10px; border-radius: 8px; transition: transform var(--t-micro) var(--ease), background-color var(--t-micro); }
+  .item:hover { transform: translateY(-3px); background: rgba(252, 249, 242, 0.9); }
+  .item-ev { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .item-ev li { padding: 3px 10px; font-size: 0.8rem; font-weight: 500; color: var(--cobalt); border: 1px solid var(--cobalt-line); border-radius: 999px; background: rgba(255, 255, 255, 0.5); }
+  .item-hand { margin-top: 10px; font-size: 1rem; line-height: 1.25; color: var(--cobalt); transform: rotate(-1.5deg); transform-origin: left; }
+  .item-quote { margin: 12px 0 0; padding-left: 12px; border-left: 2px solid var(--yellow); font-family: var(--font-serif-text); font-style: italic; font-size: 0.95rem; line-height: 1.45; color: #3b3833; }
+  .co-closing { margin: 14px 0 0 4px; font-family: var(--font-serif-text); font-style: italic; font-size: 0.98rem; color: var(--grey); max-width: 70ch; }
+  .co-closing::before { content: '— '; color: var(--cobalt); font-style: normal; }
+  .co-now { margin-top: 6px; font-size: 0.85rem; color: var(--grey); }
+  .co-right > :global(*) { position: sticky; top: 96px; height: auto !important; }
+  .co-n { transition: opacity var(--t-micro), transform var(--t-micro) var(--ease); opacity: 0.55; transform-origin: left center; width: fit-content; }
+  .co-n.is-current { opacity: 1; transform: scale(1.15); }
   .item-n { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #E3EAFB; color: var(--cobalt); font-family: var(--font-serif-text); font-size: 0.8rem; font-weight: 600; transition: background-color var(--t-micro), color var(--t-micro); }
   .item:hover .item-n { background: var(--cobalt); color: #fff; }
   .item-title { font-family: var(--font-serif-text); font-weight: 600; font-size: 1.02rem; color: var(--ink); }

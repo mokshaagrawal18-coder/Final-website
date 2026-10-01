@@ -14,14 +14,3 @@ export type NoteEntry = {
 };
 
 export const notesList: NoteEntry[] = [];
-
-// Things on the list, shown as a quiet "coming up" line while the page is empty.
-export const upcomingThemes = [
-  'Tiny UX decisions',
-  'consumer psychology',
-  'persuasion',
-  'skincare category conventions',
-  'brand positioning',
-  'ads, behind the scenes',
-  'small behavioural observations',
-];

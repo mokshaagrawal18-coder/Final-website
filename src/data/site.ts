@@ -1,20 +1,26 @@
 /**
- * Site-wide links and settings.
- * Fill in the TODO values before publishing — every page reads from here.
+ * Site-wide links and settings. Every page, the nav and the footer read from here.
+ * Leave a value empty ('') to hide that link everywhere rather than show a broken or generic one.
  */
+import fs from 'node:fs';
+import path from 'node:path';
+
+const RESUME_PATH = '/resume/Moksha-Agrawal-Resume.pdf';
+const hasFile = (p: string) => fs.existsSync(path.join(process.cwd(), 'public', p));
+
 export const site = {
   name: 'Moksha Agrawal',
   description:
     'Moksha Agrawal: analytics, research and building things. Usually trying to make complicated things simpler.',
 
-  // TODO: replace with the real address, e.g. 'hello@yourdomain.com'
-  email: 'hello@example.com',
-  // TODO: replace with real profile URLs
-  linkedin: 'https://www.linkedin.com/',
-  github: 'https://github.com/',
+  email: 'mokshaagrawal18@gmail.com',
 
-  // Drop the résumé PDF at public/resume/Moksha-Agrawal-Resume.pdf
-  resume: '/resume/Moksha-Agrawal-Resume.pdf',
+  // NEEDS INPUT: paste your real profile URLs, e.g. 'https://www.linkedin.com/in/your-handle/'
+  linkedin: '',
+  github: '',
+
+  // Résumé buttons appear only once the PDF exists at public/resume/Moksha-Agrawal-Resume.pdf
+  resume: hasFile(RESUME_PATH) ? RESUME_PATH : '',
 
   // Link to the live Random Drift build (leave empty until it is hosted)
   randomDrift: '',
@@ -23,9 +29,9 @@ export const site = {
   healthcareReport: '',
 };
 
+// Notes stays reachable at /notes/ but is out of the main navigation until a first article exists.
 export const nav = [
   { label: 'About', href: '/about/' },
   { label: 'Work', href: '/work/' },
   { label: 'Projects', href: '/projects/' },
-  { label: 'Notes', href: '/notes/' },
 ];

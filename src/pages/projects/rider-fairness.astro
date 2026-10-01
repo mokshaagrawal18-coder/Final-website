@@ -7,7 +7,7 @@ import '../../styles/details.css';
   title="Is the Algorithm Being Fair to Riders?"
   description="Analysing 15,000 delivery records to separate rider skill from circumstance, and building a fairer score."
   question="Can a performance score be mathematically accurate and still be unfair?"
-  intro="I analysed 15,000 delivery records to understand how much rider performance was being shaped by skill versus circumstances like traffic, weather, and route conditions."
+  intro="I reverse-engineered rider scoring across 15,000 delivery records to understand how traffic, weather, and rider experience were shaping performance scores, then built a condition-adjusted Fair Score to separate performance from circumstance."
   did={[
     { title: 'Reverse-engineered the scoring logic', body: 'Worked backwards from the existing score to understand what was driving it.' },
     { title: 'Separated skill from circumstance', body: 'Tested which factors reflected rider performance and which were largely outside the rider’s control.' },
@@ -15,7 +15,7 @@ import '../../styles/details.css';
   ]}
   stoodOut="Riders with similar underlying performance could still receive meaningfully different scores because of the conditions around them."
   keyLine="A model can be consistent without necessarily being fair."
-  proof={['15,000 records', '99.9% reconstructed fit', 'Fair Score framework']}
+  proof={['15,000 records', '99.9% model fit', 'Fair Score framework']}
   reflection="This made me more interested in the difference between predicting performance and judging it fairly."
   detailsLabel="How I tested it"
   next={{ href: '/projects/healthcare-expenditure/', label: 'Next: Healthcare Expenditure' }}
@@ -26,7 +26,7 @@ import '../../styles/details.css';
     <div class="xd-block">
       <h3>Score reconstruction</h3>
       <p>Treated the existing performance score as the thing to explain, and worked backwards to find which recorded factors reproduced it.</p>
-      <p>The reconstructed score matched the original with a 99.9% fit, which meant the logic was understood well enough to question it.</p>
+      <p>The reconstructed model fit the original scores at 99.9%, which meant the logic was understood well enough to question it.</p>
     </div>
     <div class="xd-block">
       <h3>Regression</h3>
@@ -40,7 +40,7 @@ import '../../styles/details.css';
       <h3>Controllable vs uncontrollable</h3>
       <p>Sorted the factors by whether a rider could reasonably influence them.</p>
       <div class="xd-split">
-        <div><span class="lbl">largely outside the rider’s control</span>traffic · weather · route conditions</div>
+        <div><span class="lbl">largely outside the rider’s control</span>traffic · weather</div>
         <div><span class="lbl">closer to rider performance</span>what remains once circumstance is accounted for</div>
       </div>
     </div>

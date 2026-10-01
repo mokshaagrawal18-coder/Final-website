@@ -13,7 +13,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
         {nav.map((item) => (
           <li><a href={item.href} class:list={['nav-link', { 'is-active': isActive(item.href) }]} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a></li>
         ))}
-        <li><a href={site.resume} class="nav-link" target="_blank" rel="noopener">Résumé <span class="nl-arrow nl-ext" aria-hidden="true">↗</span><span class="visually-hidden">(opens in a new tab)</span></a></li>
+        {site.resume && <li><a href={site.resume} class="nav-link" target="_blank" rel="noopener">Résumé <span class="nl-arrow nl-ext" aria-hidden="true">↗</span><span class="visually-hidden">(opens in a new tab)</span></a></li>}
         <li><a href="/contact/" class:list={['nav-link nav-hi', { 'is-active': isActive('/contact/') }]} aria-current={isActive('/contact/') ? 'page' : undefined}>Say hi <span class="nl-arrow" aria-hidden="true">→</span></a></li>
       </ul>
     </nav>
@@ -28,7 +28,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
       {nav.map((item) => (
         <li><a href={item.href} class:list={['mm-link', { 'is-active': isActive(item.href) }]} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a></li>
       ))}
-      <li><a href={site.resume} class="mm-link" target="_blank" rel="noopener">Résumé <span aria-hidden="true">↗</span></a></li>
+      {site.resume && <li><a href={site.resume} class="mm-link" target="_blank" rel="noopener">Résumé <span aria-hidden="true">↗</span></a></li>}
       <li><a href="/contact/" class:list={['mm-link', { 'is-active': isActive('/contact/') }]}>Say hi <span aria-hidden="true">→</span></a></li>
     </ul>
   </nav>

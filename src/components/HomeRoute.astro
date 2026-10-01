@@ -30,7 +30,7 @@ const stops = [
     icon: 'M12 3.5a3.5 3.5 0 1 0 0.01 0M5 21c0-4.5 3-7.5 7-7.5s7 3 7 7.5z',
   },
   {
-    label: 'Notes', sub: ['thoughts', 'in progress'], href: '/notes/', tone: 'yellow',
+    label: 'Notes', sub: ['more', 'soon'], href: '/notes/', tone: 'yellow', soon: true,
     node: [454, 45], tag: [457, 62], subAt: [444, 83], iconAt: 'right',
     icon: 'M6 4h12v17H6zM9 2.5v3M15 2.5v3M9 10h6M9 14h6M9 18h4',
   },
@@ -70,7 +70,7 @@ const path = pts.reduce((d, p, i, a) => {
         <a href={s.href} class="stop-link" style={at(s)}>
           <span class="stop-node" aria-hidden="true"></span>
           <span class:list={['stop-tag', `is-${s.tone}`]}>{s.label}</span>
-          <span class:list={['stop-sub hand', `icon-${s.iconAt}`]}>
+          <span class:list={['stop-sub hand', `icon-${s.iconAt}`, { 'is-soon': (s as any).soon }]}>
             <span class="stop-sub-text">{s.sub[0]}<br />&nbsp;{s.sub[1]}</span>
             <svg class:list={['stop-icon', { 'is-bars': s.bars }]} viewBox="0 0 24 24" aria-hidden="true"><path d={s.icon} /></svg>
           </span>
@@ -133,6 +133,8 @@ const path = pts.reduce((d, p, i, a) => {
     transition: opacity var(--t-micro) var(--ease);
   }
   .stop-sub.icon-left { flex-direction: row-reverse; }
+  .stop-sub.is-soon .stop-sub-text { padding: 0.1em 0.5em; border: 1px dashed var(--cobalt-line); border-radius: 4px; }
+  .stop-sub.is-soon .stop-sub-text br { display: none; }
   .stop-sub.icon-left .stop-icon { align-self: flex-end; margin-bottom: -0.9em; }
   .stop-icon { flex: none; width: 1.7em; height: 1.7em; fill: none; stroke: var(--cobalt); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
   .stop-icon.is-bars { stroke-width: 2.6; stroke-linecap: butt; }

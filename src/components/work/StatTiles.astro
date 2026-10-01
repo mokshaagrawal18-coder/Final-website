@@ -24,18 +24,15 @@ const { stats, variant = 'boxes' } = Astro.props;
   .tiles--circles .tile-icon svg { width: 26px; height: 26px; }
   .tiles--circles .tile:hover .tile-icon { transform: translateY(-3px); }
 
-  .tiles--boxes { border: 1px solid var(--line); border-radius: 6px; background: rgba(255, 255, 255, 0.45); }
+  .tiles--boxes { grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); background: #FBF8F1; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  /* hairlines drawn by each tile, so a short last row leaves no grey gap */
+  .tiles--boxes .tile { box-shadow: 1px 0 0 var(--line), 0 1px 0 var(--line); }
   .tiles--boxes .tile { align-items: flex-start; text-align: left; padding: 16px 16px 14px; transition: background-color var(--t-micro) var(--ease); }
-  .tiles--boxes .tile + .tile { border-left: 1px solid var(--line); }
-  .tiles--boxes .tile:hover { background: rgba(36, 82, 214, 0.04); }
+  .tiles--boxes .tile:hover { background: #F4F2EE; }
   .tiles--boxes .tile-icon { margin-bottom: 4px; }
   .tiles--boxes .tile-value { font-size: 1.2rem; }
 
   @media (max-width: 640px) {
-    .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .tiles--boxes .tile + .tile { border-left: 0; }
-    .tiles--boxes .tile { border-top: 1px solid var(--line); }
-    .tiles--boxes .tile:nth-child(-n + 2) { border-top: 0; }
-    .tiles--boxes .tile:nth-child(even) { border-left: 1px solid var(--line); }
+    .tiles--circles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 </style>

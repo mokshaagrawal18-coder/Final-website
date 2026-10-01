@@ -26,11 +26,16 @@ import { site } from '../../data/site';
         <p class="num p-n">01</p>
         <h2 class="t-section p-title" id="p1-title">Is the Algorithm Being Fair to Riders?</h2>
         <p class="p-q">Can a performance score be mathematically accurate and still be unfair?</p>
+        <div class="p-copy">
+          <p>I reverse-engineered scoring across 15,000 delivery records, measuring how traffic, weather and rider experience shaped performance scores.</p>
+          <p>Then I built a condition-adjusted Fair Score designed to separate rider performance from circumstances outside the rider’s control.</p>
+        </div>
+        <p class="p-key">A model can be consistent without necessarily being fair.</p>
         <ul class="tags" role="list">
-          <li class="tag">Data analysis</li>
-          <li class="tag">Model fairness</li>
           <li class="tag tag--metric">15,000 records</li>
+          <li class="tag tag--metric">99.9% model fit</li>
           <li class="tag">Python</li>
+          <li class="tag">regression</li>
         </ul>
         <ArrowLink href="/projects/rider-fairness/" variant="button" class="p-cta">View project</ArrowLink>
       </div>
@@ -44,12 +49,15 @@ import { site } from '../../data/site';
       <div class="p-text reveal">
         <p class="num p-n">02</p>
         <h2 class="t-section p-title" id="p2-title">Healthcare Expenditure:<br /> A Gender-Based Analysis</h2>
-        <p class="p-q">What actually drives healthcare spending, and is it the same for everyone?</p>
+        <p class="p-q">What actually drives healthcare spending — and is it the same across genders?</p>
+        <div class="p-copy">
+          <p>I used Jamovi, regression and statistical analysis to test demographic, financial and healthcare-need drivers of expenditure.</p>
+          <p>The resulting model explained 63.1% of expenditure variation, helping identify which factors were most strongly associated with spending behaviour across genders.</p>
+        </div>
         <ul class="tags" role="list">
-          <li class="tag">Research</li>
-          <li class="tag">Statistics</li>
-          <li class="tag tag--metric">370 responses</li>
           <li class="tag">Jamovi</li>
+          <li class="tag">Regression</li>
+          <li class="tag tag--metric">R² 0.631</li>
         </ul>
         <ArrowLink href="/projects/healthcare-expenditure/" variant="button" class="p-cta">View project</ArrowLink>
       </div>
@@ -64,6 +72,7 @@ import { site } from '../../data/site';
         <p class="p-n"><span class="num">03</span> <span class="soon">Coming soon</span></p>
         <h2 class="t-section p-title" id="p3-title">Tiny UX Decisions</h2>
         <p class="p-q">How much can one tiny interface change affect a decision?</p>
+        <div class="p-copy"><p>A growing collection of defaults, framing, friction, recommendations, and other interface choices that quietly shape what people notice and choose.</p></div>
         <ul class="tags" role="list">
           <li class="tag">Behaviour</li>
           <li class="tag">UX</li>
@@ -116,6 +125,9 @@ import { site } from '../../data/site';
   .p-n { font-size: 1rem; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
   .soon { font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; background: var(--yellow); color: var(--ink); padding: 4px 8px 3px; border-radius: 3px; }
   .p-title { font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.9rem); }
+  .p-copy { margin: -6px 0 16px; max-width: 46ch; color: var(--grey); }
+  .p-copy p + p { margin-top: 0.6em; }
+  .p-key { margin: 0 0 18px; font-weight: 500; }
   .p-q { margin: 18px 0 22px; font-size: 1.2rem; line-height: 1.4; font-weight: 500; color: var(--cobalt); max-width: 30ch; }
   :global(.p-cta) { margin-top: 28px; }
   .p-more { margin-top: 18px; }

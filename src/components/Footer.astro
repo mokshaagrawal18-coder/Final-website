@@ -8,14 +8,14 @@ import { site } from '../data/site';
       <p class="footer-main head">Thanks for looking a little closer.</p>
       <ul class="footer-links" role="list">
         <li><a href={`mailto:${site.email}`}>Email</a></li>
-        <li><a href={site.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-        <li><a href={site.github} target="_blank" rel="noopener noreferrer">GitHub</a></li>
-        <li><a href={site.resume} target="_blank" rel="noopener">Résumé</a></li>
+        {site.linkedin && <li><a href={site.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></li>}
+        {site.github && <li><a href={site.github} target="_blank" rel="noopener noreferrer">GitHub</a></li>}
+        {site.resume && <li><a href={site.resume} target="_blank" rel="noopener">Résumé</a></li>}
       </ul>
     </div>
     <div class="footer-base">
       <p class="hand hand--grey built">Built with too many tabs open.</p>
-      <a href="#top" class="arrow-link arrow-link--ink to-top"><span class="al-text">Back to top</span> <span class="al-arrow al-arrow--up" aria-hidden="true">↑</span></a>
+      <a href="#top" class="arrow-link arrow-link--ink to-top" data-to-top><span class="al-text">Back to top</span> <span class="al-arrow al-arrow--up" aria-hidden="true">↑</span></a>
       <p class="copy">© 2026 Moksha Agrawal</p>
     </div>
   </div>

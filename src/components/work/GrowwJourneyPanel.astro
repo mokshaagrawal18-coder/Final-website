@@ -4,10 +4,10 @@ import type { Stat } from '../../data/work';
 interface Props { stats: Stat[] }
 const { stats } = Astro.props;
 const steps = [
-  { label: 'Sign up', sub: 'Account creation', friction: false },
-  { label: 'KYC', sub: 'Verification delays', friction: true },
-  { label: 'Activation', sub: 'Confusion about next steps', friction: true },
-  { label: 'Invest', sub: 'First investment', friction: false },
+  { label: 'Sign up', sub: 'account created', friction: false },
+  { label: 'KYC', sub: 'documents', friction: true },
+  { label: 'Verification', sub: 'checks', friction: true },
+  { label: 'Activation', sub: 'ready to trade', friction: false },
 ];
 ---
 <div class="gj" data-journey data-reveal>
@@ -27,7 +27,7 @@ const steps = [
       ))}
     </ol>
     <span class="gj-arrow" aria-hidden="true">→</span>
-    <p class="hand gj-note" aria-hidden="true">Smoother journeys. More confident investors.</p>
+    <p class="hand gj-note" aria-hidden="true">where “this is taking too long” begins.</p>
   </div>
   <p class="gj-hint hand" aria-hidden="true"><span class="gj-key"></span> where people got stuck · tap a step</p>
 
@@ -37,7 +37,7 @@ const steps = [
 
 <style>
   .gj-row { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 0.32fr); align-items: start; gap: 10px; margin-top: 16px; }
-  .gj-steps { position: relative; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .gj-steps { position: relative; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 6px; }
   .gj-line { position: absolute; left: 12.5%; right: 12.5%; top: 37px; height: 2px; background: rgba(36, 82, 214, 0.2); }
   .gj-fill { position: absolute; inset: 0; background: var(--cobalt); transform-origin: left; }
   :global(.js) .gj:not(.is-in) .gj-fill { transform: scaleX(0); }
@@ -47,7 +47,7 @@ const steps = [
     display: flex; flex-direction: column; align-items: center; gap: 8px;
     padding: 0 4px 6px; border: 0; background: none; text-align: center; border-radius: 6px;
   }
-  .gj-label { font-family: var(--font-serif-text); font-size: 0.95rem; color: var(--ink); }
+  .gj-label { font-family: var(--font-serif-text); font-size: 0.85rem; color: var(--ink); }
   .gj-dot { position: relative; z-index: 1; width: 14px; height: 14px; border-radius: 50%; background: var(--cobalt); box-shadow: 0 0 0 3px var(--paper); transition: transform var(--t-micro) var(--ease), box-shadow var(--t-micro); }
   .is-friction .gj-dot { background: var(--yellow); }
   .gj-sub { font-size: 0.9rem; line-height: 1.15; color: var(--grey); transition: color var(--t-micro); }

@@ -81,7 +81,7 @@ export const notes: Note[] = [
     body: [
       'You practise. You count. You fix. You repeat.',
       'Then you walk on stage and trust that all of it is in there somewhere.',
-      'Sixteen years later, I still like that balance: prepare properly, then let yourself do the thing.',
+      'More than sixteen years later, I still like that balance: prepare properly, then let yourself do the thing.',
     ],
     closing: 'prepare, then trust it.',
     paper: 'lined', rotate: -1.1, pullout: 'counts',
