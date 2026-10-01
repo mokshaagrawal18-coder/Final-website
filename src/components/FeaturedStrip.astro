@@ -1,0 +1,149 @@
+---
+/**
+ * Featured project strip with a small "adjust for circumstance" slider.
+ * Illustrative numbers only (same as the project visual): 86 vs 72 as scored, 84 vs 82 adjusted.
+ */
+const A = [86, 84];
+const B = [72, 82];
+const start = 0.35;
+const lerp = (a: number[], t: number) => Math.round(a[0] + (a[1] - a[0]) * t);
+---
+<section class="fstrip container" aria-labelledby="fs-title">
+  <div class="fs-card" data-fairness>
+    <div class="fs-intro">
+      <p class="fs-tag">Featured project</p>
+      <h2 class="fs-title" id="fs-title">
+        <a href="/projects/rider-fairness/">Is the Algorithm Being Fair to Riders? <span class="fs-arrow" aria-hidden="true">→</span></a>
+      </h2>
+      <p class="fs-q">Can a performance score be mathematically accurate and still be unfair?</p>
+    </div>
+
+    <div class="fs-slider">
+      <label for="fairness" class="fs-slider-label">Adjust for circumstance</label>
+      <div class="fs-range">
+        <output class="fs-bubble" for="fairness" data-gap style={`--t:${start}`}>gap {lerp(A, start) - lerp(B, start)} pts</output>
+        <input type="range" id="fairness" min="0" max="1" step="0.01" value={start} data-range style={`--t:${start}`} aria-describedby="fs-ends" />
+      </div>
+      <p class="fs-ends" id="fs-ends"><span>as scored</span><span>adjusted</span></p>
+    </div>
+
+    <div class="fs-out" aria-live="polite">
+      <div class="fs-row">
+        <span class="fs-who">Rider A</span>
+        <span class="fs-bar"><span data-bar="a" style={`--w:${lerp(A, start)}%`}></span></span>
+        <span class="fs-num head" data-num="a">{lerp(A, start)}</span>
+      </div>
+      <div class="fs-row">
+        <span class="fs-who">Rider B</span>
+        <span class="fs-bar"><span data-bar="b" style={`--w:${lerp(B, start)}%`}></span></span>
+        <span class="fs-num head" data-num="b">{lerp(B, start)}</span>
+      </div>
+      <p class="fs-note hand">same ability. different conditions.</p>
+      <p class="fs-illus">illustration</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-fairness]').forEach((root) => {
+    const range = root.querySelector<HTMLInputElement>('[data-range]')!;
+    const gap = root.querySelector<HTMLElement>('[data-gap]')!;
+    const A = [86, 84], B = [72, 82];
+    const lerp = (v: number[], t: number) => Math.round(v[0] + (v[1] - v[0]) * t);
+    const set = (k: string, n: number) => {
+      root.querySelector<HTMLElement>(`[data-num="${k}"]`)!.textContent = String(n);
+      root.querySelector<HTMLElement>(`[data-bar="${k}"]`)!.style.setProperty('--w', `${n}%`);
+    };
+    const update = () => {
+      const t = Number(range.value);
+      const a = lerp(A, t), b = lerp(B, t);
+      set('a', a); set('b', b);
+      gap.textContent = `gap ${a - b} pts`;
+      range.style.setProperty('--t', String(t));
+      gap.style.setProperty('--t', String(t));
+      range.setAttribute('aria-valuetext', `Rider A ${a}, Rider B ${b}, gap ${a - b} points`);
+    };
+    range.addEventListener('input', update);
+    update();
+  });
+</script>
+
+<style>
+  .fs-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 0.95fr);
+    gap: 28px 44px;
+    align-items: center;
+    padding: 30px 36px;
+    background: var(--paper);
+    border-radius: 4px;
+    box-shadow: var(--shadow-paper);
+  }
+  .fs-tag {
+    display: inline-block;
+    padding: 5px 12px 4px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    background: #F8E8B4; color: var(--ink);
+    transform: rotate(-2deg);
+  }
+  .fs-title { margin-top: 14px; font-size: clamp(1.5rem, 1.1rem + 1vw, 2rem); line-height: 1.12; }
+  .fs-title a { transition: color var(--t-micro) var(--ease); }
+  .fs-title a:hover { color: var(--cobalt); }
+  .fs-arrow { display: inline-block; color: var(--cobalt); transition: transform var(--t-micro) var(--ease); }
+  .fs-title a:hover .fs-arrow, .fs-title a:focus-visible .fs-arrow { transform: translateX(4px); }
+  .fs-q { margin-top: 10px; font-size: 0.95rem; color: var(--grey); max-width: 40ch; }
+
+  .fs-slider-label { display: block; font-size: 0.8125rem; color: var(--grey); margin-bottom: 30px; }
+  .fs-range { position: relative; }
+  .fs-bubble {
+    position: absolute; bottom: calc(100% + 8px);
+    left: calc(var(--t) * (100% - 20px) + 10px);
+    transform: translateX(-50%);
+    font-family: var(--font-head); font-weight: 600; font-size: 0.85rem; white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  input[type='range'] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 28px; margin: 0; background: transparent; cursor: pointer;
+  }
+  input[type='range']::-webkit-slider-runnable-track {
+    height: 3px; border-radius: 3px;
+    background: linear-gradient(to right, var(--cobalt) calc(var(--t) * 100%), var(--line-strong) calc(var(--t) * 100%));
+  }
+  input[type='range']::-moz-range-track { height: 3px; border-radius: 3px; background: var(--line-strong); }
+  input[type='range']::-moz-range-progress { height: 3px; border-radius: 3px; background: var(--cobalt); }
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 20px; height: 20px; margin-top: -8.5px; border-radius: 50%;
+    background: var(--cobalt); border: 3px solid var(--paper); box-shadow: 0 0 0 1.5px var(--cobalt);
+    transition: transform 160ms var(--ease);
+  }
+  input[type='range']::-moz-range-thumb {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--cobalt); border: 3px solid var(--paper); box-shadow: 0 0 0 1.5px var(--cobalt);
+  }
+  input[type='range']:hover::-webkit-slider-thumb { transform: scale(1.12); }
+  input[type='range']:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 4px; border-radius: 4px; }
+  .fs-ends { display: flex; justify-content: space-between; margin-top: 6px; font-size: 0.8rem; color: var(--grey); }
+
+  .fs-out { position: relative; display: grid; gap: 10px; }
+  .fs-row { display: grid; grid-template-columns: 58px 1fr 30px; align-items: center; gap: 10px; }
+  .fs-who { font-size: 0.85rem; color: var(--grey); }
+  .fs-bar { height: 9px; border-radius: 2px; background: rgba(23, 23, 23, 0.06); overflow: hidden; }
+  .fs-bar span { display: block; height: 100%; width: var(--w); background: var(--cobalt); border-radius: 2px; transition: width 220ms var(--ease); }
+  .fs-row:nth-child(2) .fs-bar span { background: #6E8BE3; }
+  .fs-num { font-size: 1.1rem; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+  .fs-note { margin-top: 6px; font-size: 1.2rem; transform: rotate(-2deg); transform-origin: left; }
+  .fs-illus { position: absolute; top: -26px; right: 0; font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--grey); border: 1px dashed var(--line-strong); border-radius: 3px; padding: 2px 6px 1px; }
+
+  @media (max-width: 1024px) {
+    .fs-card { grid-template-columns: 1fr 1fr; }
+    .fs-intro { grid-column: 1 / -1; }
+  }
+  @media (max-width: 760px) { .fstrip { margin-top: 40px; } }
+  @media (max-width: 640px) {
+    .fs-card { grid-template-columns: 1fr; padding: 24px 20px; }
+    .fs-out { margin-top: 18px; }
+  }
+</style>

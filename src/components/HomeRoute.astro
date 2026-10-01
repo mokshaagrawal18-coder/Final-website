@@ -1,0 +1,133 @@
+---
+/**
+ * The blue route across Home: start here → Work → Projects → About → Notes → pick a route.
+ * Desktop: an SVG curve with stops pinned onto it (x in %, y in px of a 230px-tall band).
+ * Phones: the same stops as a vertical path down the left edge.
+ */
+const H = 230;
+const stops = [
+  { label: 'Work', sub: 'what I do and care about', href: '/work/', x: 21, y: 118, tone: 'blue',
+    icon: 'M3 6h18v10H3zM1 19h22M9 19l1-3h4l1 3' },
+  { label: 'Projects', sub: 'ideas into real things', href: '/projects/', x: 40, y: 156, tone: 'yellow',
+    icon: 'M4 20V14M9 20V10M14 20V12M19 20V5' },
+  { label: 'About', sub: 'the bigger picture', href: '/about/', x: 60, y: 112, tone: 'blue',
+    icon: 'M12 4a4 4 0 1 0 0.01 0M4 21c1-5 4-7 8-7s7 2 8 7' },
+  { label: 'Notes', sub: 'thoughts in progress', href: '/notes/', x: 80, y: 150, tone: 'yellow',
+    icon: 'M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h7' },
+];
+
+// curve passes through these (viewBox x = % × 10)
+const pts: [number, number][] = [
+  [18, 150], [110, 104], [210, 118], [300, 168], [400, 156],
+  [500, 104], [600, 112], [690, 156], [800, 150], [900, 128], [970, 98],
+];
+// Catmull-Rom → cubic Bézier
+const path = pts.reduce((d, p, i, a) => {
+  if (i === 0) return `M${p[0]} ${p[1]}`;
+  const p0 = a[i - 2] ?? a[i - 1], p1 = a[i - 1], p3 = a[i + 1] ?? p;
+  const c1 = [p1[0] + (p[0] - p0[0]) / 6, p1[1] + (p[1] - p0[1]) / 6];
+  const c2 = [p[0] - (p3[0] - p1[0]) / 6, p[1] - (p3[1] - p1[1]) / 6];
+  return `${d} C${c1[0].toFixed(1)} ${c1[1].toFixed(1)} ${c2[0].toFixed(1)} ${c2[1].toFixed(1)} ${p[0]} ${p[1]}`;
+}, '');
+---
+<nav class="route" aria-label="Pick a route through the site" data-route style={`--h:${H}px`}>
+  <svg class="route-line" viewBox={`0 0 1000 ${H}`} preserveAspectRatio="none" aria-hidden="true">
+    <path class="rl-path" d={path} />
+    <path class="rl-head" d="M950 92 L972 97 L960 115" />
+  </svg>
+
+  <span class="route-start" aria-hidden="true" style="--x:1.8%;--y:150px"></span>
+  <p class="hand route-hint route-hint--start" aria-hidden="true">start<br />here</p>
+  <p class="hand route-hint route-hint--end" aria-hidden="true">pick<br />a route</p>
+
+  <ol class="route-stops" role="list">
+    {stops.map((s, i) => (
+      <li class="stop" style={`--x:${s.x}%;--y:${s.y}px;--i:${i}`}>
+        <a href={s.href} class="stop-link">
+          <span class="stop-node" aria-hidden="true"></span>
+          <span class:list={['stop-label head', `is-${s.tone}`]}>{s.label}</span>
+          <span class="stop-sub hand">
+            {s.sub}
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d={s.icon} /></svg>
+          </span>
+        </a>
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .route { position: relative; height: calc(var(--h) + 96px); }
+  .route-line { position: absolute; left: 0; top: 0; width: 100%; height: var(--h); overflow: visible; }
+  .rl-path, .rl-head { fill: none; stroke: var(--cobalt); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+  /* the line "draws" left to right once */
+  :global(.js) .route-line { clip-path: inset(-20px 100% -20px -20px); animation: route-draw 1100ms var(--ease) 250ms forwards; }
+  @keyframes route-draw { to { clip-path: inset(-20px -20px -20px -20px); } }
+
+  .route-start {
+    position: absolute; left: var(--x); top: var(--y);
+    width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%;
+    background: var(--yellow); box-shadow: 0 0 0 3px var(--cream), 0 0 0 4.5px var(--cobalt);
+  }
+  .route-hint { position: absolute; font-size: 1.15rem; line-height: 1; color: var(--cobalt); }
+  .route-hint--start { left: 0; top: 92px; transform: rotate(-8deg); }
+  .route-hint--end { right: -4px; top: 40px; transform: rotate(-10deg); text-align: right; }
+
+  .route-stops { list-style: none; margin: 0; padding: 0; }
+  .stop { position: absolute; left: var(--x); top: var(--y); }
+  .stop-link {
+    position: relative;
+    display: flex; flex-direction: column; align-items: center;
+    transform: translateX(-50%);
+    padding-top: 14px;
+    min-width: 120px;
+  }
+  .stop-node {
+    position: absolute; top: -8px; left: 50%;
+    width: 16px; height: 16px; margin-left: -8px; border-radius: 50%;
+    background: var(--cream); border: 2.2px solid var(--cobalt);
+    transition: background-color var(--t-micro) var(--ease), transform var(--t-micro) var(--ease), box-shadow var(--t-micro) var(--ease);
+  }
+  .stop-label {
+    display: inline-block;
+    padding: 6px 14px 5px;
+    border-radius: 4px;
+    font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em;
+    transition: transform var(--t-micro) var(--ease), box-shadow var(--t-micro) var(--ease);
+  }
+  .stop-label.is-blue { background: #DCE5FA; color: var(--ink); }
+  .stop-label.is-yellow { background: #F8E4A2; color: var(--ink); }
+  .stop-sub {
+    display: flex; align-items: center; gap: 6px;
+    margin-top: 6px; max-width: 150px;
+    font-size: 1.05rem; line-height: 1.05; color: var(--grey); text-align: center;
+    transition: color var(--t-micro) var(--ease);
+  }
+  .stop-sub svg { flex: none; width: 20px; height: 20px; fill: none; stroke: var(--cobalt); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* hover / focus: the stop becomes the active marker */
+  .stop-link:hover .stop-label, .stop-link:focus-visible .stop-label { transform: translateY(-3px); box-shadow: 0 6px 14px -10px rgba(23, 23, 23, 0.45); }
+  .stop-link:hover .stop-sub, .stop-link:focus-visible .stop-sub { color: var(--ink); }
+  .stop-link:hover .stop-node, .stop-link:focus-visible .stop-node { background: var(--cobalt); transform: scale(1.2); box-shadow: 0 0 0 5px var(--cobalt-soft); }
+  .stop-link:focus-visible { outline: none; }
+  .stop-link:focus-visible .stop-label { outline: 2px solid var(--cobalt); outline-offset: 3px; }
+
+  :global(.js) .stop { opacity: 0; animation: stop-in 420ms var(--ease) forwards; animation-delay: calc(500ms + var(--i) * 170ms); }
+  @keyframes stop-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- phones: a vertical path ---------- */
+  @media (max-width: 760px) {
+    .route { height: auto; padding: 8px 0 0 28px; }
+    .route-line, .route-start, .route-hint { display: none; }
+    .route::before { content: ''; position: absolute; left: 8px; top: 18px; bottom: 26px; width: 2px; background: var(--cobalt); border-radius: 2px; }
+    .route-stops { display: grid; gap: 18px; }
+    .stop { position: relative; left: auto; top: auto; }
+    .stop-link { transform: none; flex-direction: row; align-items: center; gap: 12px; padding: 0; min-height: 44px; }
+    .stop-node { position: absolute; left: -27px; top: 50%; margin: -8px 0 0 0; }
+    .stop-sub { margin-top: 0; max-width: none; text-align: left; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .route-line { animation: none; clip-path: none; }
+    :global(.js) .stop { animation: none; opacity: 1; }
+  }
+</style>
