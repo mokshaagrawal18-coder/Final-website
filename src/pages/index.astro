@@ -17,167 +17,206 @@ const truths = [
   'will happily explain it 10 different ways',
   'pasta opinions: firm',
 ];
+
+/*
+ * Hero geometry comes straight from the reference layout, which is 556 units wide.
+ * 1 unit = 100/556 cqw of the hero frame, so the composition scales as one piece.
+ */
+const U = 100 / 556;
+const u = (v: number) => `${(v * U).toFixed(3)}cqw`;
+
+// torn-paper outline for the photo card, in % of the card box
+const rand = (() => { let s = 7; return () => ((s = (s * 9301 + 49297) % 233280) / 233280); })();
+const edge = (a: [number, number], b: [number, number], n: number, j: number) =>
+  Array.from({ length: n }, (_, i) => {
+    const t = i / n;
+    const x = a[0] + (b[0] - a[0]) * t, y = a[1] + (b[1] - a[1]) * t;
+    const dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy) || 1;
+    const off = i === 0 ? 0 : (rand() - 0.5) * j;
+    return `${(x + (-dy / len) * off).toFixed(2)}% ${(y + (dx / len) * off).toFixed(2)}%`;
+  });
+const TL: [number, number] = [0, 11.4], TR: [number, number] = [88.4, 0], BR: [number, number] = [100, 100], BL: [number, number] = [5.2, 86];
+const paper = [...edge(TL, TR, 28, 0.9), ...edge(TR, BR, 28, 0.9), ...edge(BR, BL, 28, 1.1), ...edge(BL, TL, 24, 0.9)].join(', ');
+const personClip = ['-30% -40%', '130% -40%', ...edge(BR, BL, 28, 1.1)].join(', ');
 ---
 <BaseLayout description="Hi, I’m Moksha. I like making complicated things simpler: data, research, systems, and the occasional better question.">
-  <!-- HOME 1 · HERO + ROUTE -->
-  <section class="home-hero container" aria-labelledby="hi">
-    <div class="hh-text">
-      <svg class="hh-sparks" viewBox="0 0 40 40" aria-hidden="true"><path d="M8 30L16 22M6 16l10 2M18 6l2 11" /></svg>
-      <h1 class="hh-title" id="hi">
-        <span class="hh-line">Hi, I’m</span>
-        <span class="hh-line hh-name"><span class="hh-brush">Moksha</span><span class="hh-dot" aria-hidden="true"></span><span class="visually-hidden">.</span></span>
-      </h1>
-      <p class="hh-copy">
-        I like making complicated <strong>things simpler.</strong><br />
-        Data, research, <span class="hh-squig">systems</span>, and the occasional better question.
-      </p>
-    </div>
+  <Fragment slot="head">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Kalam:wght@400&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" />
+  </Fragment>
 
-    <div class="hh-photo">
-      <span class="hh-swatch" aria-hidden="true"></span>
-      <svg class="hh-photo-sparks" viewBox="0 0 40 40" aria-hidden="true"><path d="M30 34L22 26M34 20l-10 1M20 8l1 11" /></svg>
-      <figure class="hh-frame">
-        <img src="/images/home-portrait.jpg" alt="Moksha Agrawal smiling, chin resting on her hand, at a café table" width="900" height="832" fetchpriority="high" decoding="async" />
-      </figure>
-      <p class="hh-note hand">
-        curious about people, systems and what connects them.
-        <svg viewBox="0 0 50 40" aria-hidden="true"><path d="M44 4C40 22 28 32 8 34M15 27l-8 7 9 4" /></svg>
-      </p>
-    </div>
+  <div class="home">
+    <!-- HOME 1 · HERO -->
+    <section class="hh" aria-labelledby="hi">
+      <div class="hh-stage" style={`--u:${U}cqw`}>
+        <div class="hh-text">
+          <svg class="hh-sparks" viewBox="19 26 22 30" aria-hidden="true">
+            <path d="M31.5 28.75 L38 38.75 M23 38.75 L33.75 43.75 M22 52.5 L32 49.5" />
+          </svg>
+          <h1 class="hh-title" id="hi">
+            <span class="hh-line">Hi, I’m</span>
+            <span class="hh-line"><span class="hh-name">
+              <svg class="hh-brush" viewBox="0 0 200 40" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M3 9 C 30 5, 70 7, 110 4 S 175 6, 198 3 L 197 12 C 199 18, 196 25, 199 31 C 160 34, 120 33, 80 36 S 25 38, 4 37 C 1 30, 4 24, 1 18 C 3 14, 0 12, 3 9 Z" />
+                <path class="hh-brush-dry" d="M8 15 H 190 M12 27 H 186" />
+              </svg>
+              <span class="hh-word">Moksha</span><span class="hh-dot" aria-hidden="true"></span><span class="visually-hidden">.</span>
+            </span></span>
+          </h1>
+          <p class="hh-copy">
+            I like making complicated <strong>things simpler</strong>. <br />
+            Data, research, <span class="hh-squig">systems<svg viewBox="0 0 64 12" preserveAspectRatio="none" aria-hidden="true"><path d="M3 8 C 16 3, 30 2, 40 4 L 26 9.5 C 38 8, 50 6.5, 62 7" /></svg></span>, and the occasional better question.
+          </p>
+        </div>
 
-    <div class="hh-route">
-      <HomeRoute />
-    </div>
-  </section>
+        <div class="hh-photo">
+          <div class="hh-card" style={`--paper:polygon(${paper});--person:polygon(${personClip})`}>
+            <span class="hh-paper-rim" aria-hidden="true"></span>
+            <span class="hh-paper" aria-hidden="true">
+              <span class="hh-block"></span>
+              <svg class="hh-ysparks" viewBox="0 0 30 40"><path d="M14 2 L 22 14 M 2 18 L 16 22 M 1 34 L 14 31" /></svg>
+            </span>
+            <span class="hh-person">
+              <img src="/images/home-cutout.webp" alt="Moksha Agrawal smiling, chin resting on her hand" width="1000" height="856" fetchpriority="high" decoding="async" />
+            </span>
+          </div>
+        </div>
 
-  <!-- HOME 2 · FEATURED PROJECT -->
-  <FeaturedStrip />
+        <p class="hh-note hand" aria-hidden="true">
+          curious <br />about people, <br />systems and <br />what connects <br />them.
+          <svg viewBox="0 0 12 10"><path d="M1.5 2 L 6 8 L 10.5 1.5" /></svg>
+        </p>
+        <p class="hh-pick hand" aria-hidden="true">pick<br />a route</p>
+      </div>
 
-  <a href="#experience" class="scroll-cue" aria-label="Scroll to the next section">
-    <svg viewBox="0 0 20 70" aria-hidden="true"><path class="sc-line" d="M10 2v52" /><path d="M4 50l6 7 6-7" /></svg>
-    <span class="hand">scroll to explore</span>
-  </a>
+      <div class="hh-route">
+        <HomeRoute />
+      </div>
+    </section>
 
-  <!-- HOME 3 · EXPERIENCE -->
-  <section class="section container" id="experience" aria-labelledby="proof-title">
-    <div class="proof-head">
-      <h2 class="t-h3" id="proof-title">A few things I’ve worked on</h2>
-      <ArrowLink href="/work/" class="hide-sm">see the work</ArrowLink>
-    </div>
-    <ul class="proof" role="list">
-      {proof.map((p, i) => (
-        <li class="proof-item reveal" style={`--delay:${i * 90}ms`}>
-          <a href={p.href} class="proof-link">
-            <span class="proof-name head">{p.name}</span>
-            <span class="proof-tags">{p.tags}</span>
-            <span class="proof-metric num">{p.metric}</span>
-          </a>
-        </li>
-      ))}
-    </ul>
-    <ArrowLink href="/work/" class="proof-cta-sm">see the work</ArrowLink>
-  </section>
+    <!-- HOME 2 · FEATURED PROJECT -->
+    <FeaturedStrip />
 
-  <!-- HOME 4 · PERSONAL STRIP -->
-  <section class="section container" aria-labelledby="also-title">
-    <div class="also-head">
-      <h2 class="t-h3" id="also-title">Also true about me</h2>
-      <ArrowLink href="/about/">the slightly more personal version</ArrowLink>
-    </div>
-    <ul class="also-strip reveal" role="list">
-      {truths.map((t) => (
-        <li>{t === 'pasta opinions: firm' ? <span class="hl">{t}</span> : t}</li>
-      ))}
-    </ul>
-  </section>
+    <!-- HOME 3 · EXPERIENCE -->
+    <section class="section container" id="experience" aria-labelledby="proof-title">
+      <div class="proof-head">
+        <h2 class="t-h3" id="proof-title">A few things I’ve worked on</h2>
+        <ArrowLink href="/work/" class="hide-sm">see the work</ArrowLink>
+      </div>
+      <ul class="proof" role="list">
+        {proof.map((p, i) => (
+          <li class="proof-item reveal" style={`--delay:${i * 90}ms`}>
+            <a href={p.href} class="proof-link">
+              <span class="proof-name head">{p.name}</span>
+              <span class="proof-tags">{p.tags}</span>
+              <span class="proof-metric num">{p.metric}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <ArrowLink href="/work/" class="proof-cta-sm">see the work</ArrowLink>
+    </section>
 
-  <!-- HOME 5 · CLOSE -->
-  <section class="section container close" aria-labelledby="close-title">
-    <h2 class="t-section" id="close-title">Still curious?</h2>
-    <ul class="close-links" role="list">
-      <li><ArrowLink href="/about/" variant="ink">About</ArrowLink></li>
-      <li><ArrowLink href="/work/" variant="ink">Work</ArrowLink></li>
-      <li><ArrowLink href="/projects/" variant="ink">Projects</ArrowLink></li>
-      <li><ArrowLink href="/notes/" variant="ink">Notes</ArrowLink></li>
-    </ul>
-    <p class="hand close-note">thanks for looking a little closer.</p>
-  </section>
+    <!-- HOME 4 · PERSONAL STRIP -->
+    <section class="section container" aria-labelledby="also-title">
+      <div class="also-head">
+        <h2 class="t-h3" id="also-title">Also true about me</h2>
+        <ArrowLink href="/about/">the slightly more personal version</ArrowLink>
+      </div>
+      <ul class="also-strip reveal" role="list">
+        {truths.map((t) => (
+          <li>{t === 'pasta opinions: firm' ? <span class="hl">{t}</span> : t}</li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- HOME 5 · CLOSE -->
+    <section class="section container close" aria-labelledby="close-title">
+      <h2 class="t-section" id="close-title">Still curious?</h2>
+      <ul class="close-links" role="list">
+        <li><ArrowLink href="/about/" variant="ink">About</ArrowLink></li>
+        <li><ArrowLink href="/work/" variant="ink">Work</ArrowLink></li>
+        <li><ArrowLink href="/projects/" variant="ink">Projects</ArrowLink></li>
+        <li><ArrowLink href="/notes/" variant="ink">Notes</ArrowLink></li>
+      </ul>
+      <p class="hand close-note">thanks for looking a little closer.</p>
+    </section>
+  </div>
 </BaseLayout>
 
 <style>
-  /* ---------- hero ---------- */
-  .home-hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
-    column-gap: 40px;
-    padding-top: clamp(28px, 4vw, 56px);
+  .home {
+    overflow-x: clip;
+    --font-serif-display: 'DM Serif Display', 'Times New Roman', Georgia, serif;
+    --font-serif-text: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --font-hand-print: 'Kalam', 'Comic Neue', 'Segoe Print', cursive;
+    --font-hand: var(--font-hand-print);
   }
-  .hh-text { position: relative; padding-top: 28px; align-self: start; }
-  .hh-sparks { position: absolute; left: -30px; top: 0; width: 36px; height: 36px; }
-  .hh-sparks path, .hh-photo-sparks path { fill: none; stroke: var(--cobalt); stroke-width: 2.2; stroke-linecap: round; }
-  .hh-title { font-size: clamp(3.4rem, 1.6rem + 5.4vw, 6.6rem); font-weight: 700; line-height: 0.98; letter-spacing: -0.04em; }
+
+  /* ---------- hero frame: everything placed in reference units ---------- */
+  .hh { width: 100%; max-width: 1440px; margin: 0 auto; container-type: inline-size; padding-top: 8px; }
+  .hh-stage { position: relative; height: calc(var(--u) * 190); }
+
+  .hh-text { position: absolute; left: calc(var(--u) * 45); top: calc(var(--u) * 25); z-index: 2; }
+  .hh-sparks { position: absolute; left: calc(var(--u) * -26); top: calc(var(--u) * -3); width: calc(var(--u) * 22); height: calc(var(--u) * 30); overflow: visible; }
+  .hh-sparks path { fill: none; stroke: var(--cobalt); stroke-width: 1.6; stroke-linecap: round; }
+
+  .hh-title {
+    font-family: var(--font-serif-display); font-weight: 400;
+    font-size: calc(var(--u) * 50.5);
+    line-height: 1.055; letter-spacing: -0.012em;
+    color: #121212;
+  }
   .hh-line { display: block; }
-  .hh-name { margin-top: 0.04em; }
-  .hh-brush { position: relative; z-index: 0; }
-  .hh-brush::before {
-    content: ''; position: absolute; z-index: -1;
-    left: -0.12em; right: -0.08em; bottom: 0.04em; height: 0.42em;
-    background: var(--yellow);
-    border-radius: 40% 12% 46% 10% / 60% 30% 50% 40%;
-    transform: rotate(-1.2deg);
-    opacity: 0.9;
-  }
-  .hh-dot { display: inline-block; width: 0.17em; height: 0.17em; margin-left: 0.05em; border-radius: 50%; background: var(--cobalt); }
-  .hh-copy { margin-top: 28px; font-size: 1.15rem; line-height: 1.6; max-width: 46ch; }
-  .hh-copy strong { font-weight: 600; }
-  .hh-squig { position: relative; white-space: nowrap; }
-  .hh-squig::after {
-    content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 6px;
-    background: radial-gradient(circle at 3px -1px, transparent 3px, var(--yellow) 3.2px, var(--yellow) 4.6px, transparent 4.8px) 0 0 / 7px 6px repeat-x;
-  }
+  .hh-name { position: relative; display: inline-block; }
+  .hh-word { position: relative; z-index: 1; }
+  .hh-brush { position: absolute; z-index: 0; left: -0.13em; right: -0.09em; top: 0.33em; height: 0.84em; width: calc(100% + 0.22em); }
+  .hh-brush path { fill: #F5CD52; opacity: 0.88; }
+  .hh-brush .hh-brush-dry { fill: none; stroke: #F8DC85; stroke-width: 1.4; opacity: 0.8; }
+  .hh-dot { position: relative; z-index: 1; display: inline-block; width: 0.19em; height: 0.19em; margin-left: 0.04em; border-radius: 50%; background: var(--cobalt); }
 
-  .hh-photo { position: relative; align-self: start; justify-self: center; width: min(100%, 440px); margin-top: 6px; }
-  .hh-frame {
-    position: relative; z-index: 1;
-    margin: 0;
-    padding: 12px;
-    background: #fff;
-    transform: rotate(2.2deg);
-    box-shadow: 0 18px 36px -24px rgba(60, 45, 20, 0.55);
-    clip-path: polygon(0 1.5%, 6% 0, 14% 1.2%, 23% 0.2%, 31% 1.4%, 42% 0.3%, 53% 1.2%, 62% 0, 71% 1.3%, 80% 0.4%, 90% 1.4%, 100% 0.2%, 99.2% 12%, 100% 26%, 99.3% 40%, 100% 55%, 99.1% 70%, 100% 85%, 99.4% 100%, 88% 98.8%, 76% 100%, 64% 98.9%, 52% 100%, 40% 99%, 28% 100%, 16% 98.8%, 5% 100%, 0 98.5%, 0.8% 86%, 0 72%, 0.9% 58%, 0 44%, 0.7% 30%, 0 16%);
+  .hh-copy {
+    margin-top: calc(var(--u) * 5);
+    font-family: var(--font-serif-text);
+    font-size: max(15px, calc(var(--u) * 8.4));
+    line-height: 1.68;
+    color: #3B3833;
+    white-space: nowrap;
   }
-  .hh-frame img { width: 100%; height: auto; display: block; }
-  .hh-swatch {
-    position: absolute; z-index: 0;
-    left: -9%; bottom: -6%; width: 52%; height: 62%;
-    background: var(--yellow); opacity: 0.85;
-    border-radius: 46% 54% 38% 62% / 52% 40% 60% 48%;
-    transform: rotate(-8deg);
+  .hh-copy strong { font-weight: 600; color: #1d1b18; }
+  .hh-squig { position: relative; display: inline-block; }
+  .hh-squig svg { position: absolute; left: -4%; bottom: -0.55em; width: 150%; height: 0.5em; overflow: visible; }
+  .hh-squig path { fill: none; stroke: #F2C23C; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* torn-paper photo card */
+  .hh-photo { position: absolute; left: calc(var(--u) * 286); top: calc(var(--u) * 10); width: calc(var(--u) * 216); z-index: 1; }
+  .hh-card { position: relative; aspect-ratio: 865 / 790; filter: drop-shadow(0 10px 14px rgba(70, 52, 20, 0.16)) drop-shadow(0 1px 1px rgba(70, 52, 20, 0.12)); }
+  .hh-paper-rim, .hh-paper { position: absolute; inset: 0; clip-path: var(--paper); }
+  .hh-paper-rim { background: #fff; transform: scale(1.012); }
+  .hh-paper { inset: 0.5%; background: radial-gradient(120% 90% at 30% 20%, #F7F2E5, #EFE8D6); }
+  .hh-block {
+    position: absolute; left: 8.7%; right: 5.8%; top: 18.4%; bottom: 16.5%;
+    background: #F4C84A;
+    border-radius: 46% 12% 10% 14% / 44% 9% 10% 10%;
   }
-  .hh-photo-sparks { position: absolute; z-index: 2; left: -34px; top: -18px; width: 40px; height: 40px; transform: scaleX(-1); }
+  .hh-ysparks { position: absolute; left: 11.6%; top: 17.7%; width: 9.5%; overflow: visible; }
+  .hh-ysparks path { fill: none; stroke: #F2BE2E; stroke-width: 2.4; stroke-linecap: round; }
+  .hh-person { position: absolute; inset: 0; clip-path: var(--person); }
+  .hh-person img { position: absolute; left: -8.03%; top: -7.85%; width: 129.7%; max-width: none; height: auto; }
+
   .hh-note {
-    position: absolute; z-index: 2;
-    left: calc(100% + 18px); top: 4%;
-    width: 128px;
-    font-size: 1.2rem; line-height: 1.05; color: var(--cobalt);
-    transform: rotate(-4deg);
+    position: absolute; left: calc(var(--u) * 503); top: calc(var(--u) * 36);
+    margin: 0; font-size: calc(var(--u) * 6.7); line-height: 1.32; color: var(--cobalt);
+    transform: rotate(-9deg); transform-origin: left top;
+    white-space: nowrap;
   }
-  .hh-note svg { display: block; width: 46px; height: 36px; margin-top: 6px; overflow: visible; }
-  .hh-note path { fill: none; stroke: var(--cobalt); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .hh-note svg { display: block; width: calc(var(--u) * 6); margin: calc(var(--u) * 2) 0 0 calc(var(--u) * 33); overflow: visible; }
+  .hh-note path { fill: none; stroke: var(--cobalt); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .hh-pick { position: absolute; left: calc(var(--u) * 527); top: calc(var(--u) * 168); margin: 0; font-size: calc(var(--u) * 6.8); line-height: 1.1; color: var(--cobalt); transform: rotate(-24deg); white-space: nowrap; }
 
-  .hh-route { grid-column: 1 / -1; margin-top: -64px; position: relative; z-index: 3; pointer-events: none; }
-  .hh-route :global(a) { pointer-events: auto; }
-
-  /* ---------- scroll cue: the route keeps going ---------- */
-  .scroll-cue { display: flex; flex-direction: column; align-items: center; gap: 2px; width: fit-content; margin: 28px auto 0; color: var(--cobalt); min-height: 44px; }
-  .scroll-cue svg { width: 20px; height: 70px; overflow: visible; }
-  .scroll-cue path { fill: none; stroke: var(--cobalt); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .scroll-cue .sc-line { stroke-dasharray: 4 6; }
-  .scroll-cue .hand { font-size: 1.1rem; color: var(--grey); transition: color var(--t-micro); }
-  .scroll-cue:hover .hand { color: var(--cobalt); }
-  .scroll-cue:hover svg { transform: translateY(3px); transition: transform var(--t-micro) var(--ease); }
+  .hh-route { position: relative; z-index: 3; }
 
   /* ---------- experience ---------- */
+  #experience { padding-top: clamp(64px, 7vw, 110px); }
   .proof-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 24px; }
   .proof { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line-strong); }
   .proof-item + .proof-item { border-left: 1px solid var(--line); }
@@ -206,20 +245,24 @@ const truths = [
 
   /* ---------- close ---------- */
   .close-links { display: flex; flex-wrap: wrap; gap: 4px 36px; margin-top: 20px; font-size: 1.25rem; }
-  .close-note { margin-top: 28px; transform: rotate(-1.5deg); transform-origin: left; display: inline-block; }
+  .close-note { margin-top: 28px; transform: rotate(-1.5deg); transform-origin: left; display: inline-block; font-size: 1.15rem; }
 
-  /* ---------- responsive ---------- */
-  @media (max-width: 1399px) {
-    /* not enough margin on the right: the note moves into the gap left of the photo */
-    .hh-note { left: auto; right: calc(100% + 28px); top: 34%; text-align: right; }
-    .hh-note svg { margin-left: auto; transform: scaleX(-1); }
-  }
+  /* ---------- below ~900px: stack the hero ---------- */
   @media (max-width: 900px) {
-    .home-hero { grid-template-columns: 1fr; row-gap: 40px; }
-    .hh-photo { width: min(88%, 400px); }
-    .hh-note { position: static; width: auto; margin: 22px auto 0; text-align: center; }
+    .hh { padding: 12px var(--gutter) 0; }
+    .hh-stage { height: auto; display: flex; flex-direction: column; }
+    .hh-text, .hh-photo, .hh-note, .hh-pick { position: relative; left: auto; top: auto; }
+    .hh-text { padding: 26px 0 0 4px; }
+    .hh-sparks { left: -14px; top: 0; width: 22px; height: 30px; }
+    .hh-title { font-size: clamp(3.2rem, 12vw, 5.2rem); }
+    .hh-copy { margin-top: 18px; font-size: 1.05rem; white-space: normal; }
+    .hh-copy br { display: none; }
+    .hh-photo { width: min(92%, 440px); margin: 52px auto 0; }
+    .hh-note { align-self: center; margin-top: 18px; font-size: 1.15rem; transform: rotate(-4deg); text-align: center; white-space: normal; }
+    .hh-note br { display: none; }
     .hh-note svg { display: none; }
-    .hh-route { margin-top: 8px; }
+    .hh-pick { display: none; }
+    .hh-route { margin-top: 32px; }
   }
   @media (max-width: 760px) {
     .proof { grid-template-columns: 1fr; }
@@ -227,11 +270,6 @@ const truths = [
     .proof-link { padding-left: 0; }
     :global(.proof-cta-sm) { display: inline-flex; margin-top: 12px; }
     .also-strip { flex-direction: column; align-items: flex-start; gap: 8px; }
-    .also-strip li + li::before { margin: 0 10px 0 0; }
-    .also-strip li:first-child::before { content: '✦'; color: var(--cobalt); font-size: 0.7rem; margin: 0 10px 0 0; }
-  }
-  @media (max-width: 640px) {
-    .hh-sparks { left: -6px; top: -8px; width: 26px; }
-    .hh-text { padding-top: 22px; }
+    .also-strip li::before { content: '✦' !important; color: var(--cobalt); font-size: 0.7rem; margin: 0 10px 0 0 !important; }
   }
 </style>
