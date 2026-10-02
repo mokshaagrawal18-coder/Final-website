@@ -10,10 +10,14 @@ const links = [
 ---
 <footer class="site-footer">
   <div class="container footer-inner">
-    <div class="signoff" data-reveal>
-      <p class="footer-main">Thanks for looking <span class="so-hl">a little closer<svg class="so-line draw" data-reveal viewBox="0 0 200 16" preserveAspectRatio="none" aria-hidden="true"><path d="M3 9 C 40 4, 80 13, 120 8 S 175 5, 197 9" style="--len:210;--delay:900ms" /></svg></span>.<svg class="so-heart draw" data-reveal viewBox="0 0 24 22" aria-hidden="true"><path d="M12 19 C 5 14, 2 10.5, 2 7 A 4.6 4.6 0 0 1 12 5.2 A 4.6 4.6 0 0 1 22 7 C 22 10.5, 19 14, 12 19 Z" style="--len:70;--delay:1500ms" /></svg></p>
-      <p class="so-sign hand" aria-hidden="true">— Moksha</p>
+    <div class="meet" data-reveal aria-hidden="true">
+      <svg viewBox="0 0 1000 24" preserveAspectRatio="none">
+        <path pathLength="1" d="M0 12 C 70 3, 140 21, 210 12 S 350 3, 420 12 S 470 16, 492 12" />
+        <path pathLength="1" d="M1000 12 C 930 21, 860 3, 790 12 S 650 21, 580 12 S 530 8, 508 12" />
+      </svg>
+      <span class="meet-dot"></span>
     </div>
+    <p class="footer-main">Thanks for looking a little closer.</p>
     <ul class="footer-links" role="list">
       {links.map((l) => (
         <li>
@@ -37,27 +41,16 @@ const links = [
 
 <style>
   .site-footer { margin-top: auto; padding: 8px 0 24px; }
-  .footer-inner { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; border-top: 1px solid var(--line); padding-top: 40px; }
+  .footer-inner { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; padding-top: 24px; }
 
-  /* sign-off: a highlighter sweep, a pen line, a small heart that breathes, then a signature */
-  .signoff { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  /* two curvy lines that start at either edge and meet in the middle */
+  .meet { position: relative; width: min(100%, 460px); height: 24px; margin-bottom: 6px; }
+  .meet svg { display: block; width: 100%; height: 24px; overflow: visible; }
+  .meet path { fill: none; stroke: var(--cobalt); stroke-width: 1.6; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 0; transition: stroke-dashoffset 1600ms cubic-bezier(.45, 0, .2, 1); }
+  :global(.js) .meet:not(.is-in) path { stroke-dashoffset: 1; }
+  .meet-dot { position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; background: var(--cobalt); transition: transform 400ms var(--ease) 1500ms, opacity 400ms 1500ms; }
+  :global(.js) .meet:not(.is-in) .meet-dot { opacity: 0; transform: scale(0.2); }
   .footer-main { font-family: var(--font-serif-text); font-weight: 600; font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); letter-spacing: -0.005em; color: var(--ink); }
-  .so-hl {
-    position: relative; padding: 0 3px;
-    background-image: linear-gradient(transparent 55%, rgba(242, 200, 75, 0.55) 55%, rgba(242, 200, 75, 0.55) 92%, transparent 92%);
-    background-repeat: no-repeat; background-size: 100% 100%;
-    transition: background-size 1100ms cubic-bezier(.5, 0, .2, 1) 300ms, background-image 300ms;
-  }
-  :global(.js) .signoff:not(.is-in) .so-hl { background-size: 0% 100%; }
-  .so-line { position: absolute; left: 0; right: 0; bottom: -9px; width: 100%; height: 10px; overflow: visible; }
-  .so-line path { fill: none; stroke: var(--cobalt); stroke-width: 1.6; stroke-linecap: round; }
-  .so-heart { display: inline-block; width: 0.95em; height: 0.9em; margin-left: 8px; vertical-align: -0.1em; overflow: visible; transform-origin: 50% 60%; }
-  .so-heart path { fill: rgba(217, 85, 69, 0); stroke: var(--red); stroke-width: 1.6; stroke-linejoin: round; transition: fill 900ms ease 2200ms; }
-  .signoff.is-in .so-heart path { fill: rgba(217, 85, 69, 0.3); }
-  .signoff.is-in .so-heart { animation: so-breathe 3.6s ease-in-out 2.6s infinite; }
-  @keyframes so-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
-  .so-sign { margin-top: 10px; font-size: 1.15rem; color: var(--cobalt); transform: rotate(-3deg); transition: opacity 900ms ease 2000ms, transform 900ms ease 2000ms; }
-  :global(.js) .signoff:not(.is-in) .so-sign { opacity: 0; transform: rotate(-3deg) translateY(4px); }
 
   .footer-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; }
   .footer-links li + li::before { content: '·'; color: var(--grey); margin: 0 12px; }
@@ -87,8 +80,7 @@ const links = [
   .to-top:hover svg { transform: translateY(-3px); }
 
   @media (prefers-reduced-motion: reduce) {
-    .so-hl, .so-sign { transition: none !important; }
-    .so-heart { animation: none !important; }
+    .meet path, .meet-dot { transition: none; }
   }
   @media (max-width: 640px) {
     .to-top { position: static; transform: none; margin-top: 14px; flex-direction: row; }
