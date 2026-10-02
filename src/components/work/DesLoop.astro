@@ -1,0 +1,144 @@
+---
+/**
+ * D. E. Shaw: the quarterly research loop (filings arrive → standardise → compare → update).
+ * Each story on the left lights up its own step while the centre shows what happened there:
+ * story 1 → compare, story 2 → standardise, story 3 → update (and the loop speeds up).
+ * Desktop: follows the story being read. Stacked layouts: steps through on its own while in view.
+ */
+const nodes = [
+  { id: 'in', x: 150, y: 38, lines: ['filings', 'arrive'] },
+  { id: '1', x: 262, y: 150, lines: ['standardise'] },
+  { id: '0', x: 150, y: 262, lines: ['compare'] },
+  { id: '2', x: 38, y: 150, lines: ['update'] },
+];
+---
+<figure class="dl" data-desloop aria-label="Every quarter the same loop: filings arrive, get standardised, compared against last quarter, and the database is updated. Automating the repeatable part cut daily monitoring from 2 hours to 30 minutes.">
+  <div class="dl-top">
+    <div>
+      <p class="panel-title">How the work flows</p>
+      <p class="dl-sub">Every quarter, the same loop</p>
+    </div>
+    <span class="dl-dots" aria-hidden="true"><i class="on"></i><i></i><i></i></span>
+  </div>
+
+  <div class="dl-loop" aria-hidden="true">
+    <svg viewBox="0 0 300 300">
+      <circle class="dl-ring" cx="150" cy="150" r="112" />
+      <circle class="dl-runner" r="6" cx="150" cy="38" data-runner />
+      {nodes.map((n) => (
+        <g class:list={['dl-node', { lit: n.id === '0' }]} data-node={n.id}>
+          <circle cx={n.x} cy={n.y} r="30" />
+          {n.lines.map((l, i) => <text x={n.x} y={n.y + 4 + (i - (n.lines.length - 1) / 2) * 13}>{l}</text>)}
+        </g>
+      ))}
+    </svg>
+    <div class="dl-center">
+      <div class="dl-view on">
+        <span class="dl-tags"><span class="t-new">NEW</span><span class="t-exit">EXIT</span><span class="t-up">↑ BIGGER</span></span>
+        <span class="dl-cap">vs last quarter</span>
+      </div>
+      <div class="dl-view">
+        <span class="dl-fmt"><s>bn · lakh · cr</s><b>one format</b></span>
+        <span class="dl-cap">15 yrs · 60+ companies</span>
+      </div>
+      <div class="dl-view">
+        <span class="dl-big"><s>2 hrs</s><b>30 mins</b></span>
+        <span class="dl-cap">daily, now automated</span>
+      </div>
+    </div>
+  </div>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-desloop]').forEach((fig) => {
+    const section = fig.closest('.co-wrap');
+    const items = Array.from(section?.querySelectorAll<HTMLElement>('.item') ?? []);
+    const views = Array.from(fig.querySelectorAll<HTMLElement>('.dl-view'));
+    const dots = Array.from(fig.querySelectorAll<HTMLElement>('.dl-dots i'));
+    const nodes = Array.from(fig.querySelectorAll<SVGGElement>('[data-node]'));
+    const runner = fig.querySelector<SVGCircleElement>('[data-runner]')!;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let active = 0;
+    let target = 0.5;
+
+    const set = (i: number) => {
+      if (i === active) return;
+      active = i;
+      views.forEach((v, j) => v.classList.toggle('on', j === i));
+      dots.forEach((d, j) => d.classList.toggle('on', j === i));
+      nodes.forEach((n) => n.classList.toggle('lit', n.dataset.node === String(i)));
+      items.forEach((it, j) => it.classList.toggle('is-active', j === i));
+      target = i === 2 ? 1.8 : 0.5; // the loop speeds up on the "automate" story
+    };
+    items[0]?.classList.add('is-active');
+
+    const pinned = () => getComputedStyle(fig.parentElement!).position === 'sticky';
+
+    // desktop: follow the story being read (and the one being hovered)
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+        if (e.isIntersecting && pinned()) set(items.indexOf(e.target as HTMLElement));
+      }), { rootMargin: '-40% 0px -55% 0px' });
+      items.forEach((it) => io.observe(it));
+    }
+    items.forEach((it, i) => it.addEventListener('mouseenter', () => set(i)));
+
+    // stacked layouts: step through on its own while the loop is on screen
+    let visible = false;
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0.4 }).observe(fig);
+    }
+    if (!reduce) setInterval(() => { if (visible && !pinned()) set((active + 1) % 3); }, 3200);
+
+    // the runner travels round the ring, easing between speeds
+    let ang = 0, v = 0.5, last = performance.now();
+    const R = 112, C = 150;
+    const tick = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000); last = now;
+      v += (target - v) * 0.03;
+      ang += v * dt;
+      runner.setAttribute('cx', (C + R * Math.sin(ang)).toFixed(2));
+      runner.setAttribute('cy', (C - R * Math.cos(ang)).toFixed(2));
+      requestAnimationFrame(tick);
+    };
+    if (!reduce) requestAnimationFrame(tick);
+  });
+</script>
+
+<style>
+  .dl { margin: 0; }
+  .dl-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .dl-sub { margin-top: 2px; font-size: 0.85rem; color: var(--grey); }
+  .dl-dots { display: flex; gap: 5px; margin-top: 8px; }
+  .dl-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line-strong); transition: background-color 300ms, transform 300ms; }
+  .dl-dots i.on { background: var(--cobalt); transform: scale(1.3); }
+
+  .dl-loop { position: relative; width: min(100%, 300px); aspect-ratio: 1; margin: 14px auto 0; }
+  .dl-loop svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .dl-ring { fill: none; stroke: var(--cobalt-line); stroke-width: 1.6; stroke-dasharray: 4 5; }
+  .dl-runner { fill: var(--yellow); stroke: var(--ink); stroke-width: 1; }
+  .dl-node circle { fill: var(--paper); stroke: var(--cobalt-line); stroke-width: 1.6; transition: fill 400ms, stroke 400ms; }
+  .dl-node text { font: 600 9.5px var(--font-body); fill: var(--grey); text-anchor: middle; transition: fill 400ms; }
+  .dl-node.lit circle { fill: var(--cobalt); stroke: var(--cobalt); }
+  .dl-node.lit text { fill: #fff; }
+
+  .dl-center { position: absolute; left: 50%; top: 50%; width: 46%; transform: translate(-50%, -50%); text-align: center; }
+  .dl-view { display: none; flex-direction: column; align-items: center; gap: 6px; }
+  .dl-view.on { display: flex; animation: dl-in 500ms var(--ease); }
+  @keyframes dl-in { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: none; } }
+  .dl-tags { display: grid; gap: 4px; justify-items: center; }
+  .dl-tags span { font-size: 0.66rem; font-weight: 600; padding: 2px 9px; border-radius: 999px; }
+  .t-new { background: #E3EAFB; color: var(--cobalt); }
+  .t-exit { background: #F7DCD7; color: #A9372A; }
+  .t-up { background: #FBEBC0; color: #8A6410; }
+  .dl-fmt, .dl-big { display: flex; flex-direction: column; align-items: center; line-height: 1.15; }
+  .dl-fmt s { font-size: 0.72rem; color: var(--grey); text-decoration-color: var(--red); }
+  .dl-fmt b { font-family: var(--font-head); font-weight: 400; font-size: 1.05rem; color: var(--cobalt); }
+  .dl-big s { font-family: var(--font-head); font-size: 1rem; color: var(--grey); text-decoration-color: var(--red); }
+  .dl-big b { font-family: var(--font-head); font-weight: 400; font-size: 1.35rem; color: var(--cobalt); }
+  .dl-cap { font-size: 0.68rem; line-height: 1.3; color: var(--grey); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dl-view.on { animation: none; }
+  }
+</style>

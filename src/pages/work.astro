@@ -2,13 +2,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArrowLink from '../components/ArrowLink.astro';
 import Toolkit from '../components/Toolkit.astro';
-import DesFlow from '../components/work/DesFlow.astro';
+import DesLoop from '../components/work/DesLoop.astro';
 import GrowwJourneyPanel from '../components/work/GrowwJourneyPanel.astro';
 import MensaLandscape from '../components/work/MensaLandscape.astro';
 import CompanyMark from '../components/work/CompanyMark.astro';
 import { companies } from '../data/work';
 
-const visuals: Record<string, any> = { 'de-shaw': DesFlow, groww: GrowwJourneyPanel, mensa: MensaLandscape };
+const visuals: Record<string, any> = { 'de-shaw': DesLoop, groww: GrowwJourneyPanel, mensa: MensaLandscape };
 ---
 <BaseLayout title="Work" description="Financial research, customer operations and e-commerce: what Moksha was figuring out, what she worked on, and what changed.">
   <div class="work theme-paper">
@@ -164,6 +164,8 @@ const visuals: Record<string, any> = { 'de-shaw': DesFlow, groww: GrowwJourneyPa
   .item { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 14px; align-items: start; transition: transform var(--t-micro) var(--ease); }
   .item:hover { transform: translateY(-2px); }
   .item-n { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #E3EAFB; color: var(--cobalt); font-family: var(--font-serif-text); font-size: 0.72rem; font-weight: 600; }
+  .item-n { transition: background-color 300ms, color 300ms; }
+  .item.is-active .item-n { background: var(--cobalt); color: #fff; }
   .item-title { font-family: var(--font-serif-text); font-weight: 600; font-size: 1.08rem; color: var(--ink); }
   .item-body { margin-top: 6px; max-width: 46ch; font-family: var(--font-serif-text); font-size: 0.95rem; line-height: 1.55; color: #4a4741; }
   .item-ev { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 14px; }
