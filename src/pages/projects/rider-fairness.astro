@@ -1,6 +1,6 @@
 ---
 import ProjectLayout from '../../layouts/ProjectLayout.astro';
-import RiderCompare from '../../components/visuals/RiderCompare.astro';
+import RiderDayDemo from '../../components/visuals/RiderDayDemo.astro';
 import '../../styles/details.css';
 ---
 <ProjectLayout
@@ -20,7 +20,17 @@ import '../../styles/details.css';
   detailsLabel="How I tested it"
   next={{ href: '/projects/healthcare-expenditure/', label: 'Next: Healthcare Expenditure' }}
 >
-  <RiderCompare slot="visual" />
+  <section slot="visual" class="rf-try is-wide" id="try" aria-labelledby="rf-try-title">
+    <div class="rf-why">
+      <p class="rf-kicker">Why I made this</p>
+      <h2 class="rf-why-title" id="rf-try-title">A score sees the outcome, not the day.</h2>
+      <p>Delivery riders are often judged by a single number. That number knows how long a delivery took. It doesn’t know about the traffic jam, or the rain that started halfway through the shift.</p>
+      <p>So I wanted to check something simple: <strong>is the score measuring the rider, or the conditions the rider happened to be in?</strong></p>
+      <p class="rf-hint hand">try it before reading the rest ↓</p>
+    </div>
+    <RiderDayDemo />
+    <p class="rf-after">That is the question the project tests at scale: across 15,000 delivery records, how much of the score was really the rider, and how much was the road. <a href="#how">See how I tested it ↓</a></p>
+  </section>
 
   <div slot="details" class="xd-grid">
     <div class="xd-block">
@@ -53,3 +63,19 @@ import '../../styles/details.css';
     </div>
   </div>
 </ProjectLayout>
+
+<style>
+  .rf-try { scroll-margin-top: 96px; display: grid; grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.6fr); gap: clamp(28px, 4vw, 64px); align-items: start; }
+  .rf-kicker { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cobalt); font-weight: 600; }
+  .rf-why-title { margin-top: 10px; font-size: clamp(1.5rem, 1.2rem + 0.9vw, 2rem); line-height: 1.15; }
+  .rf-why p:not(.rf-kicker) { margin-top: 14px; font-size: 0.98rem; line-height: 1.6; color: #4a4741; }
+  .rf-why strong { color: var(--ink); font-weight: 600; }
+  .rf-why .rf-hint { margin-top: 20px; font-size: 1.1rem; color: var(--cobalt); transform: rotate(-2deg); width: fit-content; }
+  .rf-after { grid-column: 2; margin-top: -8px; max-width: 60ch; font-size: 0.95rem; line-height: 1.6; color: #4a4741; }
+  .rf-after a { color: var(--cobalt); font-weight: 500; border-bottom: 1.5px solid var(--yellow); white-space: nowrap; }
+  @media (max-width: 1024px) {
+    .rf-try { grid-template-columns: 1fr; }
+    .rf-after { grid-column: 1; margin-top: 0; }
+    .rf-why p:not(.rf-kicker) { max-width: 60ch; }
+  }
+</style>

@@ -89,7 +89,7 @@ const p = Astro.props;
   .pd-intro { margin-top: 20px; max-width: 46ch; }
   :global(.pd-report) { margin-top: 26px; }
   .pd-visual { margin-top: clamp(48px, 5vw, 72px); }
-  .pd-visual > :global(*) { max-width: 760px; }
+  .pd-visual > :global(*:not(.is-wide)) { max-width: 760px; }
 
   .pd-label { margin-bottom: 20px; font-family: var(--font-body); }
   .did { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1.5px solid var(--ink); }

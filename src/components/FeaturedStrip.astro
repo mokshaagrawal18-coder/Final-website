@@ -1,31 +1,14 @@
 ---
 /**
- * Featured project: a short pitch on the left, and on the right a tiny experiment.
- * The reader changes the day (clear → traffic → traffic + rain). The rider never changes:
- * the score-only view gets harsher while the context view explains what actually happened.
+ * Featured project, kept light: the pitch on the left and a quiet hint of the idea on the right
+ * (same rider, three days, three scores). The hands-on version lives on the project page.
  * Illustrative scenario only — not records from the dataset.
  */
 const days = [
-  {
-    id: 'clear', label: 'Clear roads', icon: 'M12 7a5 5 0 1 0 0.01 0M12 1.5v2.5M12 20v2.5M1.5 12h2.5M20 12h2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8',
-    algo: { delivery: 'On track', completion: 'Completed', observed: 'Looks strong', verdict: 'Strong', tone: 'good', score: 86, note: 'On a clear day, the score looks fine.' },
-    ctx: { traffic: 'Normal', weather: 'Clear', read: 'Performance looks strong.' },
-    takeaway: ['Nothing surprising yet.', 'Now change the day. The rider stays exactly the same.'],
-  },
-  {
-    id: 'traffic', label: 'Heavy traffic', icon: 'M3 16v-4l2-5h14l2 5v4zM3 16v2h3v-2M18 16v2h3v-2M7 13h.01M17 13h.01',
-    algo: { delivery: 'Running late', completion: 'Completed', observed: 'Looks slower', verdict: 'Average', tone: 'mid', score: 78, note: 'The score starts blaming the rider for the road.' },
-    ctx: { traffic: 'Heavy', weather: 'Clear', read: 'Same rider. The delay came from the traffic.' },
-    takeaway: ['Same person, lower score.', 'Nothing about the rider changed. Only the road did.'],
-  },
-  {
-    id: 'rain', label: 'Traffic + rain', icon: 'M6 14a4 4 0 0 1 .6-8 5.5 5.5 0 0 1 10.4 1.5A3.3 3.3 0 0 1 18 14zM8 17l-1 3M12 17l-1 3M16 17l-1 3',
-    algo: { delivery: 'Late', completion: 'Completed', observed: 'Looks weak', verdict: 'Weak', tone: 'bad', score: 72, note: 'Now the rider looks like the problem.' },
-    ctx: { traffic: 'Heavy', weather: 'Rain', read: 'Still the same rider. Harder conditions, not worse performance.' },
-    takeaway: ['That gap is the whole project.', 'A score can punish circumstances as if they were performance.'],
-  },
+  { label: 'clear roads', score: 86, tone: 'good', icon: 'M12 7a5 5 0 1 0 0.01 0M12 1.5v2.5M12 20v2.5M1.5 12h2.5M20 12h2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8' },
+  { label: 'heavy traffic', score: 78, tone: 'mid', icon: 'M3 16v-4l2-5h14l2 5v4zM3 16v2h3v-2M18 16v2h3v-2M7 13h.01M17 13h.01' },
+  { label: 'traffic + rain', score: 72, tone: 'bad', icon: 'M6 14a4 4 0 0 1 .6-8 5.5 5.5 0 0 1 10.4 1.5A3.3 3.3 0 0 1 18 14zM8 17l-1 3M12 17l-1 3M16 17l-1 3' },
 ];
-const first = days[0];
 ---
 <section class="fstrip" aria-labelledby="fs-title">
   <div class="fs-card">
@@ -36,123 +19,41 @@ const first = days[0];
       <p class="fs-q">Can a score mistake difficult conditions for poor performance?</p>
       <p class="fs-copy">I tested that across 15,000 deliveries, then built a condition-adjusted alternative.</p>
       <p class="fs-ev">15,000 records <span aria-hidden="true">·</span> 99.9% model fit <span aria-hidden="true">·</span> Python</p>
-      <a href="/projects/rider-fairness/#how" class="fs-cta">See how I tested it <span aria-hidden="true">→</span></a>
+      <a href="/projects/rider-fairness/#try" class="fs-cta">Try the experiment <span aria-hidden="true">→</span></a>
     </div>
 
-    <div class="fs-demo" data-demo>
-      <div class="dm-head">
-        <div>
-          <p class="dm-kicker">Illustrative scenario</p>
-          <p class="dm-title">Same rider. Different conditions.</p>
-          <p class="dm-sub">Change the day below. The rider stays the same — only the circumstances change.</p>
-        </div>
-        <p class="hand dm-try" data-try aria-hidden="true">try all three →</p>
-      </div>
-
-      <div class="dm-days" role="group" aria-label="Choose the day's conditions">
+    <a href="/projects/rider-fairness/#try" class="fs-hint" aria-label="Same rider on three different days: the score drops from 86 to 72. Try it on the project page.">
+      <span class="fs-hint-head"><span class="hand">same rider, three days</span><span class="fs-illus">illustrative</span></span>
+      <span class="fs-days" aria-hidden="true">
         {days.map((d, i) => (
-          <button type="button" class="dm-day" data-day={d.id} aria-pressed={i === 0 ? 'true' : 'false'}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d={d.icon} /></svg> {d.label}
-          </button>
+          <>
+            {i > 0 && <span class="fs-sep">→</span>}
+            <span class="fs-day" data-tone={d.tone}>
+              <svg viewBox="0 0 24 24"><path d={d.icon} /></svg>
+              <span class="fs-num">{d.score}</span>
+              <span class="fs-lbl">{d.label}</span>
+            </span>
+          </>
         ))}
-      </div>
-
-      <div class="dm-panels" aria-live="polite">
-        <div class="dm-panel dm-algo" data-tone={first.algo.tone}>
-          <div class="dm-ph">
-            <p class="dm-plabel">Score-only view</p>
-            <span class="dm-verdict" data-f="verdict">{first.algo.verdict}</span>
-          </div>
-          <p class="dm-ptitle">What the algorithm sees</p>
-          <dl class="dm-rows">
-            <div><dt>Delivery time</dt><dd data-f="delivery">{first.algo.delivery}</dd></div>
-            <div><dt>Completion</dt><dd data-f="completion">{first.algo.completion}</dd></div>
-            <div><dt>Observed performance</dt><dd data-f="observed">{first.algo.observed}</dd></div>
-          </dl>
-          <div class="dm-score" aria-hidden="true">
-            <span class="dm-bar"><span data-f="bar" style={`--w:${first.algo.score}%`}></span></span>
-            <span class="dm-num" data-f="score">{first.algo.score}</span>
-          </div>
-          <p class="dm-note" data-f="note">{first.algo.note}</p>
-        </div>
-
-        <span class="dm-rider" aria-hidden="true">
-          <svg viewBox="0 0 48 48"><circle cx="13" cy="35" r="5" /><circle cx="36" cy="35" r="5" /><path d="M13 35 H 22 L 27 24 H 33 M 33 24 L 36 35 M 22 24 H 15 M 30 18 h 5" /><circle cx="27" cy="12" r="3.5" /></svg>
-          <span>same<br />rider</span>
-        </span>
-
-        <div class="dm-panel dm-ctx">
-          <p class="dm-plabel">Add context</p>
-          <p class="dm-ptitle">What else was happening?</p>
-          <dl class="dm-rows">
-            <div><dt>Traffic</dt><dd data-f="traffic">{first.ctx.traffic}</dd></div>
-            <div><dt>Weather</dt><dd data-f="weather">{first.ctx.weather}</dd></div>
-            <div><dt>Rider</dt><dd>Same rider</dd></div>
-          </dl>
-          <div class="dm-read">
-            <p class="dm-plabel">Context-adjusted read</p>
-            <p class="dm-read-text" data-f="read">{first.ctx.read}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="dm-take">
-        <p class="dm-take-1" data-f="take1">{first.takeaway[0]}</p>
-        <p class="dm-take-2" data-f="take2">{first.takeaway[1]}</p>
-      </div>
-    </div>
+      </span>
+      <span class="fs-hint-foot" aria-hidden="true">The rider didn’t change. The score did.</span>
+    </a>
   </div>
 
   <a href="#experience" class="fs-scroll">
     <svg viewBox="0 0 24 14" aria-hidden="true"><path d="M3 3l9 8 9-8" /></svg>
     <span class="hand">scroll to explore</span>
   </a>
-
-  <script type="application/json" data-days set:html={JSON.stringify(days)} />
 </section>
-
-<script>
-  type Day = { id: string; algo: Record<string, any>; ctx: Record<string, string>; takeaway: string[] };
-  document.querySelectorAll<HTMLElement>('.fstrip').forEach((root) => {
-    const demo = root.querySelector<HTMLElement>('[data-demo]');
-    const json = root.querySelector('[data-days]');
-    if (!demo || !json) return;
-    const days: Day[] = JSON.parse(json.textContent || '[]');
-    const buttons = Array.from(demo.querySelectorAll<HTMLButtonElement>('[data-day]'));
-    const algo = demo.querySelector<HTMLElement>('.dm-algo')!;
-    const f = (k: string) => demo.querySelector<HTMLElement>(`[data-f="${k}"]`)!;
-    const seen = new Set(['clear']);
-
-    const show = (id: string) => {
-      const d = days.find((x) => x.id === id);
-      if (!d) return;
-      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.day === id)));
-      algo.dataset.tone = d.algo.tone;
-      for (const k of ['delivery', 'completion', 'observed', 'verdict', 'note']) f(k).textContent = d.algo[k];
-      f('score').textContent = String(d.algo.score);
-      f('bar').style.setProperty('--w', `${d.algo.score}%`);
-      f('traffic').textContent = d.ctx.traffic;
-      f('weather').textContent = d.ctx.weather;
-      f('read').textContent = d.ctx.read;
-      f('take1').textContent = d.takeaway[0];
-      f('take2').textContent = d.takeaway[1];
-      // a quick flash on whatever changed, so the eye follows it
-      demo.classList.remove('is-changing'); void demo.offsetWidth; demo.classList.add('is-changing');
-      seen.add(id);
-      if (seen.size === days.length) demo.querySelector<HTMLElement>('[data-try]')!.textContent = 'that’s the gap ✓';
-    };
-    buttons.forEach((b) => b.addEventListener('click', () => show(b.dataset.day!)));
-  });
-</script>
 
 <style>
   .fstrip { width: min(100% - 2 * var(--gutter), 1340px); margin: 0 auto; position: relative; }
   .fs-card {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: clamp(28px, 3.5vw, 56px);
-    align-items: start;
+    align-items: center;
     padding: clamp(36px, 3.4vw, 48px) clamp(22px, 3vw, 44px) clamp(24px, 2.4vw, 34px);
     background: linear-gradient(180deg, #FCFAF5, #F8F4EA);
     border-radius: 8px;
@@ -182,64 +83,22 @@ const first = days[0];
   .fs-cta span { color: var(--cobalt); transition: transform var(--t-micro) var(--ease); }
   .fs-cta:hover span { transform: translateX(4px); }
 
-  /* right: the experiment */
-  .dm-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
-  .dm-kicker { font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--grey); }
-  .dm-title { margin-top: 4px; font-family: var(--font-head); font-size: 1.45rem; line-height: 1.15; }
-  .dm-sub { margin-top: 4px; font-size: 0.85rem; color: var(--grey); }
-  .dm-try { flex: none; margin-top: 6px; font-size: 0.95rem; color: var(--cobalt); transform: rotate(-3deg); }
-
-  .dm-days { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-  .dm-day {
-    display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 16px;
-    font-size: 0.88rem; font-weight: 500; color: var(--ink);
-    background: var(--paper); border: 1px solid var(--line-strong); border-radius: 999px;
-    transition: background-color var(--t-micro), border-color var(--t-micro), transform 120ms var(--ease);
-  }
-  .dm-day svg { width: 16px; height: 16px; fill: none; stroke: var(--cobalt); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-  .dm-day:hover { border-color: var(--cobalt-line); }
-  .dm-day:active { transform: scale(0.97); }
-  .dm-day[aria-pressed='true'] { background: #E3EAFB; border-color: var(--cobalt); color: var(--ink); }
-
-  .dm-panels { display: grid; grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr); align-items: center; margin-top: 16px; }
-  .dm-panel { align-self: stretch; padding: 16px 18px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; }
-  .dm-ph { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-  .dm-plabel { font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--grey); }
-  .dm-ptitle { margin-top: 4px; font-weight: 600; font-size: 0.98rem; }
-  .dm-rows { margin: 10px 0 0; }
-  .dm-rows div { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; font-size: 0.85rem; border-top: 1px solid var(--line); }
-  .dm-rows dt { color: #4a4741; }
-  .dm-rows dd { margin: 0; font-weight: 600; text-align: right; transition: color 300ms var(--ease); }
-
-  .dm-verdict { padding: 3px 10px; font-size: 0.75rem; font-weight: 600; border-radius: 999px; transition: background-color 300ms, color 300ms; }
-  .dm-algo[data-tone='good'] .dm-verdict { background: #E3EAFB; color: var(--cobalt); }
-  .dm-algo[data-tone='mid'] .dm-verdict { background: #FBEBC0; color: #8A6410; }
-  .dm-algo[data-tone='bad'] .dm-verdict { background: #F7DCD7; color: #A9372A; }
-  .dm-algo[data-tone='bad'] [data-f='observed'], .dm-algo[data-tone='bad'] [data-f='delivery'] { color: #A9372A; }
-  .dm-algo[data-tone='mid'] [data-f='delivery'] { color: #8A6410; }
-
-  .dm-score { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; margin-top: 10px; }
-  .dm-bar { height: 6px; border-radius: 3px; background: rgba(23, 23, 23, 0.07); overflow: hidden; }
-  .dm-bar span { display: block; height: 100%; width: var(--w); background: var(--cobalt); border-radius: 3px; transition: width 600ms var(--ease), background-color 300ms; }
-  .dm-algo[data-tone='mid'] .dm-bar span { background: #D9A521; }
-  .dm-algo[data-tone='bad'] .dm-bar span { background: var(--red); }
-  .dm-num { font-family: var(--font-head); font-size: 1.3rem; font-variant-numeric: tabular-nums; }
-  .dm-note { margin-top: 8px; font-size: 0.8rem; color: var(--grey); }
-
-  .dm-rider { display: flex; flex-direction: column; align-items: center; gap: 4px; font-family: var(--font-hand); font-size: 0.78rem; line-height: 1; text-align: center; color: var(--cobalt); }
-  .dm-rider svg { width: 44px; height: 44px; padding: 7px; border-radius: 50%; background: var(--paper); border: 1px solid var(--line-strong); }
-  .dm-rider path, .dm-rider circle { fill: none; stroke: var(--cobalt); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-  .dm-read { margin-top: 12px; padding: 12px 14px; background: #EEF2FC; border-radius: 8px; }
-  .dm-read-text { margin-top: 4px; font-weight: 600; font-size: 0.9rem; line-height: 1.4; }
-
-  .dm-take { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
-  .dm-take-1 { font-weight: 600; font-size: 0.92rem; color: #3b3833; }
-  .dm-take-2 { margin-top: 2px; font-size: 0.85rem; color: var(--grey); }
-
-  /* change cue: changed text fades in */
-  :global(.js) .is-changing [data-f] { animation: dm-in 380ms var(--ease); }
-  @keyframes dm-in { from { opacity: 0.15; } to { opacity: 1; } }
+  /* right: a quiet hint, not the experiment itself */
+  .fs-hint { display: block; padding: 20px 22px 18px; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 10px; transition: border-color var(--t-micro), transform var(--t-micro) var(--ease); }
+  .fs-hint:hover { border-color: var(--cobalt-line); transform: translateY(-2px); }
+  .fs-hint-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .fs-hint-head .hand { font-size: 1.05rem; color: var(--cobalt); }
+  .fs-illus { font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--grey); }
+  .fs-days { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 14px; }
+  .fs-day { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+  .fs-day svg { width: 22px; height: 22px; fill: none; stroke: var(--grey); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .fs-num { font-family: var(--font-head); font-size: 1.9rem; line-height: 1; font-variant-numeric: tabular-nums; }
+  .fs-day[data-tone='good'] .fs-num { color: var(--cobalt); }
+  .fs-day[data-tone='mid'] .fs-num { color: #B58614; }
+  .fs-day[data-tone='bad'] .fs-num { color: #A9372A; }
+  .fs-lbl { font-size: 0.75rem; color: var(--grey); }
+  .fs-sep { color: var(--line-strong); font-size: 1.1rem; }
+  .fs-hint-foot { display: block; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 0.88rem; font-weight: 600; color: #3b3833; }
 
   /* scroll cue */
   .fs-scroll { display: flex; flex-direction: column; align-items: center; width: fit-content; min-height: 44px; margin: 6px auto 0; }
@@ -249,19 +108,8 @@ const first = days[0];
   .fs-scroll:hover path { stroke: var(--cobalt); }
   .fs-scroll:hover .hand { color: var(--cobalt); }
 
-  @media (max-width: 1100px) {
+  @media (max-width: 900px) {
     .fs-card { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 900px) { .fstrip { margin-top: 56px; } }
-  @media (max-width: 620px) {
-    .dm-panels { grid-template-columns: 1fr; gap: 10px; }
-    .dm-rider { flex-direction: row; justify-self: center; }
-    .dm-rider br { display: none; }
-    .dm-head { flex-direction: column; gap: 4px; }
-    .dm-try { margin-top: 0; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    :global(.js) .is-changing [data-f] { animation: none; }
-    .dm-bar span { transition: none; }
+    .fstrip { margin-top: 56px; }
   }
 </style>
