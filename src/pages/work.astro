@@ -175,6 +175,8 @@ const visuals: Record<string, any> = { 'de-shaw': DesLoop, groww: GrowwJourneyPa
   .item-quote { margin: 12px 0 0; padding-left: 12px; border-left: 2px solid var(--yellow); max-width: 42ch; font-family: var(--font-serif-text); font-style: italic; font-size: 0.95rem; line-height: 1.45; color: #3b3833; }
 
   .co-visual { position: sticky; top: 110px; padding: 22px 22px 20px; background: rgba(252, 249, 242, 0.7); border-radius: 8px; }
+  /* the D. E. Shaw loop sits straight on the page, no panel behind it */
+  #de-shaw .co-visual { background: none; padding: 0; }
   .work :global(.panel-title) { font-family: var(--font-serif-text); font-weight: 600; font-size: 1rem; color: var(--ink); }
   .work :global(.panel-sub) { font-weight: 400; color: var(--grey); }
 
