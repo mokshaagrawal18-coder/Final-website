@@ -29,3 +29,13 @@ const { label, id } = Astro.props;
   .xd[open] .xd-body { animation: xd-in 360ms var(--ease); }
   @keyframes xd-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 </style>
+
+<script>
+  // arriving via a #link to this section opens it
+  const open = () => {
+    const d = location.hash && document.getElementById(location.hash.slice(1));
+    if (d instanceof HTMLDetailsElement) d.open = true;
+  };
+  open();
+  window.addEventListener('hashchange', open);
+</script>
