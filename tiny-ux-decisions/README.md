@@ -9,9 +9,18 @@ This is a standalone project. It is not linked from the personal site. It lives 
 ```bash
 cd tiny-ux-decisions
 npm install
-npm run dev       # http://localhost:5173
+npm run dev       # version 1: http://localhost:5173  ·  version 2: http://localhost:5173/v2.html
 npm run build     # static files in dist/ (relative paths, so it can be hosted from any folder)
 ```
+
+## Two versions
+
+Both run the same experiments, data and fictional interfaces. Only the page around them differs.
+
+- **Version 1** (`index.html`, `src/App.jsx`, `src/styles.css`): editorial scroll. Cream paper, serif display, mono labels.
+- **Version 2** (`v2.html`, `src/v2/`): a design-review document. White page, grey canvas boards, a spec column per test listing what is held constant, magenta redlines for the change, and an extra step where you try to spot the change yourself before it is shown.
+
+Shared: `src/data/experiments.js`, `src/components/interfaces/`, `src/interfaces.css`.
 
 ## What's in it
 

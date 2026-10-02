@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { cancelReasons } from '../data/experiments.js';
 import { BrowserFrame, ExperimentHeader, Explanation, NextRow, TinyQuestion, useRevealScroll } from './Experiment.jsx';
 
-const PATH_A = ['Account', 'Confirm', 'Cancelled'];
-const PATH_B = ['Account', 'Offer', 'Offer', 'Survey', 'Warning', 'Cancelled'];
+export const PATH_A = ['Account', 'Confirm', 'Cancelled'];
+export const PATH_B = ['Account', 'Offer', 'Offer', 'Survey', 'Warning', 'Cancelled'];
 
 function AccountCard() {
   return (
@@ -16,7 +16,7 @@ function AccountCard() {
 }
 
 /** Flow A: the straight path. */
-function FlowA({ onDone }) {
+export function FlowA({ onDone }) {
   const [step, setStep] = useState(0);
   const [actions, setActions] = useState(0);
   const act = (to) => {
@@ -68,7 +68,7 @@ function FlowA({ onDone }) {
 }
 
 /** Flow B: the same cancellation, the long way round. */
-function FlowB({ onDone }) {
+export function FlowB({ onDone }) {
   const [step, setStep] = useState('account');
   const [actions, setActions] = useState(0);
   const [reason, setReason] = useState('');

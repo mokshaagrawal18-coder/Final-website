@@ -10,6 +10,10 @@ export const SOURCE_URL = ''; // Set to the repo URL to show "View source code".
 export const experiments = [
   {
     id: 'popular',
+    task: 'Pick a music plan',
+    variableShort: 'Badge',
+    variable: 'A “Most popular” badge on Plus',
+    constant: ['The three plans and their order', 'Prices', 'Features', 'Card size and position'],
     number: '01',
     category: 'Social proof',
     title: 'The Popular One',
@@ -27,6 +31,10 @@ export const experiments = [
   },
   {
     id: 'default',
+    task: 'Finish a flight booking',
+    variableShort: 'Starting state',
+    variable: 'Travel protection starts out selected',
+    constant: ['Flight and fare', 'Price of protection', 'Wording of both options', 'Button position'],
     number: '02',
     category: 'Defaults',
     title: 'Already Checked',
@@ -44,6 +52,10 @@ export const experiments = [
   },
   {
     id: 'scarcity',
+    task: 'Buy a lamp, or wait',
+    variableShort: 'Stock warning',
+    variable: 'An “Only 2 left” line',
+    constant: ['Price', 'Rating and reviews', 'Delivery date', 'Photo and layout'],
     number: '03',
     category: 'Scarcity',
     title: 'Only Two Left',
@@ -61,6 +73,10 @@ export const experiments = [
   },
   {
     id: 'friction',
+    task: 'Cancel a subscription, twice',
+    variableShort: 'Extra screens',
+    variable: 'Four screens between “cancel” and “cancelled”',
+    constant: ['The plan', 'The price', 'The outcome'],
     number: '04',
     category: 'Friction',
     title: 'Leaving So Soon?',
@@ -78,6 +94,10 @@ export const experiments = [
   },
   {
     id: 'recommend',
+    task: 'Pick a film for tonight',
+    variableShort: 'Label',
+    variable: '“Recommended for you” on one film',
+    constant: ['The four films and their order', 'Ratings', 'Posters', 'Running times'],
     number: '05',
     category: 'Recommendations',
     title: 'Picked For You',

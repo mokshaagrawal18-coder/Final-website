@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { filters, specimens } from '../data/experiments.js';
 
 /** A tiny live sample of each pattern, drawn in the same fake-UI style as the experiments. */
-function Sample({ id }) {
+export function Sample({ id }) {
   switch (id) {
     case '001':
       return (

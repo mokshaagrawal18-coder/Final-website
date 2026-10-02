@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { stripLayers } from '../data/experiments.js';
 
-function HotelArt() {
+export function HotelArt() {
   return (
     <svg viewBox="0 0 400 200" className="hotel-art" role="img" aria-label="Illustration of a small white villa by the sea with a palm tree">
       <defs>
@@ -27,12 +27,59 @@ function HotelArt() {
 }
 
 /** Wraps a layer so it can fold away smoothly when switched off. */
-function Layer({ on, children, inline = false }) {
+export function Layer({ on, children, inline = false }) {
   const Tag = inline ? 'span' : 'div';
   return (
     <Tag className={`layer ${inline ? 'layer-inline' : ''} ${on ? '' : 'is-off'}`} aria-hidden={!on}>
       <Tag className="layer-inner">{children}</Tag>
     </Tag>
+  );
+}
+
+/** The Palm House listing. `on` says which persuasion layers are visible. */
+export function HotelCard({ on, bare }) {
+  return (
+    <article className={`hotel ${bare ? 'is-bare' : ''}`} aria-label="Hotel listing">
+      <div className="hotel-img">
+        <HotelArt />
+        <Layer on={on.recommendation}>
+          <span className="hotel-fav">🏆 Guest favourite</span>
+        </Layer>
+      </div>
+      <div className="hotel-body">
+        <p className="hotel-name">The Palm House</p>
+        <p className="hotel-place">Goa</p>
+
+        <Layer on={on.social}>
+          <p className="hotel-stars">
+            <span aria-hidden="true">★★★★★</span> <strong>4.8</strong> · 2,341 reviews
+          </p>
+        </Layer>
+        <Layer on={on.urgency}>
+          <p className="hotel-viewing">
+            <span className="s-dot" aria-hidden="true" /> 17 people are viewing this
+          </p>
+        </Layer>
+
+        <div className="hotel-price-row">
+          <Layer on={on.anchor} inline>
+            <span className="hotel-strike">₹14,200</span>
+          </Layer>
+          <span className="hotel-price">₹9,899</span>
+          <span className="hotel-night">/ night</span>
+          <Layer on={on.discount} inline>
+            <span className="hotel-save">Save 30%</span>
+          </Layer>
+        </div>
+
+        <Layer on={on.scarcity}>
+          <p className="hotel-scarce">🔥 Only 1 room left</p>
+        </Layer>
+        <p className="hotel-free">✓ Free cancellation</p>
+
+        <span className={`hotel-btn ${on.urgency ? 'is-urgent' : ''}`}>{on.urgency ? 'Reserve now' : 'Reserve'}</span>
+      </div>
+    </article>
   );
 }
 
@@ -56,47 +103,7 @@ export default function Strip() {
 
         <div className="strip-grid">
           <div className="strip-card-wrap">
-            <article className={`hotel ${none ? 'is-bare' : ''}`} aria-label="Hotel listing">
-              <div className="hotel-img">
-                <HotelArt />
-                <Layer on={on.recommendation}>
-                  <span className="hotel-fav">🏆 Guest favourite</span>
-                </Layer>
-              </div>
-              <div className="hotel-body">
-                <p className="hotel-name">The Palm House</p>
-                <p className="hotel-place">Goa</p>
-
-                <Layer on={on.social}>
-                  <p className="hotel-stars">
-                    <span aria-hidden="true">★★★★★</span> <strong>4.8</strong> · 2,341 reviews
-                  </p>
-                </Layer>
-                <Layer on={on.urgency}>
-                  <p className="hotel-viewing">
-                    <span className="s-dot" aria-hidden="true" /> 17 people are viewing this
-                  </p>
-                </Layer>
-
-                <div className="hotel-price-row">
-                  <Layer on={on.anchor} inline>
-                    <span className="hotel-strike">₹14,200</span>
-                  </Layer>
-                  <span className="hotel-price">₹9,899</span>
-                  <span className="hotel-night">/ night</span>
-                  <Layer on={on.discount} inline>
-                    <span className="hotel-save">Save 30%</span>
-                  </Layer>
-                </div>
-
-                <Layer on={on.scarcity}>
-                  <p className="hotel-scarce">🔥 Only 1 room left</p>
-                </Layer>
-                <p className="hotel-free">✓ Free cancellation</p>
-
-                <span className={`hotel-btn ${on.urgency ? 'is-urgent' : ''}`}>{on.urgency ? 'Reserve now' : 'Reserve'}</span>
-              </div>
-            </article>
+            <HotelCard on={on} bare={none} />
           </div>
 
           <div className="strip-controls">
