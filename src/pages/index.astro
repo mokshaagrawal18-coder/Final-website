@@ -106,6 +106,10 @@ const personClip = ['-30% -40%', '130% -40%', ...edge(BR, BL, 28, 1.1)].join(', 
   .home {
     overflow-x: clip;
   }
+  /* Home sections sit closer together than inner pages */
+  .home :global(.section) { padding-top: clamp(44px, 2.2rem + 1.8vw, 76px); }
+  .home :global(.fs-scroll) { margin-top: 2px; }
+  .close { padding-bottom: 36px !important; }
 
   /* ---------- hero frame: everything placed in reference units ---------- */
   /* 302 reference units tall (stage 190 + route 112): cap the width so it fits the screen height too */
