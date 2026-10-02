@@ -10,13 +10,7 @@ const links = [
 ---
 <footer class="site-footer">
   <div class="container footer-inner">
-    <div class="meet" data-reveal aria-hidden="true">
-      <svg viewBox="0 0 1000 24" preserveAspectRatio="none">
-        <path pathLength="1" d="M0 12 C 70 3, 140 21, 210 12 S 350 3, 420 12 S 470 16, 492 12" />
-        <path pathLength="1" d="M1000 12 C 930 21, 860 3, 790 12 S 650 21, 580 12 S 530 8, 508 12" />
-      </svg>
-      <span class="meet-dot"></span>
-    </div>
+    <svg class="footer-squiggle" viewBox="0 0 60 20" aria-hidden="true" data-wave><path d="M2 12 C 10 6, 16 6, 22 10 S 34 15, 40 10 S 52 6, 58 10" /></svg>
     <p class="footer-main">Thanks for looking a little closer.</p>
     <ul class="footer-links" role="list">
       {links.map((l) => (
@@ -38,18 +32,42 @@ const links = [
   </div>
 </footer>
 
+<script>
+  // Same shape as the static wave; k scales how far each curve swings from the middle line.
+  const wave = document.querySelector<SVGSVGElement>('[data-wave]');
+  const path = wave?.querySelector('path');
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches || !matchMedia('(hover: hover)').matches;
+  if (wave && path && !calm) {
+    const mid = 10;
+    const d = (k: number) => {
+      const y = (o: number) => (mid + o * k).toFixed(2);
+      return `M2 ${y(2)} C 10 ${y(-4)}, 16 ${y(-4)}, 22 ${y(0)} S 34 ${y(5)}, 40 ${y(0)} S 52 ${y(-4)}, 58 ${y(0)}`;
+    };
+    let k = 1, target = 1, raf = 0;
+    const tick = () => {
+      k += (target - k) * 0.035; // slow, fluid easing
+      path.setAttribute('d', d(k));
+      raf = Math.abs(target - k) > 0.002 ? requestAnimationFrame(tick) : 0;
+    };
+    addEventListener('pointermove', (e) => {
+      const r = wave.getBoundingClientRect();
+      const dist = Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2));
+      const near = Math.max(0, 1 - dist / 520); // 0 far away → 1 right on it
+      target = 1 + 1.0 * near * near;
+      if (!raf) raf = requestAnimationFrame(tick);
+    }, { passive: true });
+    document.addEventListener('pointerleave', () => { target = 1; if (!raf) raf = requestAnimationFrame(tick); });
+  }
+</script>
+
 
 <style>
   .site-footer { margin-top: auto; padding: 8px 0 24px; }
-  .footer-inner { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; padding-top: 24px; }
+  .footer-inner { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; border-top: 1px solid var(--line); padding-top: 30px; }
 
-  /* two curvy lines that start at either edge and meet in the middle */
-  .meet { position: relative; width: min(100%, 460px); height: 24px; margin-bottom: 6px; }
-  .meet svg { display: block; width: 100%; height: 24px; overflow: visible; }
-  .meet path { fill: none; stroke: var(--cobalt); stroke-width: 1.6; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 0; transition: stroke-dashoffset 1600ms cubic-bezier(.45, 0, .2, 1); }
-  :global(.js) .meet:not(.is-in) path { stroke-dashoffset: 1; }
-  .meet-dot { position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; background: var(--cobalt); transition: transform 400ms var(--ease) 1500ms, opacity 400ms 1500ms; }
-  :global(.js) .meet:not(.is-in) .meet-dot { opacity: 0; transform: scale(0.2); }
+  /* the little wave deepens as the cursor comes closer, and calms when it leaves */
+  .footer-squiggle { width: 52px; height: 18px; margin-bottom: 2px; overflow: visible; }
+  .footer-squiggle path { fill: none; stroke: var(--cobalt); stroke-width: 1.8; stroke-linecap: round; }
   .footer-main { font-family: var(--font-serif-text); font-weight: 600; font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); letter-spacing: -0.005em; color: var(--ink); }
 
   .footer-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; }
@@ -80,7 +98,7 @@ const links = [
   .to-top:hover svg { transform: translateY(-3px); }
 
   @media (prefers-reduced-motion: reduce) {
-    .meet path, .meet-dot { transition: none; }
+    .footer-squiggle { transform: none; }
   }
   @media (max-width: 640px) {
     .to-top { position: static; transform: none; margin-top: 14px; flex-direction: row; }
