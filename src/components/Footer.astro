@@ -10,19 +10,10 @@ const links = [
 ---
 <footer class="site-footer">
   <div class="container footer-inner">
-    <div class="buddy" data-buddy>
-      <svg class="buddy-face" viewBox="0 0 64 56" aria-hidden="true">
-        <circle class="bf-head" cx="30" cy="30" r="20" />
-        <g class="bf-eyes"><ellipse cx="23.5" cy="27" rx="2" ry="2.6" /><ellipse cx="36.5" cy="27" rx="2" ry="2.6" /></g>
-        <circle class="bf-cheek" cx="19" cy="34" r="3" /><circle class="bf-cheek" cx="41" cy="34" r="3" />
-        <path class="bf-smile" d="M24 35.5 C 27 39, 33 39, 36 35.5" />
-        <g class="bf-hand"><path d="M50 30 l4-8 M53 31 l5-6 M54 34 l6-3 M49 28 c-2 4 -1 9 3 10 c3 1 6-1 7-3" /></g>
-      </svg>
-      <p class="buddy-say hand" data-say aria-live="polite"></p>
-      <span class="buddy-pops" data-pops aria-hidden="true"></span>
+    <div class="signoff" data-reveal>
+      <p class="footer-main">Thanks for looking <span class="so-hl">a little closer<svg class="so-line draw" data-reveal viewBox="0 0 200 16" preserveAspectRatio="none" aria-hidden="true"><path d="M3 9 C 40 4, 80 13, 120 8 S 175 5, 197 9" style="--len:210;--delay:900ms" /></svg></span>.<svg class="so-heart draw" data-reveal viewBox="0 0 24 22" aria-hidden="true"><path d="M12 19 C 5 14, 2 10.5, 2 7 A 4.6 4.6 0 0 1 12 5.2 A 4.6 4.6 0 0 1 22 7 C 22 10.5, 19 14, 12 19 Z" style="--len:70;--delay:1500ms" /></svg></p>
+      <p class="so-sign hand" aria-hidden="true">— Moksha</p>
     </div>
-    <p class="footer-main">Thanks for looking a little closer.</p>
-    <button type="button" class="wave-btn hand" data-wave>wave back <span aria-hidden="true">✋</span></button>
     <ul class="footer-links" role="list">
       {links.map((l) => (
         <li>
@@ -43,91 +34,30 @@ const links = [
   </div>
 </footer>
 
-<script>
-  const lines = [
-    'hi! ♡',
-    'okay, now we’re friends',
-    'you came back :)',
-    'this made my day, honestly',
-    'still here? me too.',
-    'go on, the email link is right there ↓',
-    'okay last one… (it’s not)',
-  ];
-  document.querySelectorAll<HTMLElement>('[data-buddy]').forEach((buddy) => {
-    const btn = buddy.parentElement?.querySelector<HTMLButtonElement>('[data-wave]');
-    const say = buddy.querySelector<HTMLElement>('[data-say]')!;
-    const pops = buddy.querySelector<HTMLElement>('[data-pops]')!;
-    if (!btn) return;
-    let n = 0;
-    const colors = ['var(--cobalt)', 'var(--yellow)', 'var(--red)'];
-    btn.addEventListener('click', () => {
-      say.textContent = lines[n % lines.length];
-      n++;
-      buddy.classList.remove('is-waving'); void buddy.offsetWidth; buddy.classList.add('is-waving');
-      say.classList.remove('is-on'); void say.offsetWidth; say.classList.add('is-on');
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      for (let i = 0; i < 6; i++) {
-        const h = document.createElement('span');
-        h.className = 'pop';
-        h.textContent = i % 3 === 2 ? '✦' : '♥';
-        h.style.setProperty('--x', `${Math.round((Math.random() - 0.5) * 90)}px`);
-        h.style.setProperty('--r', `${Math.round((Math.random() - 0.5) * 50)}deg`);
-        h.style.setProperty('--d', `${i * 60}ms`);
-        h.style.color = colors[i % 3];
-        pops.appendChild(h);
-        setTimeout(() => h.remove(), 1500);
-      }
-    });
-  });
-</script>
 
 <style>
   .site-footer { margin-top: auto; padding: 8px 0 24px; }
   .footer-inner { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; border-top: 1px solid var(--line); padding-top: 40px; }
 
-  /* a tiny doodle who waves back */
-  .buddy { position: relative; width: 64px; height: 56px; }
-  .buddy-face { width: 64px; height: 56px; overflow: visible; transition: transform 300ms var(--ease); }
-  .bf-head { fill: var(--paper); stroke: var(--ink); stroke-width: 1.6; }
-  .bf-eyes { fill: var(--ink); transform-origin: 30px 27px; animation: bf-blink 4.5s infinite; }
-  .bf-cheek { fill: #F4B9AE; opacity: 0.7; }
-  .bf-smile, .bf-hand path { fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-  .bf-hand { transform-origin: 50px 38px; opacity: 0; transform: rotate(20deg); transition: opacity 200ms; }
-  .site-footer:hover .buddy-face { transform: rotate(-6deg); }
-  .buddy.is-waving .bf-hand { opacity: 1; animation: bf-wave 900ms var(--ease); }
-  .buddy.is-waving .bf-smile { d: path('M23 34.5 C 26 41, 34 41, 37 34.5'); }
-  @keyframes bf-blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
-  @keyframes bf-wave { 0% { transform: rotate(20deg); } 20% { transform: rotate(-18deg); } 40% { transform: rotate(16deg); } 60% { transform: rotate(-14deg); } 80% { transform: rotate(10deg); } 100% { transform: rotate(0); } }
-
-  .buddy-say {
-    position: absolute; left: calc(100% + 6px); top: -6px; white-space: nowrap;
-    padding: 4px 12px; font-size: 1rem; color: var(--cobalt);
-    background: var(--paper); border: 1px solid var(--line-strong); border-radius: 14px 14px 14px 3px;
-    opacity: 0; transform: translateY(4px) rotate(-2deg); pointer-events: none;
-  }
-  .buddy-say:empty { display: none; }
-  .buddy-say.is-on { animation: bf-say 2.6s var(--ease) forwards; }
-  @keyframes bf-say { 0% { opacity: 0; transform: translateY(4px) rotate(-2deg); } 12%, 82% { opacity: 1; transform: translateY(0) rotate(-2deg); } 100% { opacity: 0; transform: translateY(-4px) rotate(-2deg); } }
-
-  .buddy-pops { position: absolute; left: 50%; top: 10px; pointer-events: none; }
-  .buddy-pops :global(.pop) { position: absolute; left: 0; top: 0; font-size: 14px; line-height: 1; opacity: 0; animation: bf-pop 1.2s var(--ease) var(--d) forwards; }
-  @keyframes bf-pop {
-    0% { opacity: 0; transform: translate(-50%, 0) scale(0.4); }
-    20% { opacity: 1; }
-    100% { opacity: 0; transform: translate(calc(-50% + var(--x)), -70px) rotate(var(--r)) scale(1); }
-  }
-
-  .wave-btn {
-    min-height: 36px; padding: 2px 16px; margin-top: -2px;
-    font-size: 1rem; color: var(--ink); background: rgba(242, 200, 75, 0.35);
-    border: 1px dashed rgba(23, 23, 23, 0.25); border-radius: 999px; transform: rotate(-1.5deg);
-    transition: background-color var(--t-micro), transform 160ms var(--ease);
-  }
-  .wave-btn span { display: inline-block; transition: transform 200ms var(--ease); }
-  .wave-btn:hover { background: var(--yellow); }
-  .wave-btn:hover span { transform: rotate(-18deg); }
-  .wave-btn:active { transform: rotate(-1.5deg) scale(0.96); }
+  /* sign-off: a highlighter sweep, a pen line, a small heart that breathes, then a signature */
+  .signoff { display: flex; flex-direction: column; align-items: center; gap: 2px; }
   .footer-main { font-family: var(--font-serif-text); font-weight: 600; font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); letter-spacing: -0.005em; color: var(--ink); }
+  .so-hl {
+    position: relative; padding: 0 3px;
+    background-image: linear-gradient(transparent 55%, rgba(242, 200, 75, 0.55) 55%, rgba(242, 200, 75, 0.55) 92%, transparent 92%);
+    background-repeat: no-repeat; background-size: 100% 100%;
+    transition: background-size 1100ms cubic-bezier(.5, 0, .2, 1) 300ms, background-image 300ms;
+  }
+  :global(.js) .signoff:not(.is-in) .so-hl { background-size: 0% 100%; }
+  .so-line { position: absolute; left: 0; right: 0; bottom: -9px; width: 100%; height: 10px; overflow: visible; }
+  .so-line path { fill: none; stroke: var(--cobalt); stroke-width: 1.6; stroke-linecap: round; }
+  .so-heart { display: inline-block; width: 0.95em; height: 0.9em; margin-left: 8px; vertical-align: -0.1em; overflow: visible; transform-origin: 50% 60%; }
+  .so-heart path { fill: rgba(217, 85, 69, 0); stroke: var(--red); stroke-width: 1.6; stroke-linejoin: round; transition: fill 900ms ease 2200ms; }
+  .signoff.is-in .so-heart path { fill: rgba(217, 85, 69, 0.3); }
+  .signoff.is-in .so-heart { animation: so-breathe 3.6s ease-in-out 2.6s infinite; }
+  @keyframes so-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+  .so-sign { margin-top: 10px; font-size: 1.15rem; color: var(--cobalt); transform: rotate(-3deg); transition: opacity 900ms ease 2000ms, transform 900ms ease 2000ms; }
+  :global(.js) .signoff:not(.is-in) .so-sign { opacity: 0; transform: rotate(-3deg) translateY(4px); }
 
   .footer-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; }
   .footer-links li + li::before { content: '·'; color: var(--grey); margin: 0 12px; }
@@ -157,11 +87,10 @@ const links = [
   .to-top:hover svg { transform: translateY(-3px); }
 
   @media (prefers-reduced-motion: reduce) {
-    .bf-eyes, .buddy.is-waving .bf-hand { animation: none; }
-    .buddy-face { transition: none; }
+    .so-hl, .so-sign { transition: none !important; }
+    .so-heart { animation: none !important; }
   }
   @media (max-width: 640px) {
-    .buddy-say { left: -90px; right: -90px; top: -40px; margin: 0 auto; width: auto; max-width: max-content; white-space: normal; text-align: center; }
     .to-top { position: static; transform: none; margin-top: 14px; flex-direction: row; }
   }
 </style>
