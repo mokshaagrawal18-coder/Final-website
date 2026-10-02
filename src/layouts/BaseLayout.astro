@@ -9,7 +9,7 @@ interface Props { title?: string; description?: string }
 const { title, description = site.description } = Astro.props;
 const fullTitle = title ? `${title} · Moksha Agrawal` : 'Moksha Agrawal';
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImage = new URL('/og.png', Astro.site);
+const ogImage = new URL('/og.jpg', Astro.site);
 ---
 <!doctype html>
 <html lang="en" id="top">
