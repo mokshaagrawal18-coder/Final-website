@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { builtWith, experiments, filters, methodology, SOURCE_URL, specimens, stripLayers } from '../data/experiments.js';
 import { describeChoice } from '../components/Sections.jsx';
+import { outcomeLabel, outcomeOf, sessionTakeaway } from '../data/outcomes.js';
 import { Sample } from '../components/Library.jsx';
 import { HotelCard } from '../components/Strip.jsx';
 
 const isDone = (choices, id) => (id === 'friction' ? choices[id]?.b !== undefined : choices[id]?.spot !== undefined);
+const isStarted = (choices, id) => choices[id]?.a !== undefined;
 
 export function Bar({ choices }) {
   const count = experiments.filter((e) => isDone(choices, e.id)).length;
@@ -122,7 +124,7 @@ export function TestPlan({ choices }) {
                     </td>
                     <td>{e.task}</td>
                     <td className={done ? 'is-red' : 'is-muted'}>{done ? e.variableShort : 'Revealed after'}</td>
-                    <td>{done ? 'Done' : 'Not run'}</td>
+                    <td>{done ? 'Done' : isStarted(choices, e.id) ? 'In progress' : 'Not run'}</td>
                   </tr>
                 );
               })}
@@ -140,16 +142,17 @@ function logRow(id, r) {
     return { first: `${r.a} actions`, second: `${r.b} actions`, result: `+${r.b - r.a} actions`, red: true };
   }
   if (r?.spot === undefined) return null;
-  const changed = r.a !== r.b;
+  const outcome = outcomeOf(id, r);
   return {
     first: describeChoice(id, r.a),
     second: describeChoice(id, r.b),
-    result: changed ? 'Changed' : 'Same',
-    red: changed,
+    result: outcomeLabel[outcome],
+    red: outcome === 'toward',
   };
 }
 
 export function SessionLog({ choices }) {
+  const takeaway = sessionTakeaway(choices);
   return (
     <section className="log" id="log" aria-labelledby="log-title">
       <div className="wrap log-grid">
@@ -157,6 +160,7 @@ export function SessionLog({ choices }) {
           <h2 className="h2" id="log-title">
             Your session
           </h2>
+          {takeaway && <p className="log-takeaway">{takeaway}</p>}
           <p className="log-note">This isn’t a psychological profile. Five choices can’t tell us that.</p>
           <p className="log-note">
             But they do make something visible: interfaces don’t only present choices.{' '}
@@ -187,7 +191,7 @@ export function SessionLog({ choices }) {
                       </>
                     ) : (
                       <td colSpan={3} className="is-muted">
-                        <a href={`#exp-${e.id}`}>Not run yet</a>
+                        <a href={`#exp-${e.id}`}>{isStarted(choices, e.id) ? 'In progress' : 'Not run yet'}</a>
                       </td>
                     )}
                   </tr>

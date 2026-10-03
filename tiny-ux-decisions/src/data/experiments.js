@@ -34,7 +34,7 @@ export const experiments = [
     task: 'Finish a flight booking',
     variableShort: 'Starting state',
     variable: 'Travel protection starts out selected',
-    constant: ['Flight and fare', 'Price of protection', 'Wording of both options', 'Button position'],
+    constant: ['Flight and fare', 'Price of protection', 'Wording of both options', 'Layout'],
     number: '02',
     category: 'Defaults',
     title: 'Already Checked',
@@ -75,7 +75,7 @@ export const experiments = [
     id: 'friction',
     task: 'Cancel a subscription, twice',
     variableShort: 'Extra screens',
-    variable: 'Four screens between “cancel” and “cancelled”',
+    variable: 'Three extra screens before you can leave: two offers and a survey',
     constant: ['The plan', 'The price', 'The outcome'],
     number: '04',
     category: 'Friction',
@@ -84,11 +84,11 @@ export const experiments = [
     prompt: 'Cancel your membership.',
     versionA: 'A two-step cancellation.',
     versionB: 'The same cancellation, routed through offers, a survey and a warning.',
-    change: '+ 4 extra screens',
+    change: '+ 3 extra screens',
     changeNote: 'Same membership. Same outcome. Same person who had already decided.',
     explanation: [
       'Friction isn’t always visual. Sometimes design shapes behaviour by making one action simply require more effort than another.',
-      'An extra click seems tiny. Five extra decisions don’t.',
+      'An extra click seems tiny. Four extra decisions don’t.',
     ],
     question: 'If saying yes takes one click, how many clicks should saying no take?',
   },
@@ -332,6 +332,10 @@ export const methodology = [
   {
     title: 'The badge goes somewhere it could matter',
     body: 'In “Picked For You”, the recommendation is placed on a film you didn’t choose the first time. Otherwise it could never change your mind. In the other experiments, the change sits where it would in a real product.',
+  },
+  {
+    title: 'There is no control group',
+    body: 'People sometimes change their answer on a second look even when nothing has changed. A proper experiment would compare against a group who saw version A twice. Without one, a change in your answer is a prompt to think about the nudge, not proof that it worked.',
   },
   {
     title: 'Nothing leaves your browser',

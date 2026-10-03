@@ -74,6 +74,7 @@ export function FlowB({ onDone }) {
   const [reason, setReason] = useState('');
   const [detour, setDetour] = useState(null); // { text, back }
   const [detours, setDetours] = useState([]);
+  const [hint, setHint] = useState(false);
 
   const act = (to) => {
     setActions((n) => n + 1);
@@ -112,15 +113,24 @@ export function FlowB({ onDone }) {
             <p className="ui-h">Account</p>
             <AccountCard />
             <ul className="ui-settings" role="list">
-              <li>Profiles</li>
-              <li>Playback settings</li>
-              <li>Payment method</li>
+              {['Profiles', 'Playback settings', 'Payment method'].map((row) => (
+                <li key={row}>
+                  <button type="button" className="ui-settings-row" onClick={() => setHint(true)}>
+                    {row}
+                  </button>
+                </li>
+              ))}
               <li>
                 <button type="button" className="ui-settings-link" onClick={() => act('pause')}>
                   Manage membership <span aria-hidden="true">›</span>
                 </button>
               </li>
             </ul>
+            {hint && (
+              <p className="ui-small reel-muted" aria-live="polite">
+                Not there. There’s no cancel button on this screen. Look for the smallest link.
+              </p>
+            )}
           </>
         )}
         {step === 'pause' && (
@@ -130,7 +140,7 @@ export function FlowB({ onDone }) {
             <button
               type="button"
               className="ui-btn ui-btn-amber"
-              onClick={() => divert('Paused instead', 'Membership paused until 2 Nov.', 'lite')}
+              onClick={() => divert('Paused instead', 'Membership paused until 14 Nov.', 'lite')}
             >
               Pause membership
             </button>

@@ -613,8 +613,17 @@ button.ui-film:hover {
   font-size: 14px;
   color: #c9c8cd;
 }
-.ui-settings li:last-child {
+.ui-settings li:has(button) {
   padding: 0;
+}
+.ui-settings-row {
+  width: 100%;
+  background: none;
+  border: 0;
+  padding: 11px 2px;
+  text-align: left;
+  font-size: 14px;
+  color: #c9c8cd;
 }
 .ui-settings-link {
   width: 100%;

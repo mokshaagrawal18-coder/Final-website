@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { FlowA, FlowB, PATH_A, PATH_B } from '../components/FrictionExperiment.jsx';
+import { outcomeHeadline, outcomeLabel, outcomeOf, outcomeText } from '../data/outcomes.js';
 
 /** Scroll the canvas back into view when the board moves to a new step. */
 function useFollow(step) {
@@ -128,7 +129,8 @@ export function Board({ exp, n, result = {}, onRecord, onReset, renderInterface,
 
   const spot = (e) => {
     if (found) return;
-    if (e.target.closest('.delta')) {
+    // The change itself, or something it directly caused (like a total that includes it).
+    if (e.target.closest('.delta, .delta-echo')) {
       setFound(true);
       const tries = misses.length;
       later(() => {
@@ -156,7 +158,7 @@ export function Board({ exp, n, result = {}, onRecord, onReset, renderInterface,
     onReset();
   };
 
-  const changed = result.a !== result.b;
+  const outcome = outcomeOf(exp.id, result);
   const spotText =
     result.spot === -1
       ? 'You asked to be shown'
@@ -183,7 +185,7 @@ export function Board({ exp, n, result = {}, onRecord, onReset, renderInterface,
                 {interlude ? (
                   <div className="interlude">
                     <p>Same question.</p>
-                    <p className="interlude-sub">Look again.</p>
+                    <p className="interlude-sub">Answer as if it’s the first time.</p>
                   </div>
                 ) : (
                   <div className="appear" key={phase}>
@@ -249,13 +251,19 @@ export function Board({ exp, n, result = {}, onRecord, onReset, renderInterface,
                 </div>
                 <div>
                   <dt>Result</dt>
-                  <dd className={changed ? 'is-red' : ''}>{changed ? 'Changed' : 'Stayed the same'}</dd>
+                  <dd className={outcome === 'toward' ? 'is-red' : ''}>{outcomeLabel[outcome]}</dd>
                 </div>
                 <div>
                   <dt>Spotting</dt>
                   <dd>{spotText}</dd>
                 </div>
               </dl>
+              {outcome && (
+                <div className="outcome">
+                  <p className="outcome-head">{outcomeHeadline(exp.id, outcome)}</p>
+                  <p className="outcome-why">{outcomeText[exp.id][outcome]}</p>
+                </div>
+              )}
 
               <Notes exp={exp} />
               <Actions next={next} onReset={reset} />

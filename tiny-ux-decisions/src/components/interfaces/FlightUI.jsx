@@ -11,6 +11,8 @@ export default function FlightUI({ variant, interactive, onChoose, pending, pick
   const [sel, setSel] = useState(start);
   const current = interactive ? sel : start;
   const total = flight.fare + (current === 'protect' ? flight.protection : 0);
+  // In version B the total is a knock-on effect of the change, so it counts when spotting it.
+  const echo = variant === 'B' ? 'delta-echo' : '';
 
   const options = [
     { id: 'protect', label: `Add travel protection · ${inr(flight.protection)}` },
@@ -87,7 +89,7 @@ export default function FlightUI({ variant, interactive, onChoose, pending, pick
 
         <div className="ui-flight-foot">
           <p className="ui-small ui-muted">
-            Total <strong className="ui-total">{inr(total)}</strong>
+            Total <strong className={`ui-total ${echo}`}>{inr(total)}</strong>
           </p>
           {interactive ? (
             <button
@@ -99,7 +101,7 @@ export default function FlightUI({ variant, interactive, onChoose, pending, pick
               {pending ? '✓ Booked' : `Continue · ${inr(total)}`}
             </button>
           ) : (
-            <span className="ui-btn ui-btn-solid ui-btn-teal">Continue · {inr(total)}</span>
+            <span className={`ui-btn ui-btn-solid ui-btn-teal ${echo}`}>Continue · {inr(total)}</span>
           )}
         </div>
         {interactive && !sel && <p className="ui-hint">Pick one option to continue.</p>}

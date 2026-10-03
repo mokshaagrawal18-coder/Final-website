@@ -801,6 +801,22 @@ h3 {
   color: var(--muted);
   font-weight: 400;
 }
+.outcome {
+  margin-top: 24px;
+  max-width: 62ch;
+}
+.outcome-head {
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+}
+.outcome-why {
+  margin-top: 6px;
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--muted);
+}
 .notes {
   margin-top: 36px;
   display: grid;
@@ -1000,6 +1016,13 @@ h3 {
   font-size: 18px;
   line-height: 1.55;
   color: var(--muted);
+  max-width: 40ch;
+}
+.log-takeaway {
+  margin-top: 16px;
+  font-family: var(--font-body);
+  font-size: 20px;
+  line-height: 1.45;
   max-width: 40ch;
 }
 .log-note strong {

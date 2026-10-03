@@ -653,8 +653,15 @@ mark {
 .result-verdict {
   font-weight: 600;
 }
+.result-line.is-toward .result-verdict,
 .result-line.is-changed .result-verdict {
   color: var(--red);
+}
+.result-why {
+  flex-basis: 100%;
+  max-width: 60ch;
+  color: var(--grey);
+  font-size: 15px;
 }
 .result-path {
   display: inline-flex;
@@ -862,6 +869,10 @@ mark {
   display: grid;
   gap: 12px;
   color: #d9d4ca;
+}
+.res-takeaway {
+  color: var(--paper);
+  font-size: 20px;
 }
 .res-note strong {
   color: var(--paper);

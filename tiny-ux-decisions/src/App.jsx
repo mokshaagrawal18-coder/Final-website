@@ -16,10 +16,6 @@ const revealNotes = {
   recommend: 'The label went on a film you didn’t pick the first time. Otherwise it could never have changed your mind.',
 };
 
-const verdicts = {
-  scarcity: { changedText: 'Your decision changed.', stayedText: 'You made the same call both times.' },
-};
-
 export default function App() {
   // Choices live only in memory: { [experimentId]: { a, b, ... } }
   const [choices, setChoices] = useState({});
@@ -72,7 +68,6 @@ export default function App() {
                 next={nextFor(i)}
                 describe={(v) => describeChoice(exp.id, v)}
                 revealNote={revealNotes[exp.id]}
-                {...verdicts[exp.id]}
                 renderInterface={(variant, opts) => <UI variant={variant} {...opts} />}
               />
             );

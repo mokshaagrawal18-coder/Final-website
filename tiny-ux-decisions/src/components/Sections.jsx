@@ -1,4 +1,5 @@
 import { builtWith, experiments, films, methodology, plans, SOURCE_URL } from '../data/experiments.js';
+import { outcomeLabel, outcomeOf, sessionTakeaway } from '../data/outcomes.js';
 
 const done = (choices, id) => choices[id]?.b !== undefined;
 
@@ -122,9 +123,9 @@ function ResultRow({ id, r }) {
   if (!r || r.b === undefined) {
     return (
       <>
-        <span className="res-status res-none">Not tried yet</span>
+        <span className="res-status res-none">{r?.a !== undefined ? 'Halfway through' : 'Not tried yet'}</span>
         <span className="mono res-detail">
-          <a href={`#exp-${id}`}>Try it →</a>
+          <a href={`#exp-${id}`}>{r?.a !== undefined ? 'Finish it →' : 'Try it →'}</a>
         </span>
       </>
     );
@@ -139,10 +140,10 @@ function ResultRow({ id, r }) {
       </>
     );
   }
-  const changed = r.a !== r.b;
+  const outcome = outcomeOf(id, r);
   return (
     <>
-      <span className={`res-status ${changed ? 'res-changed' : 'res-stayed'}`}>{changed ? 'Changed' : 'Stayed'}</span>
+      <span className={`res-status ${outcome === 'toward' ? 'res-changed' : 'res-stayed'}`}>{outcomeLabel[outcome]}</span>
       <span className="mono res-detail">
         {describeChoice(id, r.a)} → {describeChoice(id, r.b)}
       </span>
@@ -152,6 +153,7 @@ function ResultRow({ id, r }) {
 
 export function Results({ choices }) {
   const any = experiments.some((e) => done(choices, e.id));
+  const takeaway = sessionTakeaway(choices);
   return (
     <section className="section results" id="results" aria-labelledby="results-title">
       <div className="wrap results-inner">
@@ -169,6 +171,7 @@ export function Results({ choices }) {
           ))}
         </ul>
         <div className={`res-note ${any ? '' : 'is-quiet'}`}>
+          {takeaway && <p className="res-takeaway">{takeaway}</p>}
           <p>This isn’t a psychological profile. Five choices can’t tell us that.</p>
           <p>
             But they do make something visible: interfaces don’t only present choices.{' '}

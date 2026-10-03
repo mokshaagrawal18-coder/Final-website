@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { outcomeHeadline, outcomeOf, outcomeText } from '../data/outcomes.js';
 
 /** A light browser window around each fictional interface. */
 export function BrowserFrame({ url, children, className = '' }) {
@@ -29,16 +30,19 @@ export function ExperimentHeader({ exp }) {
   );
 }
 
-export function ResultLine({ from, to, changed, changedText = 'Your choice changed.', stayedText = 'You stuck with your first choice.' }) {
+/** What this pair of choices means: moved toward the nudge, away from it, already agreed, not moved, or changed elsewhere. */
+export function ResultLine({ id, result, describe }) {
+  const outcome = outcomeOf(id, result);
   return (
-    <div className={`result-line ${changed ? 'is-changed' : ''}`}>
-      <p className="result-verdict">{changed ? changedText : stayedText}</p>
+    <div className={`result-line is-${outcome}`}>
+      <p className="result-verdict">{outcomeHeadline(id, outcome)}</p>
       <p className="mono result-path">
-        <span>{from}</span>
+        <span>{describe(result.a)}</span>
         <span className="arrow" aria-hidden="true">→</span>
         <span className="sr-only">then</span>
-        <span className={changed ? 'is-new' : ''}>{to}</span>
+        <span className={result.a !== result.b ? 'is-new' : ''}>{describe(result.b)}</span>
       </p>
+      <p className="result-why">{outcomeText[id][outcome]}</p>
     </div>
   );
 }
@@ -101,7 +105,7 @@ export function useRevealScroll(active) {
  *   opts.pending      — the value just chosen (for a brief confirmation state)
  *   opts.picked       — the visitor's choice for that round (reveal only)
  */
-export function ABExperiment({ exp, result = {}, onRecord, onReset, next, renderInterface, describe, revealNote, changedText, stayedText }) {
+export function ABExperiment({ exp, result = {}, onRecord, onReset, next, renderInterface, describe, revealNote }) {
   const phase = result.b !== undefined ? 'reveal' : result.a !== undefined ? 'b' : 'a';
   const [interlude, setInterlude] = useState(false);
   const [pending, setPending] = useState(null);
@@ -154,7 +158,7 @@ export function ABExperiment({ exp, result = {}, onRecord, onReset, next, render
             {interlude ? (
               <div className="interlude" aria-live="polite">
                 <p className="interlude-text">One more time.</p>
-                <p className="mono interlude-sub">Same question. Look again.</p>
+                <p className="mono interlude-sub">Same question. Answer as if it’s the first time.</p>
               </div>
             ) : (
               <div className="fade-in" key={phase}>
@@ -189,13 +193,7 @@ export function ABExperiment({ exp, result = {}, onRecord, onReset, next, render
             <p className="change-note">{exp.changeNote}</p>
             {revealNote && <p className="reveal-note">{revealNote}</p>}
 
-            <ResultLine
-              from={describe(result.a)}
-              to={describe(result.b)}
-              changed={result.a !== result.b}
-              changedText={changedText}
-              stayedText={stayedText}
-            />
+            <ResultLine id={exp.id} result={result} describe={describe} />
 
             <div className="reveal-grid">
               <Explanation exp={exp} />
