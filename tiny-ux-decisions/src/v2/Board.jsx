@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { FlowA, FlowB, PATH_A, PATH_B } from '../components/FrictionExperiment.jsx';
 import { outcomeHeadline, outcomeLabel, outcomeOf, outcomeText } from '../data/outcomes.js';
+import { versusResearch } from '../data/wild.js';
+import { InTheWild } from '../components/Wild.jsx';
 
 /** Scroll the canvas back into view when the board moves to a new step. */
 function useFollow(step) {
@@ -262,10 +264,14 @@ export function Board({ exp, n, result = {}, onRecord, onReset, renderInterface,
                 <div className="outcome">
                   <p className="outcome-head">{outcomeHeadline(exp.id, outcome)}</p>
                   <p className="outcome-why">{outcomeText[exp.id][outcome]}</p>
+                  {versusResearch(exp.id, outcome, result) && (
+                    <p className="outcome-research">{versusResearch(exp.id, outcome, result)}</p>
+                  )}
                 </div>
               )}
 
               <Notes exp={exp} />
+              <InTheWild id={exp.id} />
               <Actions next={next} onReset={reset} />
             </div>
           )}
@@ -363,7 +369,11 @@ export function FrictionBoard({ exp, n, result = {}, onRecord, onReset, next }) 
                   <dd>{diff > 0 ? `${diff} more to leave the long way` : 'About the same this time'}</dd>
                 </div>
               </dl>
+              <div className="outcome">
+                <p className="outcome-research">{versusResearch('friction', null, result)}</p>
+              </div>
               <Notes exp={exp} />
+              <InTheWild id={exp.id} />
               <Actions next={next} onReset={onReset} />
             </div>
           )}

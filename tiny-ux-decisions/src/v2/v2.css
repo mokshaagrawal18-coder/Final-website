@@ -1318,6 +1318,135 @@ h3 {
   color: var(--muted);
 }
 
+/* ---------- in the wild + ship checklist ---------- */
+.outcome-research {
+  margin-top: 12px;
+  padding-left: 14px;
+  border-left: 2px solid var(--redline);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.5;
+}
+.wild {
+  margin-top: 40px;
+  border-top: 1px solid var(--ink);
+}
+.wild summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 14px 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+}
+.wild summary::-webkit-details-marker {
+  display: none;
+}
+.wild summary::before {
+  content: '+';
+  font-weight: 700;
+  color: var(--redline);
+  width: 14px;
+}
+.wild[open] summary::before {
+  content: '–';
+}
+.wild-title {
+  font-weight: 700;
+  font-stretch: 110%;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+}
+.wild-sub {
+  font-size: 13px;
+  color: var(--muted);
+}
+.wild-list {
+  border-top: 1px solid var(--rule);
+}
+.wild-list > div {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 4px 24px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.wild-list dt {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  padding-top: 3px;
+}
+.wild-list dd {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.5;
+  max-width: 62ch;
+}
+.wild-number dd {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 19px;
+  line-height: 1.35;
+}
+.wild-sources {
+  padding-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.wild-sources span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.wild-sources a {
+  color: var(--muted);
+  text-underline-offset: 3px;
+}
+.wild-sources a:hover {
+  color: var(--ink);
+}
+.ship {
+  margin-top: 12px;
+}
+.ship-head {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+}
+.ship-list {
+  margin-top: 10px;
+  border-top: 1px solid var(--rule);
+}
+.ship-list li {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 4px 16px;
+  align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.ship-tag {
+  font-family: var(--font-head);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--redline);
+}
+.ship-q {
+  font-size: 18px;
+}
+@media (max-width: 640px) {
+  .wild-list > div,
+  .ship-list li {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { cancelReasons } from '../data/experiments.js';
+import { versusResearch } from '../data/wild.js';
+import { InTheWild } from './Wild.jsx';
 import { BrowserFrame, ExperimentHeader, Explanation, NextRow, TinyQuestion, useRevealScroll } from './Experiment.jsx';
 
 export const PATH_A = ['Account', 'Confirm', 'Cancelled'];
@@ -303,12 +305,15 @@ export default function FrictionExperiment({ exp, result = {}, onRecord, onReset
                 <span className="arrow" aria-hidden="true">→</span>
                 <span className="is-new">{result.b} actions</span>
               </p>
+              <p className="result-research">{versusResearch('friction', null, result)}</p>
             </div>
 
             <div className="reveal-grid">
               <Explanation exp={exp} />
               <TinyQuestion text={exp.question} />
             </div>
+
+            <InTheWild id={exp.id} />
 
             <NextRow next={next} onReset={onReset} />
           </div>

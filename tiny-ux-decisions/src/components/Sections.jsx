@@ -1,5 +1,6 @@
 import { builtWith, experiments, films, methodology, plans, SOURCE_URL } from '../data/experiments.js';
 import { outcomeLabel, outcomeOf, sessionTakeaway } from '../data/outcomes.js';
+import { ShipChecklist } from './Wild.jsx';
 
 const done = (choices, id) => choices[id]?.b !== undefined;
 
@@ -207,6 +208,8 @@ export function Ending() {
           <blockquote className="ending-q">
             Does this design help someone make their decision, or does it quietly make more of the decision for them?
           </blockquote>
+
+          <ShipChecklist />
 
           <div className="built">
             <p className="mono kicker">Built with</p>

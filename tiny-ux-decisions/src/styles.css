@@ -1216,6 +1216,125 @@ mark {
   max-width: 44ch;
 }
 
+/* ---------- in the wild + ship checklist ---------- */
+.result-research {
+  flex-basis: 100%;
+  max-width: 60ch;
+  font-size: 15px;
+  padding-left: 12px;
+  border-left: 2px solid var(--cobalt);
+}
+.wild {
+  margin-top: 32px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--paper);
+  padding: 0 22px;
+}
+.wild summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 16px 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+}
+.wild summary::-webkit-details-marker {
+  display: none;
+}
+.wild summary::before {
+  content: '+';
+  font-family: var(--font-mono);
+  color: var(--red);
+  width: 14px;
+}
+.wild[open] summary::before {
+  content: '–';
+}
+.wild-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  line-height: 1;
+}
+.wild-sub,
+.wild-list dt,
+.wild-sources span,
+.ship-head,
+.ship-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+.wild-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 32px;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+.wild-list dd {
+  margin-top: 4px;
+  font-size: 15px;
+}
+.wild-number,
+.wild-rule {
+  grid-column: 1 / -1;
+}
+.wild-number dd {
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 1.2;
+  max-width: 44ch;
+}
+.wild-sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  padding: 14px 0 18px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+}
+.wild-sources a {
+  color: var(--grey);
+  text-underline-offset: 3px;
+}
+.wild-sources a:hover {
+  color: var(--ink);
+}
+.ship {
+  margin-top: 8px;
+}
+.ship-list {
+  margin-top: 10px;
+  border-top: 1px solid var(--line);
+}
+.ship-list li {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 4px 16px;
+  align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.ship-tag {
+  color: var(--red);
+}
+.ship-q {
+  font-size: 17px;
+}
+@media (max-width: 640px) {
+  .wild {
+    padding: 0 16px;
+  }
+  .wild-list,
+  .ship-list li {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ---------- reveal minis keep their desktop layout on phones ---------- */
 @media (max-width: 760px) {
   .mini {

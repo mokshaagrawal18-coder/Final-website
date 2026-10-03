@@ -4,6 +4,7 @@ import { describeChoice } from '../components/Sections.jsx';
 import { outcomeLabel, outcomeOf, sessionTakeaway } from '../data/outcomes.js';
 import { Sample } from '../components/Library.jsx';
 import { HotelCard } from '../components/Strip.jsx';
+import { ShipChecklist } from '../components/Wild.jsx';
 
 const isDone = (choices, id) => (id === 'friction' ? choices[id]?.b !== undefined : choices[id]?.spot !== undefined);
 const isStarted = (choices, id) => choices[id]?.a !== undefined;
@@ -354,6 +355,8 @@ export function EndNotes() {
           </p>
           <p>The question I kept returning to was simpler:</p>
           <p className="end-q">Does this design help someone make their decision, or does it quietly make more of the decision for them?</p>
+
+          <ShipChecklist />
 
           <h3 className="h3">How the tests are set up</h3>
           <dl className="method">

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { outcomeHeadline, outcomeOf, outcomeText } from '../data/outcomes.js';
+import { versusResearch } from '../data/wild.js';
+import { InTheWild } from './Wild.jsx';
 
 /** A light browser window around each fictional interface. */
 export function BrowserFrame({ url, children, className = '' }) {
@@ -43,6 +45,7 @@ export function ResultLine({ id, result, describe }) {
         <span className={result.a !== result.b ? 'is-new' : ''}>{describe(result.b)}</span>
       </p>
       <p className="result-why">{outcomeText[id][outcome]}</p>
+      {versusResearch(id, outcome, result) && <p className="result-research">{versusResearch(id, outcome, result)}</p>}
     </div>
   );
 }
@@ -199,6 +202,8 @@ export function ABExperiment({ exp, result = {}, onRecord, onReset, next, render
               <Explanation exp={exp} />
               <TinyQuestion text={exp.question} />
             </div>
+
+            <InTheWild id={exp.id} />
 
             <NextRow next={next} onReset={reset} />
           </div>
