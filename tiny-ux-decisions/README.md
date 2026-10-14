@@ -18,7 +18,7 @@ npm run build     # static files in dist/ (relative paths, so it can be hosted f
 Both run the same experiments, data and fictional interfaces. Only the page around them differs.
 
 - **Version 1** (`index.html`, `src/App.jsx`, `src/styles.css`): editorial scroll. Cream paper, serif display, mono labels.
-- **Version 2** (`v2.html`, `src/v2/`): a design-review document. White page, grey canvas boards, a spec column per test listing what is held constant, magenta redlines for the change, and an extra step where you try to spot the change yourself before it is shown.
+- **Version 2** (`v2.html`, `src/v2/`): a design-review document split into pages (`#home`, `#test-1`…`#test-5`, `#results`, `#patterns`, `#strip`, `#notes`). White page, grey canvas boards, a spec column per test listing what is held constant, magenta redlines for the change, and an extra step where you try to spot the change yourself before it is shown. Each reveal is split into tabs: your result, why it works, and the sourced "in the wild" context.
 
 Shared: `src/data/experiments.js`, `src/components/interfaces/`, `src/interfaces.css`.
 

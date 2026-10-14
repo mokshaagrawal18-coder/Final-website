@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { FlowA, FlowB, PATH_A, PATH_B } from '../components/FrictionExperiment.jsx';
 import { outcomeHeadline, outcomeLabel, outcomeOf, outcomeText } from '../data/outcomes.js';
 import { versusResearch } from '../data/wild.js';
-import { InTheWild } from '../components/Wild.jsx';
+import { WildBody } from '../components/Wild.jsx';
+import Tabs from './Tabs.jsx';
 
 /**
  * When the board moves to a new step: scroll the canvas back into view if needed,
@@ -57,7 +58,9 @@ function Spec({ exp, n, revealed, steps, current, wide = false }) {
         </div>
         <div>
           <dt>Changed</dt>
-          <dd className={revealed ? 'is-red' : 'is-hidden'}>{revealed ? exp.variable : 'Hidden until you’ve chosen'}</dd>
+          <dd className={revealed ? 'is-red' : 'is-hidden'}>
+            {revealed ? exp.variable : 'Hidden until you’ve chosen'}
+          </dd>
         </div>
         <div>
           <dt>Held constant</dt>
@@ -115,7 +118,6 @@ function Compare({ renderInterface, describe, result }) {
 function Notes({ exp }) {
   return (
     <div className="notes">
-      <h3 className="reveal-label notes-label">Why it works</h3>
       <div className="notes-body">
         {exp.explanation.map((p) => (
           <p key={p}>{p}</p>
@@ -240,7 +242,12 @@ export function Board({ exp, n, result = {}, onRecord, onReset, renderInterface,
                   </div>
                 ) : (
                   <div className="appear" key={phase}>
-                    {renderInterface(phase === 'a' ? 'A' : 'B', { interactive: true, onChoose: choose, pending, result })}
+                    {renderInterface(phase === 'a' ? 'A' : 'B', {
+                      interactive: true,
+                      onChoose: choose,
+                      pending,
+                      result,
+                    })}
                   </div>
                 )}
               </div>
@@ -263,10 +270,18 @@ export function Board({ exp, n, result = {}, onRecord, onReset, renderInterface,
                 </div>
                 <div className="spot-foot" aria-live="polite">
                   <span className="spot-status">
-                    {found ? 'That’s the one.' : misses.length === 0 ? 'No hints yet.' : `Not that. ${misses.length} miss${misses.length === 1 ? '' : 'es'}.`}
+                    {found
+                      ? 'That’s the one.'
+                      : misses.length === 0
+                        ? 'No hints yet.'
+                        : `Not that. ${misses.length} miss${misses.length === 1 ? '' : 'es'}.`}
                   </span>
                   {!found && (
-                    <button type="button" className={misses.length >= 2 ? 'button button-small' : 'link'} onClick={showMe}>
+                    <button
+                      type="button"
+                      className={misses.length >= 2 ? 'button button-small' : 'link'}
+                      onClick={showMe}
+                    >
                       Show me what changed
                     </button>
                   )}
@@ -283,35 +298,46 @@ export function Board({ exp, n, result = {}, onRecord, onReset, renderInterface,
               <Compare renderInterface={renderInterface} describe={describe} result={result} />
               {revealNote && <p className="aside-note">{revealNote}</p>}
 
-              <h3 className="reveal-label">What happened</h3>
-              <dl className="readout">
-                <div>
-                  <dt>Your choice</dt>
-                  <dd>
-                    {describe(result.a)} <span className="arrow">→</span> {describe(result.b)}
-                  </dd>
-                </div>
-                <div>
-                  <dt>Result</dt>
-                  <dd className={outcome === 'toward' ? 'is-red' : ''}>{outcomeLabel[outcome]}</dd>
-                </div>
-                <div>
-                  <dt>Spotting</dt>
-                  <dd>{spotText}</dd>
-                </div>
-              </dl>
-              {outcome && (
-                <div className="outcome">
-                  <p className="outcome-head">{outcomeHeadline(exp.id, outcome)}</p>
-                  <p className="outcome-why">{outcomeText[exp.id][outcome]}</p>
-                  {versusResearch(exp.id, outcome, result) && (
-                    <p className="outcome-research">{versusResearch(exp.id, outcome, result)}</p>
-                  )}
-                </div>
-              )}
-
-              <Notes exp={exp} />
-              <InTheWild id={exp.id} defaultOpen={false} />
+              <Tabs
+                label="About this result"
+                items={[
+                  {
+                    id: 'result',
+                    label: 'Your result',
+                    body: (
+                      <>
+                        <dl className="readout">
+                          <div>
+                            <dt>Your choice</dt>
+                            <dd>
+                              {describe(result.a)} <span className="arrow">→</span> {describe(result.b)}
+                            </dd>
+                          </div>
+                          <div>
+                            <dt>Result</dt>
+                            <dd className={outcome === 'toward' ? 'is-red' : ''}>{outcomeLabel[outcome]}</dd>
+                          </div>
+                          <div>
+                            <dt>Spotting</dt>
+                            <dd>{spotText}</dd>
+                          </div>
+                        </dl>
+                        {outcome && (
+                          <div className="outcome">
+                            <p className="outcome-head">{outcomeHeadline(exp.id, outcome)}</p>
+                            <p className="outcome-why">{outcomeText[exp.id][outcome]}</p>
+                            {versusResearch(exp.id, outcome, result) && (
+                              <p className="outcome-research">{versusResearch(exp.id, outcome, result)}</p>
+                            )}
+                          </div>
+                        )}
+                      </>
+                    ),
+                  },
+                  { id: 'why', label: 'Why it works', body: <Notes exp={exp} /> },
+                  { id: 'wild', label: 'In the wild', body: <WildBody id={exp.id} /> },
+                ]}
+              />
               <Actions next={next} onReset={reset} />
             </div>
           )}
@@ -414,26 +440,38 @@ export function FrictionBoard({ exp, n, result = {}, onRecord, onReset, next }) 
                   buttons on each screen, and “continue cancelling” the faintest.
                 </p>
               )}
-              <h3 className="reveal-label">What happened</h3>
-              <dl className="readout">
-                <div>
-                  <dt>Flow A</dt>
-                  <dd>{result.a} actions</dd>
-                </div>
-                <div>
-                  <dt>Flow B</dt>
-                  <dd className="is-red">{result.b} actions</dd>
-                </div>
-                <div>
-                  <dt>Difference</dt>
-                  <dd>{diff > 0 ? `${diff} more to leave the long way` : 'About the same this time'}</dd>
-                </div>
-              </dl>
-              <div className="outcome">
-                <p className="outcome-research">{versusResearch('friction', null, result)}</p>
-              </div>
-              <Notes exp={exp} />
-              <InTheWild id={exp.id} defaultOpen={false} />
+              <Tabs
+                label="About this result"
+                items={[
+                  {
+                    id: 'result',
+                    label: 'Your result',
+                    body: (
+                      <>
+                        <dl className="readout">
+                          <div>
+                            <dt>Flow A</dt>
+                            <dd>{result.a} actions</dd>
+                          </div>
+                          <div>
+                            <dt>Flow B</dt>
+                            <dd className="is-red">{result.b} actions</dd>
+                          </div>
+                          <div>
+                            <dt>Difference</dt>
+                            <dd>{diff > 0 ? `${diff} more to leave the long way` : 'About the same this time'}</dd>
+                          </div>
+                        </dl>
+                        <div className="outcome">
+                          <p className="outcome-research">{versusResearch('friction', null, result)}</p>
+                        </div>
+                      </>
+                    ),
+                  },
+                  { id: 'why', label: 'Why it works', body: <Notes exp={exp} /> },
+                  { id: 'wild', label: 'In the wild', body: <WildBody id={exp.id} /> },
+                ]}
+              />
               <Actions next={next} onReset={onReset} />
             </div>
           )}

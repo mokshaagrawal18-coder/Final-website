@@ -5,49 +5,80 @@ import { outcomeLabel, outcomeOf, sessionTakeaway } from '../data/outcomes.js';
 import { Sample } from '../components/Library.jsx';
 import { HotelCard } from '../components/Strip.jsx';
 import { ShipChecklist } from '../components/Wild.jsx';
-import { author, prompts, showPrompts } from '../data/author.js';
-import { spotted } from '../data/spotted.js';
+import { author } from '../data/author.js';
+import Tabs from './Tabs.jsx';
 import v1Shot from './assets/version-1.jpg';
 import v2Shot from './assets/version-2.jpg';
 
-/** A note for the author, shown only while showPrompts is on. */
-function FillIn({ children }) {
-  if (!showPrompts) return null;
-  return (
-    <aside className="fill-in">
-      <span className="fill-in-tag">For you to fill in</span>
-      {children}
-    </aside>
-  );
-}
+/** Each test has its own page: #test-1 … #test-5. */
+export const testHref = (id) => `#test-${experiments.findIndex((e) => e.id === id) + 1}`;
 
-const isDone = (choices, id) => (id === 'friction' ? choices[id]?.b !== undefined : choices[id]?.spot !== undefined);
-const isStarted = (choices, id) => choices[id]?.a !== undefined;
+export const isDone = (choices, id) => (id === 'friction' ? choices[id]?.b !== undefined : choices[id]?.spot !== undefined);
+export const isStarted = (choices, id) => choices[id]?.a !== undefined;
 
-export function Bar({ choices }) {
-  const count = experiments.filter((e) => isDone(choices, e.id)).length;
+const pages = [
+  { view: 'results', label: 'Results' },
+  { view: 'patterns', label: 'Patterns' },
+  { view: 'strip', label: 'Strip it back' },
+  { view: 'notes', label: 'Notes' },
+];
+
+/** Top bar: home, one numbered step per test, and the other pages. */
+export function Bar({ choices, view }) {
   return (
     <header className="bar">
       <div className="wrap bar-inner">
-        <a href="#top" className="bar-title">
+        <a href="#home" className="bar-title" aria-current={view === 'home' ? 'page' : undefined}>
           Tiny UX Decisions
         </a>
-        <a href="#log" className="bar-progress">
-          {count} of 5 tests run
-          <span className="bar-meter" aria-hidden="true">
-            {experiments.map((e) => (
-              <i key={e.id} className={isDone(choices, e.id) ? 'is-on' : ''} />
-            ))}
-          </span>
-        </a>
-        <nav className="bar-nav" aria-label="Sections">
-          <a href="#tests">Tests</a>
-          <a href="#index">Index</a>
-          <a href="#layers">Layers</a>
-          <a href="#notes">Notes</a>
+        <nav className="bar-tests" aria-label="Tests">
+          {experiments.map((e, i) => {
+            const here = view === `test-${i + 1}`;
+            const done = isDone(choices, e.id);
+            return (
+              <a
+                key={e.id}
+                href={`#test-${i + 1}`}
+                className={`step ${done ? 'is-done' : ''} ${here ? 'is-here' : ''}`}
+                aria-current={here ? 'page' : undefined}
+                aria-label={`Test ${i + 1}${done ? ', done' : ''}`}
+              >
+                {i + 1}
+              </a>
+            );
+          })}
+        </nav>
+        <nav className="bar-nav" aria-label="Pages">
+          {pages.map((p) => (
+            <a key={p.view} href={`#${p.view}`} aria-current={view === p.view ? 'page' : undefined}>
+              {p.label}
+            </a>
+          ))}
         </nav>
       </div>
     </header>
+  );
+}
+
+/** Previous / next at the bottom of every page, so nobody has to scroll back up. */
+export function PageNav({ prev, next }) {
+  return (
+    <nav className="wrap page-nav" aria-label="Previous and next">
+      {prev ? (
+        <a className="page-prev" href={prev.href}>
+          <span>Previous</span>
+          {prev.label}
+        </a>
+      ) : (
+        <span />
+      )}
+      {next && (
+        <a className="page-next" href={next.href}>
+          <span>Next</span>
+          {next.label}
+        </a>
+      )}
+    </nav>
   );
 }
 
@@ -95,7 +126,7 @@ export function Masthead() {
             shape what people notice and choose.
           </p>
           <div className="mast-cta">
-            <a className="button" href="#exp-popular">
+            <a className="button" href="#test-1">
               Start test 1
             </a>
             <span className="mast-aside">Try choosing before you overthink it.</span>
@@ -138,7 +169,7 @@ export function TestPlan({ choices }) {
                   <tr key={e.id} className={done ? 'is-done' : ''}>
                     <td className="num">{i + 1}</td>
                     <td>
-                      <a href={`#exp-${e.id}`}>{done ? e.title : e.neutral}</a>
+                      <a href={testHref(e.id)}>{done ? e.title : e.neutral}</a>
                     </td>
                     <td>{e.task}</td>
                     <td className={done ? 'is-red' : 'is-muted'}>{done ? e.variableShort : 'Revealed after'}</td>
@@ -178,14 +209,13 @@ export function SessionLog({ choices, onResetAll }) {
       <div className="wrap log-grid">
         <div>
           <h2 className="h2" id="log-title">
-            Your session
+            Your results
           </h2>
           {takeaway ? (
             <p className="log-takeaway">{takeaway}</p>
           ) : (
             <p className="log-note">Run a test and your answers show up here.</p>
           )}
-          <FillIn>{prompts.pilot}</FillIn>
           {anyStarted && (
             <div className="log-reset" aria-live="polite">
               {confirming ? (
@@ -197,7 +227,7 @@ export function SessionLog({ choices, onResetAll }) {
                     onClick={() => {
                       setConfirming(false);
                       onResetAll();
-                      document.getElementById('top')?.scrollIntoView();
+                      window.location.hash = 'home';
                     }}
                   >
                     Clear and start again
@@ -238,7 +268,7 @@ export function SessionLog({ choices, onResetAll }) {
                       </>
                     ) : (
                       <td colSpan={3} className="is-muted">
-                        <a href={`#exp-${e.id}`}>{isStarted(choices, e.id) ? 'In progress' : 'Not run yet'}</a>
+                        <a href={testHref(e.id)}>{isStarted(choices, e.id) ? 'In progress' : 'Not run yet'}</a>
                       </td>
                     )}
                   </tr>
@@ -269,29 +299,6 @@ export function Index() {
           </h2>
           <p className="index-lede">Once I started looking for them, they were everywhere.</p>
         </div>
-        {(spotted.length > 0 || showPrompts) && (
-          <div className="spotted">
-            <h3 className="h3">Ones I’ve actually found</h3>
-            {spotted.length > 0 ? (
-              <ul className="spotted-grid">
-                {spotted.map((x) => (
-                  <li key={x.src}>
-                    <figure>
-                      <img src={x.src} alt={x.note} loading="lazy" />
-                      <figcaption>
-                        <span>{x.where}</span>
-                        {x.note}
-                      </figcaption>
-                    </figure>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <FillIn>{prompts.spotted}</FillIn>
-            )}
-            <h3 className="h3 spotted-after">And the patterns behind them</h3>
-          </div>
-        )}
         <div className="tabs" role="group" aria-label="Filter the index">
           {filters.map((f) => (
             <button key={f.id} type="button" className="tab" aria-pressed={active === f.id} onClick={() => setActive(f.id)}>
@@ -315,7 +322,7 @@ export function Index() {
                 <span>Look for</span>
                 {s.lookFor}
                 {testFor[s.id] && (
-                  <a className="idx-try" href={`#exp-${testFor[s.id]}`}>
+                  <a className="idx-try" href={testHref(testFor[s.id])}>
                     Try it in test {experiments.findIndex((e) => e.id === testFor[s.id]) + 1}
                   </a>
                 )}
@@ -416,85 +423,98 @@ export function Layers() {
 const setupNotes = methodology.filter((m) => !['There is no control group', 'You are both groups'].includes(m.title));
 
 export function EndNotes() {
+  const learned = (
+    <div className="end-body">
+      <p>
+        I started this wanting to know whether nudges work. They do, and there are decades of research saying so. I’ve put
+        the parts I could check in each test’s “In the wild” tab.
+      </p>
+      <p>
+        The more useful lessons came from building it. My first draft named every test after its trick. The lamp test was
+        called “Only Two Left”, in big letters, right above the lamp. I had made a page about interfaces quietly steering
+        people, and it was loudly steering them the other way. The tests now have plain names until you’ve chosen.
+      </p>
+      <p>
+        Then I got stuck on a question: what does it mean if someone picks the same plan both times? My first version said
+        “You stuck with your first choice” and moved on. But the badge might have agreed with them, or not moved them, or
+        pushed them the other way, and those are different results. The same click can mean several things, and most
+        interfaces only ever count one of them.
+      </p>
+      <p>The question I ask of any interface now, including this one:</p>
+      <p className="end-q">Does this design help someone make their decision, or does it quietly make more of the decision for them?</p>
+      <ShipChecklist />
+    </div>
+  );
+
+  const made = (
+    <div className="end-body">
+      <p>
+        The first version looked like a lot of AI-made portfolio pages: cream paper, a big serif headline, little uppercase
+        labels, rounded cards and a yellow box for the key question. It worked. It also looked generated, which is an awkward
+        look for a project about interfaces you shouldn’t take at face value.
+      </p>
+      <p>
+        So I rebuilt it as a design review, the kind of document a product team marks up before shipping: a grey canvas, the
+        interface in a frame, a column listing what’s held constant, and one magenta outline around the thing that changed. I
+        also added a step I hadn’t planned, where you try to find the change before I show you. It’s the part I most want to
+        test with real people, because noticing a nudge might matter more than resisting it.
+      </p>
+      <div className="versions">
+        <figure>
+          <img
+            src={v1Shot}
+            alt="Version 1: cream background with a faint grid, a large serif title with a yellow highlight, and small uppercase labels."
+          />
+          <figcaption>Version 1</figcaption>
+        </figure>
+        <figure>
+          <img
+            src={v2Shot}
+            alt="Version 2: white page, wide bold sans-serif title, and a grey canvas showing the same sign-up form twice."
+          />
+          <figcaption>Version 2, this page</figcaption>
+        </figure>
+      </div>
+      <p className="built">Built with React and plain CSS. There’s no backend; your answers stay in this tab.</p>
+      <h3 className="h3">What this can’t tell you</h3>
+      <p>
+        One person seeing both versions isn’t an experiment. You saw frame A first, you knew something was coming, and by test
+        three you were probably hunting for it. A real test would show different people different frames, plus a group who
+        sees the same frame twice. That’s the next version.
+      </p>
+      <details className="setup">
+        <summary>Setup notes</summary>
+        <dl className="method">
+          {setupNotes.map((m) => (
+            <div key={m.title}>
+              <dt>{m.title}</dt>
+              <dd>{m.body}</dd>
+            </div>
+          ))}
+        </dl>
+      </details>
+      {SOURCE_URL && (
+        <a className="link" href={SOURCE_URL} target="_blank" rel="noreferrer">
+          View the source code
+        </a>
+      )}
+    </div>
+  );
+
   return (
-    <section className="end" id="notes" aria-labelledby="notes-title">
+    <section className="end" id="notes-page" aria-labelledby="notes-title">
       <div className="wrap end-grid">
         <h2 className="h2" id="notes-title">
-          What I learned
+          Notes
         </h2>
-        <div className="end-body">
-          <p>
-            I started this wanting to know whether nudges work. They do, and there are decades of research saying so. I’ve
-            put the parts I could check in the “In the wild” panels.
-          </p>
-          <p>
-            The more useful lessons came from building it. My first draft named every test after its trick. The lamp test was
-            called “Only Two Left”, in big letters, right above the lamp. I had made a page about interfaces quietly steering
-            people, and it was loudly steering them the other way. The tests now have plain names until you’ve chosen.
-          </p>
-          <p>
-            Then I got stuck on a question: what does it mean if someone picks the same plan both times? My first version said
-            “You stuck with your first choice” and moved on. But the badge might have agreed with them, or not moved them, or
-            pushed them the other way, and those are different results. The same click can mean several things, and most
-            interfaces only ever count one of them.
-          </p>
-          <FillIn>{prompts.moment}</FillIn>
-          <p>The question I ask of any interface now, including this one:</p>
-          <p className="end-q">Does this design help someone make their decision, or does it quietly make more of the decision for them?</p>
-
-          <ShipChecklist />
-
-          <h3 className="h3" id="process">
-            How this was made
-          </h3>
-          <p>
-            The first version looked like a lot of AI-made portfolio pages: cream paper, a big serif headline, little uppercase
-            labels, rounded cards and a yellow box for the key question. It worked. It also looked generated, which is an
-            awkward look for a project about interfaces you shouldn’t take at face value.
-          </p>
-          <p>
-            So I rebuilt it as a design review, the kind of document a product team marks up before shipping: a grey canvas,
-            the interface in a frame, a column listing what’s held constant, and one magenta outline around the thing that
-            changed. I also added a step I hadn’t planned, where you try to find the change before I show you. It’s the part I
-            most want to test with real people, because noticing a nudge might matter more than resisting it.
-          </p>
-          <div className="versions">
-            <figure>
-              <img src={v1Shot} alt="Version 1: cream background with a faint grid, a large serif title with a yellow highlight, and small uppercase labels." />
-              <figcaption>Version 1</figcaption>
-            </figure>
-            <figure>
-              <img src={v2Shot} alt="Version 2: white page, wide bold sans-serif title, and a grey canvas showing the same sign-up form twice." />
-              <figcaption>Version 2, this page</figcaption>
-            </figure>
-          </div>
-          <FillIn>{prompts.handmade}</FillIn>
-          <p className="built">Built with React and plain CSS. There’s no backend; your answers stay in this tab.</p>
-
-          <h3 className="h3">What this can’t tell you</h3>
-          <p>
-            One person seeing both versions isn’t an experiment. You saw frame A first, you knew something was coming, and by
-            test three you were probably hunting for it. A real test would show different people different frames, plus a
-            group who sees the same frame twice. That’s the next version.
-          </p>
-          <details className="setup">
-            <summary>Setup notes</summary>
-            <dl className="method">
-              {setupNotes.map((m) => (
-                <div key={m.title}>
-                  <dt>{m.title}</dt>
-                  <dd>{m.body}</dd>
-                </div>
-              ))}
-            </dl>
-          </details>
-
-          {SOURCE_URL && (
-            <a className="link" href={SOURCE_URL} target="_blank" rel="noreferrer">
-              View the source code
-            </a>
-          )}
-        </div>
+        <Tabs
+          label="Notes"
+          className="end-tabs"
+          items={[
+            { id: 'learned', label: 'What I learned', body: learned },
+            { id: 'made', label: 'How it was made', body: made },
+          ]}
+        />
       </div>
     </section>
   );

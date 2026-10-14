@@ -2,14 +2,10 @@ import { experiments } from '../data/experiments.js';
 import { shipChecklist, wild } from '../data/wild.js';
 
 /** Where a pattern shows up, one sourced number, when it helps or hurts, and what regulators say. */
-export function InTheWild({ id, defaultOpen = true }) {
+export function WildBody({ id }) {
   const w = wild[id];
   return (
-    <details className="wild" open={defaultOpen}>
-      <summary>
-        <span className="wild-title">In the wild</span>
-        <span className="wild-sub">{w.teaser}</span>
-      </summary>
+    <>
       <dl className="wild-list">
         <div>
           <dt>Where you’ll see it</dt>
@@ -40,6 +36,19 @@ export function InTheWild({ id, defaultOpen = true }) {
           </a>
         ))}
       </p>
+    </>
+  );
+}
+
+/** The same content as a collapsible panel. */
+export function InTheWild({ id, defaultOpen = true }) {
+  return (
+    <details className="wild" open={defaultOpen}>
+      <summary>
+        <span className="wild-title">In the wild</span>
+        <span className="wild-sub">{wild[id].teaser}</span>
+      </summary>
+      <WildBody id={id} />
     </details>
   );
 }
