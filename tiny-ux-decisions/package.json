@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:site": "vite build --config vite.site.config.js && mv ../public/tiny-ux-decisions/v2.html ../public/tiny-ux-decisions/index.html"
   },
   "dependencies": {
     "react": "^18.3.1",

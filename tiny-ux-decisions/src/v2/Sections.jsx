@@ -526,7 +526,8 @@ export function Foot() {
       <div className="wrap foot-inner">
         <p className="foot-line">Change one tiny thing. Look again.</p>
         <p className="foot-small">
-          Made by {author.name}, {author.year}. The brands are made up, and your answers never leave this tab.
+          Made by <a href={author.site}>{author.name}</a>, {author.year}. The brands are made up, and your answers never leave
+          this tab.
         </p>
       </div>
     </footer>
