@@ -84,7 +84,7 @@ import { site } from '../../data/site';
           <li class="tag">Experimentation</li>
           <li class="tag">React</li>
         </ul>
-        <ArrowLink href="/tiny-ux-decisions/" variant="button" class="p-cta">Try the experiments</ArrowLink>
+        {site.tinyUx && <ArrowLink href={site.tinyUx} external dir="ext" variant="button" class="p-cta">Try the experiments</ArrowLink>}
       </div>
       <div class="p-visual reveal" style="--delay:120ms">
         <PricingTeaser />

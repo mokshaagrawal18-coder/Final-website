@@ -25,6 +25,9 @@ export const site = {
   // Link to the live Random Drift build (leave empty until it is hosted)
   randomDrift: '',
 
+  // Tiny UX Decisions lives in its own repo (github.com/mokshaagrawal18-coder/tiny-ux-decisions), hosted on Vercel
+  tinyUx: 'https://tiny-ux-decisions.vercel.app/',
+
   // Optional: full healthcare research report (e.g. '/reports/healthcare-expenditure.pdf')
   healthcareReport: '/reports/Healthcare-Expenditure-Gender-Analysis.pdf',
 };
