@@ -22,8 +22,8 @@ export const site = {
   // Résumé buttons appear only once the PDF exists at public/resume/Moksha-Agrawal-Resume.pdf
   resume: hasFile(RESUME_PATH) ? RESUME_PATH : '',
 
-  // Link to the live Random Drift build (leave empty until it is hosted)
-  randomDrift: '',
+  // Link to the live Random Drift build
+  randomDrift: 'https://drift-game-three.vercel.app/',
 
   // Optional: full healthcare research report (e.g. '/reports/healthcare-expenditure.pdf')
   healthcareReport: '/reports/Healthcare-Expenditure-Gender-Analysis.pdf',

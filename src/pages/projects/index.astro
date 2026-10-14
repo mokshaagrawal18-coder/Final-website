@@ -95,7 +95,9 @@ import { site } from '../../data/site';
     <h2 class="t-h3 small-title" id="small-title">Smaller experiments <span aria-hidden="true" class="small-arrow">→</span></h2>
     <div class="exp grid">
       <div class="exp-visual">
-        <DriftSketch />
+        {site.randomDrift
+          ? <a href={site.randomDrift} target="_blank" rel="noopener noreferrer" class="exp-play" tabindex="-1" aria-hidden="true"><DriftSketch /></a>
+          : <DriftSketch />}
       </div>
       <div class="exp-text">
         <h3 class="exp-name">Random Drift</h3>
@@ -105,7 +107,7 @@ import { site } from '../../data/site';
           <li class="tag">Web experiment</li>
         </ul>
         {site.randomDrift
-          ? <ArrowLink href={site.randomDrift} external class="exp-cta">Play</ArrowLink>
+          ? <ArrowLink href={site.randomDrift} variant="button" external class="exp-cta">Play the game</ArrowLink>
           : <p class="hand hand--grey exp-soon">link coming soon</p>}
       </div>
     </div>
@@ -145,7 +147,9 @@ import { site } from '../../data/site';
   .exp-text { grid-column: 6 / span 6; }
   .exp-name { font-size: 1.5rem; font-weight: 600; }
   .exp-copy { margin: 10px 0 16px; max-width: 48ch; color: var(--grey); }
-  :global(.exp-cta) { margin-top: 10px; }
+  :global(.exp-cta) { margin-top: 18px; }
+  .exp-play { display: block; border-radius: 8px; transition: transform var(--t-micro) var(--ease); }
+  .exp-play:hover { transform: translateY(-3px); }
   .exp-soon { margin-top: 14px; }
 
   @media (max-width: 1024px) {
