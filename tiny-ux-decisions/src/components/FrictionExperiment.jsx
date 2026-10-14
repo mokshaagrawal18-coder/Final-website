@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { cancelReasons } from '../data/experiments.js';
 import { versusResearch } from '../data/wild.js';
 import { InTheWild } from './Wild.jsx';
@@ -17,6 +17,24 @@ function AccountCard() {
   );
 }
 
+/** Move keyboard focus to the new screen's heading, so keyboard users aren't sent back to the top of the page. */
+function useHeadingFocus(screen) {
+  const ref = useRef(null);
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    const h = ref.current?.querySelector('.ui-h');
+    if (h) {
+      h.setAttribute('tabindex', '-1');
+      h.focus({ preventScroll: true });
+    }
+  }, [screen]);
+  return ref;
+}
+
 /** Flow A: the straight path. */
 export function FlowA({ onDone }) {
   const [step, setStep] = useState(0);
@@ -26,46 +44,50 @@ export function FlowA({ onDone }) {
     setStep(to);
   };
 
+  const box = useHeadingFocus(step);
+
   return (
-    <BrowserFrame url="reelhouse.tv/account" className="frame-dark">
-      <div className="ui ui-cancel fade-in" key={step}>
-        {step === 0 && (
-          <>
-            <p className="ui-h">Account</p>
-            <AccountCard />
-            <button type="button" className="ui-btn ui-btn-danger" onClick={() => act(1)}>
-              Cancel membership
-            </button>
-          </>
-        )}
-        {step === 1 && (
-          <>
-            <p className="ui-h">Are you sure?</p>
-            <p className="reel-muted">Your membership will end on 14 Oct.</p>
-            <div className="ui-btn-row">
-              <button type="button" className="ui-btn ui-btn-danger" onClick={() => act(2)}>
-                Yes, cancel
+    <div ref={box}>
+      <BrowserFrame url="reelhouse.tv/account" className="frame-dark">
+        <div className="ui ui-cancel fade-in" key={step}>
+          {step === 0 && (
+            <>
+              <p className="ui-h">Account</p>
+              <AccountCard />
+              <button type="button" className="ui-btn ui-btn-danger" onClick={() => act(1)}>
+                Cancel membership
               </button>
-              <button type="button" className="ui-link" onClick={() => act(0)}>
-                Go back
+            </>
+          )}
+          {step === 1 && (
+            <>
+              <p className="ui-h">Are you sure?</p>
+              <p className="reel-muted">Your membership will end on 14 Oct.</p>
+              <div className="ui-btn-row">
+                <button type="button" className="ui-btn ui-btn-danger" onClick={() => act(2)}>
+                  Yes, cancel
+                </button>
+                <button type="button" className="ui-link" onClick={() => act(0)}>
+                  Go back
+                </button>
+              </div>
+            </>
+          )}
+          {step === 2 && (
+            <>
+              <p className="ui-h">Membership cancelled.</p>
+              <p className="reel-muted">That’s it. You can rejoin any time.</p>
+              <p className="mono action-count">
+                {actions} action{actions === 1 ? '' : 's'}
+              </p>
+              <button type="button" className="ui-btn ui-btn-light" onClick={() => onDone(actions)}>
+                Now try another one →
               </button>
-            </div>
-          </>
-        )}
-        {step === 2 && (
-          <>
-            <p className="ui-h">Membership cancelled.</p>
-            <p className="reel-muted">That’s it. You can rejoin any time.</p>
-            <p className="mono action-count">
-              {actions} action{actions === 1 ? '' : 's'}
-            </p>
-            <button type="button" className="ui-btn ui-btn-light" onClick={() => onDone(actions)}>
-              Now try another one →
-            </button>
-          </>
-        )}
-      </div>
-    </BrowserFrame>
+            </>
+          )}
+        </div>
+      </BrowserFrame>
+    </div>
   );
 }
 
@@ -93,133 +115,143 @@ export function FlowB({ onDone }) {
     setDetour(null);
   };
 
+  const box = useHeadingFocus(detour ? `detour-${detour.text}` : step);
+
   if (detour) {
     return (
-      <BrowserFrame url="reelhouse.tv/account" className="frame-dark">
-        <div className="ui ui-cancel fade-in" key="detour">
-          <p className="ui-h">{detour.text}</p>
-          <p className="reel-muted">Easy to do by accident when it’s the biggest button on the screen.</p>
-          <button type="button" className="ui-link" onClick={leaveDetour}>
-            That’s not what I wanted. Continue cancelling
-          </button>
-        </div>
-      </BrowserFrame>
+      <div ref={box}>
+        <BrowserFrame url="reelhouse.tv/account" className="frame-dark">
+          <div className="ui ui-cancel fade-in" key="detour">
+            <p className="ui-h">{detour.text}</p>
+            <p className="reel-muted">Easy to do by accident when it’s the biggest button on the screen.</p>
+            <button type="button" className="ui-link" onClick={leaveDetour}>
+              That’s not what I wanted. Continue cancelling
+            </button>
+          </div>
+        </BrowserFrame>
+      </div>
     );
   }
 
   return (
-    <BrowserFrame url="reelhouse.tv/account" className="frame-dark">
-      <div className="ui ui-cancel fade-in" key={step}>
-        {step === 'account' && (
-          <>
-            <p className="ui-h">Account</p>
-            <AccountCard />
-            <ul className="ui-settings" role="list">
-              {['Profiles', 'Playback settings', 'Payment method'].map((row) => (
-                <li key={row}>
-                  <button type="button" className="ui-settings-row" onClick={() => setHint(true)}>
-                    {row}
+    <div ref={box}>
+      <BrowserFrame url="reelhouse.tv/account" className="frame-dark">
+        <div className="ui ui-cancel fade-in" key={step}>
+          {step === 'account' && (
+            <>
+              <p className="ui-h">Account</p>
+              <AccountCard />
+              <ul className="ui-settings" role="list">
+                {['Profiles', 'Playback settings', 'Payment method'].map((row) => (
+                  <li key={row}>
+                    <button type="button" className="ui-settings-row" onClick={() => setHint(true)}>
+                      {row}
+                    </button>
+                  </li>
+                ))}
+                <li>
+                  <button type="button" className="ui-settings-link" onClick={() => act('pause')}>
+                    Manage membership <span aria-hidden="true">›</span>
                   </button>
                 </li>
-              ))}
-              <li>
-                <button type="button" className="ui-settings-link" onClick={() => act('pause')}>
-                  Manage membership <span aria-hidden="true">›</span>
-                </button>
-              </li>
-            </ul>
-            {hint && (
-              <p className="ui-small reel-muted" aria-live="polite">
-                Not there. There’s no cancel button on this screen. Look for the smallest link.
+              </ul>
+              {hint && (
+                <p className="ui-small reel-muted" aria-live="polite">
+                  Not there. There’s no cancel button on this screen. Look for the smallest link.
+                </p>
+              )}
+            </>
+          )}
+          {step === 'pause' && (
+            <>
+              <p className="ui-h">We’d hate to see you go.</p>
+              <p className="reel-muted">
+                Pause for one month instead? Your profiles and list stay exactly as they are.
               </p>
-            )}
-          </>
-        )}
-        {step === 'pause' && (
-          <>
-            <p className="ui-h">We’d hate to see you go.</p>
-            <p className="reel-muted">Pause for one month instead? Your profiles and list stay exactly as they are.</p>
-            <button
-              type="button"
-              className="ui-btn ui-btn-amber"
-              onClick={() => divert('Paused instead', 'Membership paused until 14 Nov.', 'lite')}
-            >
-              Pause membership
-            </button>
-            <button type="button" className="ui-link ui-link-faint" onClick={() => act('lite')}>
-              No, continue cancelling
-            </button>
-          </>
-        )}
-        {step === 'lite' && (
-          <>
-            <p className="ui-h">Before you go…</p>
-            <p className="reel-muted">Switch to our ₹99 Lite plan? Keep watching on one screen, for a fifth of the price.</p>
-            <button
-              type="button"
-              className="ui-btn ui-btn-amber"
-              onClick={() => divert('Switched to Lite', 'You’re on Lite now. ₹99/month from 14 Oct.', 'survey')}
-            >
-              Switch plan
-            </button>
-            <button type="button" className="ui-link ui-link-faint" onClick={() => act('survey')}>
-              Continue cancelling
-            </button>
-          </>
-        )}
-        {step === 'survey' && (
-          <>
-            <p className="ui-h">Tell us why you’re leaving.</p>
-            <label className="ui-select-label">
-              <span className="ui-small reel-muted">Reason (required)</span>
-              <select
-                value={reason}
-                onChange={(e) => {
-                  if (!reason) setActions((n) => n + 1);
-                  setReason(e.target.value);
-                }}
+              <button
+                type="button"
+                className="ui-btn ui-btn-amber"
+                onClick={() => divert('Paused instead', 'Membership paused until 14 Nov.', 'lite')}
               >
-                <option value="" disabled>
-                  Choose a reason
-                </option>
-                {cancelReasons.map((r) => (
-                  <option key={r}>{r}</option>
-                ))}
-              </select>
-            </label>
-            <button type="button" className="ui-btn ui-btn-light" disabled={!reason} onClick={() => act('warning')}>
-              Continue
-            </button>
-          </>
-        )}
-        {step === 'warning' && (
-          <>
-            <p className="ui-h">Are you sure?</p>
-            <p className="reel-muted">You’ll lose your saved preferences, your watch history and 3 profiles.</p>
-            <button
-              type="button"
-              className="ui-btn ui-btn-amber"
-              onClick={() => divert('Kept membership', 'Great, you’re staying with us!', 'warning')}
-            >
-              Keep membership
-            </button>
-            <button type="button" className="ui-link ui-link-faint" onClick={() => act('done')}>
-              Cancel anyway
-            </button>
-          </>
-        )}
-        {step === 'done' && (
-          <>
-            <p className="ui-h">Membership cancelled.</p>
-            <p className="reel-muted">We’ll miss you.</p>
-            <p className="mono action-count">{actions} actions</p>
-            <button type="button" className="ui-btn ui-btn-light" onClick={() => onDone(actions, detours)}>
-              See what changed →
-            </button>
-          </>
-        )}
-      </div>
-    </BrowserFrame>
+                Pause membership
+              </button>
+              <button type="button" className="ui-link ui-link-faint" onClick={() => act('lite')}>
+                No, continue cancelling
+              </button>
+            </>
+          )}
+          {step === 'lite' && (
+            <>
+              <p className="ui-h">Before you go…</p>
+              <p className="reel-muted">
+                Switch to our ₹99 Lite plan? Keep watching on one screen, for a fifth of the price.
+              </p>
+              <button
+                type="button"
+                className="ui-btn ui-btn-amber"
+                onClick={() => divert('Switched to Lite', 'You’re on Lite now. ₹99/month from 14 Oct.', 'survey')}
+              >
+                Switch plan
+              </button>
+              <button type="button" className="ui-link ui-link-faint" onClick={() => act('survey')}>
+                Continue cancelling
+              </button>
+            </>
+          )}
+          {step === 'survey' && (
+            <>
+              <p className="ui-h">Tell us why you’re leaving.</p>
+              <label className="ui-select-label">
+                <span className="ui-small reel-muted">Reason (required)</span>
+                <select
+                  value={reason}
+                  onChange={(e) => {
+                    if (!reason) setActions((n) => n + 1);
+                    setReason(e.target.value);
+                  }}
+                >
+                  <option value="" disabled>
+                    Choose a reason
+                  </option>
+                  {cancelReasons.map((r) => (
+                    <option key={r}>{r}</option>
+                  ))}
+                </select>
+              </label>
+              <button type="button" className="ui-btn ui-btn-light" disabled={!reason} onClick={() => act('warning')}>
+                Continue
+              </button>
+            </>
+          )}
+          {step === 'warning' && (
+            <>
+              <p className="ui-h">Are you sure?</p>
+              <p className="reel-muted">You’ll lose your saved preferences, your watch history and 3 profiles.</p>
+              <button
+                type="button"
+                className="ui-btn ui-btn-amber"
+                onClick={() => divert('Kept membership', 'Great, you’re staying with us!', 'warning')}
+              >
+                Keep membership
+              </button>
+              <button type="button" className="ui-link ui-link-faint" onClick={() => act('done')}>
+                Cancel anyway
+              </button>
+            </>
+          )}
+          {step === 'done' && (
+            <>
+              <p className="ui-h">Membership cancelled.</p>
+              <p className="reel-muted">We’ll miss you.</p>
+              <p className="mono action-count">{actions} actions</p>
+              <button type="button" className="ui-btn ui-btn-light" onClick={() => onDone(actions, detours)}>
+                See what changed →
+              </button>
+            </>
+          )}
+        </div>
+      </BrowserFrame>
+    </div>
   );
 }
 
@@ -258,7 +290,13 @@ export default function FrictionExperiment({ exp, result = {}, onRecord, onReset
           <div className="stage">
             <div className="stage-top">
               <p className="prompt" id={`exp-${exp.id}-title`}>
-                {phase === 'a' ? 'Cancel your membership.' : <><span className="again">Now try another one. </span>Same service, same membership.</>}
+                {phase === 'a' ? (
+                  'Cancel your membership.'
+                ) : (
+                  <>
+                    <span className="again">Now try another one. </span>Same service, same membership.
+                  </>
+                )}
               </p>
               <p className="mono round" aria-live="polite">
                 Flow {phase === 'a' ? 'A' : 'B'} of 2
@@ -289,8 +327,9 @@ export default function FrictionExperiment({ exp, result = {}, onRecord, onReset
             <p className="change-note">{exp.changeNote}</p>
             {result.detours?.length > 0 && (
               <p className="reveal-note">
-                Along the way you took a detour: <strong>{result.detours.join(', ').toLowerCase()}</strong>. That’s the flow
-                working as designed. The offers are the biggest buttons on the screen; “continue cancelling” is the faintest.
+                Along the way you took a detour: <strong>{result.detours.join(', ').toLowerCase()}</strong>. That’s the
+                flow working as designed. The offers are the biggest buttons on the screen; “continue cancelling” is the
+                faintest.
               </p>
             )}
 
@@ -302,7 +341,9 @@ export default function FrictionExperiment({ exp, result = {}, onRecord, onReset
               </p>
               <p className="mono result-path">
                 <span>{result.a} actions</span>
-                <span className="arrow" aria-hidden="true">→</span>
+                <span className="arrow" aria-hidden="true">
+                  →
+                </span>
                 <span className="is-new">{result.b} actions</span>
               </p>
               <p className="result-research">{versusResearch('friction', null, result)}</p>

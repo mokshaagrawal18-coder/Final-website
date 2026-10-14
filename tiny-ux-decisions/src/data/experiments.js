@@ -10,6 +10,8 @@ export const SOURCE_URL = ''; // Set to the repo URL to show "View source code".
 export const experiments = [
   {
     id: 'popular',
+    // Shown before the reveal, so the title doesn't give away what changes.
+    neutral: 'A music plan',
     task: 'Pick a music plan',
     variableShort: 'Badge',
     variable: 'A “Most popular” badge on Plus',
@@ -31,6 +33,7 @@ export const experiments = [
   },
   {
     id: 'default',
+    neutral: 'A weekend flight',
     task: 'Finish a flight booking',
     variableShort: 'Starting state',
     variable: 'Travel protection starts out selected',
@@ -52,6 +55,7 @@ export const experiments = [
   },
   {
     id: 'scarcity',
+    neutral: 'A desk lamp',
     task: 'Buy a lamp, or wait',
     variableShort: 'Stock warning',
     variable: 'An “Only 2 left” line',
@@ -73,6 +77,7 @@ export const experiments = [
   },
   {
     id: 'friction',
+    neutral: 'A cancellation',
     task: 'Cancel a subscription, twice',
     variableShort: 'Extra screens',
     variable: 'Three extra screens before you can leave: two offers and a survey',
@@ -94,6 +99,7 @@ export const experiments = [
   },
   {
     id: 'recommend',
+    neutral: 'Something to watch',
     task: 'Pick a film for tonight',
     variableShort: 'Label',
     variable: '“Recommended for you” on one film',

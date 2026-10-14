@@ -2,13 +2,13 @@ import { experiments } from '../data/experiments.js';
 import { shipChecklist, wild } from '../data/wild.js';
 
 /** Where a pattern shows up, one sourced number, when it helps or hurts, and what regulators say. */
-export function InTheWild({ id }) {
+export function InTheWild({ id, defaultOpen = true }) {
   const w = wild[id];
   return (
-    <details className="wild" open>
+    <details className="wild" open={defaultOpen}>
       <summary>
         <span className="wild-title">In the wild</span>
-        <span className="wild-sub">Where this shows up, and what the research says</span>
+        <span className="wild-sub">{w.teaser}</span>
       </summary>
       <dl className="wild-list">
         <div>

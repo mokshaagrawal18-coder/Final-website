@@ -17,14 +17,14 @@ export function Bar({ choices }) {
         <a href="#top" className="bar-title">
           Tiny UX Decisions
         </a>
-        <span className="bar-progress">
+        <a href="#log" className="bar-progress">
           {count} of 5 tests run
           <span className="bar-meter" aria-hidden="true">
             {experiments.map((e) => (
               <i key={e.id} className={isDone(choices, e.id) ? 'is-on' : ''} />
             ))}
           </span>
-        </span>
+        </a>
         <nav className="bar-nav" aria-label="Sections">
           <a href="#tests">Tests</a>
           <a href="#index">Index</a>
@@ -100,7 +100,7 @@ export function TestPlan({ choices }) {
           </h2>
           <p className="plan-rule">
             Same choice, almost the same interface, one small change. You choose first. I show you what changed afterwards.
-            About four minutes, and there are no right answers.
+            About five minutes, and there are no right answers.
           </p>
         </div>
         <div className="table-scroll">
@@ -121,7 +121,7 @@ export function TestPlan({ choices }) {
                   <tr key={e.id} className={done ? 'is-done' : ''}>
                     <td className="num">{i + 1}</td>
                     <td>
-                      <a href={`#exp-${e.id}`}>{e.title}</a>
+                      <a href={`#exp-${e.id}`}>{done ? e.title : e.neutral}</a>
                     </td>
                     <td>{e.task}</td>
                     <td className={done ? 'is-red' : 'is-muted'}>{done ? e.variableShort : 'Revealed after'}</td>
@@ -152,8 +152,10 @@ function logRow(id, r) {
   };
 }
 
-export function SessionLog({ choices }) {
+export function SessionLog({ choices, onResetAll }) {
   const takeaway = sessionTakeaway(choices);
+  const [confirming, setConfirming] = useState(false);
+  const anyStarted = experiments.some((e) => isStarted(choices, e.id));
   return (
     <section className="log" id="log" aria-labelledby="log-title">
       <div className="wrap log-grid">
@@ -167,6 +169,33 @@ export function SessionLog({ choices }) {
             But they do make something visible: interfaces don’t only present choices.{' '}
             <strong>They decide how those choices are presented.</strong>
           </p>
+          {anyStarted && (
+            <div className="log-reset" aria-live="polite">
+              {confirming ? (
+                <>
+                  <span>Clear all your answers and start again?</span>
+                  <button
+                    type="button"
+                    className="button button-small"
+                    onClick={() => {
+                      setConfirming(false);
+                      onResetAll();
+                      document.getElementById('top')?.scrollIntoView();
+                    }}
+                  >
+                    Clear and start again
+                  </button>
+                  <button type="button" className="link" onClick={() => setConfirming(false)}>
+                    Keep my answers
+                  </button>
+                </>
+              ) : (
+                <button type="button" className="link" onClick={() => setConfirming(true)}>
+                  Start over
+                </button>
+              )}
+            </div>
+          )}
         </div>
         <div className="table-scroll">
           <table className="log-table">
@@ -206,6 +235,9 @@ export function SessionLog({ choices }) {
   );
 }
 
+// Library entries that are also one of the five tests.
+const testFor = { '001': 'popular', '002': 'default', '003': 'scarcity', '006': 'recommend', '011': 'friction' };
+
 export function Index() {
   const [active, setActive] = useState('all');
   const shown = active === 'all' ? specimens : specimens.filter((s) => s.tags.includes(active));
@@ -242,6 +274,11 @@ export function Index() {
               <p className="idx-look">
                 <span>Look for</span>
                 {s.lookFor}
+                {testFor[s.id] && (
+                  <a className="idx-try" href={`#exp-${testFor[s.id]}`}>
+                    Try it in test {experiments.findIndex((e) => e.id === testFor[s.id]) + 1}
+                  </a>
+                )}
               </p>
             </li>
           ))}

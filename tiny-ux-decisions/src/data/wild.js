@@ -10,6 +10,7 @@ const CCPA = {
 
 export const wild = {
   popular: {
+    teaser: 'A “most guests do this” card raised towel reuse from 35% to 44%',
     where: 'Pricing pages for software, streaming and phone plans. “Bestseller” tags on shopping sites. “Guest favourite” on places to stay.',
     number:
       'In a hotel field study, a card saying most guests reuse their towels raised towel reuse from 35.1% to 44.1%, compared with a card that only asked guests to help the environment.',
@@ -26,6 +27,7 @@ export const wild = {
     ],
   },
   default: {
+    teaser: 'When pension enrolment was the default, 86% of new hires joined',
     where: 'Travel insurance at checkout, newsletter tick boxes, app permissions, privacy settings, pension schemes.',
     number:
       'When one US company switched its retirement plan from opt-in to opt-out, 86% of new hires took part, compared with about half or fewer under the old opt-in rule.',
@@ -40,6 +42,7 @@ export const wild = {
     ],
   },
   scarcity: {
+    teaser: '1,818 dark patterns found across about 11,000 shopping sites',
     where: 'Hotel and flight booking, flash sales, concert tickets, “selling fast” labels.',
     number:
       'A 2019 crawl of about 11,000 shopping sites found 1,818 dark-pattern instances, including low-stock and countdown messages. On 183 of those sites, the messages were outright deceptive.',
@@ -57,6 +60,7 @@ export const wild = {
     ],
   },
   friction: {
+    teaser: 'Amazon’s $2.5 billion settlement over signing up for and cancelling Prime',
     where: 'Gym memberships, streaming, news and app subscriptions, deleting an account, unsubscribing from emails.',
     number:
       'In 2025 Amazon agreed to pay $2.5 billion to settle US Federal Trade Commission claims that it signed people up for Prime without clear consent and made cancelling deliberately hard.',
@@ -73,6 +77,7 @@ export const wild = {
     ],
   },
   recommend: {
+    teaser: 'Recommendations influence about 80% of hours watched on Netflix',
     where: 'Streaming home screens, “customers also bought”, social feeds, food delivery, music playlists.',
     number:
       'Netflix’s own engineers reported that recommendations influence about 80% of the hours streamed on the service. The rest comes from search.',

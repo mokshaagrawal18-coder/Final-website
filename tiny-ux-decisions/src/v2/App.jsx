@@ -60,7 +60,7 @@ export default function App() {
             />
           );
         })}
-        <SessionLog choices={choices} />
+        <SessionLog choices={choices} onResetAll={() => setChoices({})} />
         <Index />
         <Layers />
         <EndNotes />

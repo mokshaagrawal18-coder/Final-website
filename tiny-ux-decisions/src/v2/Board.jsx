@@ -4,7 +4,10 @@ import { outcomeHeadline, outcomeLabel, outcomeOf, outcomeText } from '../data/o
 import { versusResearch } from '../data/wild.js';
 import { InTheWild } from '../components/Wild.jsx';
 
-/** Scroll the canvas back into view when the board moves to a new step. */
+/**
+ * When the board moves to a new step: scroll the canvas back into view if needed,
+ * and move keyboard focus to the new question so it isn't lost to the top of the page.
+ */
 function useFollow(step) {
   const ref = useRef(null);
   const first = useRef(true);
@@ -20,23 +23,37 @@ function useFollow(step) {
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
     }
+    el.querySelector('.ask')?.focus({ preventScroll: true });
   }, [step]);
   return ref;
 }
 
-/** Left column of every board: what this test is, and what it holds constant. */
+/**
+ * Left column of every board: what this test is, and what it holds constant.
+ * Until the reveal it uses a neutral name and hides the pattern, so nothing primes the choice.
+ */
 function Spec({ exp, n, revealed, steps, current }) {
+  const [details, setDetails] = useState(false);
   return (
     <div className="spec">
       <p className="spec-no">Test {n} of 5</p>
       <h2 className="spec-title" id={`exp-${exp.id}-title`}>
-        {exp.title}
+        {revealed ? exp.title : exp.neutral}
       </h2>
       <p className="spec-scenario">{exp.scenario}</p>
-      <dl className="spec-list">
+      <button
+        type="button"
+        className="link spec-toggle"
+        aria-expanded={details}
+        aria-controls={`exp-${exp.id}-spec`}
+        onClick={() => setDetails((d) => !d)}
+      >
+        {details ? 'Hide test details' : 'Test details'}
+      </button>
+      <dl className={`spec-list ${details ? 'is-open' : ''}`} id={`exp-${exp.id}-spec`}>
         <div>
           <dt>Pattern</dt>
-          <dd>{exp.category}</dd>
+          <dd className={revealed ? '' : 'is-hidden'}>{revealed ? exp.category : 'Revealed after'}</dd>
         </div>
         <div>
           <dt>Changed</dt>
@@ -64,9 +81,41 @@ function Spec({ exp, n, revealed, steps, current }) {
   );
 }
 
+/**
+ * Frames A and B after the reveal. Side by side on wide screens; on phones, one frame at a
+ * readable size with a switch to flip between them (which also makes the change jump out).
+ */
+function Compare({ renderInterface, describe, result }) {
+  const [view, setView] = useState('B');
+  const frames = [
+    { v: 'A', label: `Frame A · you chose ${describe(result.a)}`, picked: result.a },
+    { v: 'B', label: `Frame B · you chose ${describe(result.b)}`, picked: result.b },
+  ];
+  return (
+    <div className="canvas canvas-pair">
+      <div className="flip" role="group" aria-label="Show frame">
+        {frames.map((f) => (
+          <button key={f.v} type="button" className="flip-btn" aria-pressed={view === f.v} onClick={() => setView(f.v)}>
+            Frame {f.v}
+          </button>
+        ))}
+      </div>
+      {frames.map((f) => (
+        <figure key={f.v} className={`pair ${f.v === 'B' ? 'is-b' : ''} ${view === f.v ? 'is-shown' : ''}`}>
+          <figcaption className="frame-label">{f.label}</figcaption>
+          <div className={`shrink ${f.v === 'B' ? 'redline' : ''}`} inert="">
+            {renderInterface(f.v, { interactive: false, picked: f.picked, result })}
+          </div>
+        </figure>
+      ))}
+    </div>
+  );
+}
+
 function Notes({ exp }) {
   return (
     <div className="notes">
+      <h3 className="reveal-label notes-label">Why it works</h3>
       <div className="notes-body">
         {exp.explanation.map((p) => (
           <p key={p}>{p}</p>
@@ -176,7 +225,7 @@ export function Board({ exp, n, result = {}, onRecord, onReset, renderInterface,
         <div className="board-main" ref={canvasRef}>
           {(phase === 'a' || phase === 'b') && (
             <>
-              <p className="ask">
+              <p className="ask" tabIndex={-1}>
                 {phase === 'b' && <span className="ask-again">Again. </span>}
                 {exp.prompt}
               </p>
@@ -185,7 +234,7 @@ export function Board({ exp, n, result = {}, onRecord, onReset, renderInterface,
                   {interlude ? '' : phase === 'a' ? 'Frame A' : 'Frame B'}
                 </p>
                 {interlude ? (
-                  <div className="interlude">
+                  <div className="interlude" role="status">
                     <p>Same question.</p>
                     <p className="interlude-sub">Answer as if it’s the first time.</p>
                   </div>
@@ -200,8 +249,9 @@ export function Board({ exp, n, result = {}, onRecord, onReset, renderInterface,
 
           {phase === 'spot' && (
             <>
-              <p className="ask">
+              <p className="ask" tabIndex={-1}>
                 One thing in frame B was different from frame A. <span className="ask-soft">Tap it.</span>
+                <span className="sr-only"> Using a keyboard? Choose “Show me what changed”.</span>
               </p>
               <div className="canvas">
                 <p className="frame-label">Frame B</p>
@@ -227,23 +277,13 @@ export function Board({ exp, n, result = {}, onRecord, onReset, renderInterface,
 
           {phase === 'reveal' && (
             <div className="appear">
-              <p className="ask">{exp.changeNote}</p>
-              <div className="canvas canvas-pair">
-                <figure className="pair">
-                  <figcaption className="frame-label">Frame A · you chose {describe(result.a)}</figcaption>
-                  <div className="shrink" inert="">
-                    {renderInterface('A', { interactive: false, picked: result.a, result })}
-                  </div>
-                </figure>
-                <figure className="pair is-b">
-                  <figcaption className="frame-label">Frame B · you chose {describe(result.b)}</figcaption>
-                  <div className="shrink redline" inert="">
-                    {renderInterface('B', { interactive: false, picked: result.b, result })}
-                  </div>
-                </figure>
-              </div>
+              <p className="ask" tabIndex={-1}>
+                {exp.changeNote}
+              </p>
+              <Compare renderInterface={renderInterface} describe={describe} result={result} />
               {revealNote && <p className="aside-note">{revealNote}</p>}
 
+              <h3 className="reveal-label">What happened</h3>
               <dl className="readout">
                 <div>
                   <dt>Your choice</dt>
@@ -271,7 +311,7 @@ export function Board({ exp, n, result = {}, onRecord, onReset, renderInterface,
               )}
 
               <Notes exp={exp} />
-              <InTheWild id={exp.id} />
+              <InTheWild id={exp.id} defaultOpen={false} />
               <Actions next={next} onReset={reset} />
             </div>
           )}
@@ -320,7 +360,7 @@ export function FrictionBoard({ exp, n, result = {}, onRecord, onReset, next }) 
         <div className="board-main" ref={canvasRef}>
           {phase !== 'reveal' && (
             <>
-              <p className="ask">
+              <p className="ask" tabIndex={-1}>
                 {phase === 'a' ? (
                   'Cancel your membership.'
                 ) : (
@@ -344,7 +384,9 @@ export function FrictionBoard({ exp, n, result = {}, onRecord, onReset, next }) 
 
           {phase === 'reveal' && (
             <div className="appear">
-              <p className="ask">{exp.changeNote}</p>
+              <p className="ask" tabIndex={-1}>
+                {exp.changeNote}
+              </p>
               <div className="canvas canvas-trails">
                 <Trail label="Flow A" steps={PATH_A} count={result.a} />
                 <Trail label="Flow B" steps={PATH_B} count={result.b} />
@@ -355,6 +397,7 @@ export function FrictionBoard({ exp, n, result = {}, onRecord, onReset, next }) 
                   buttons on each screen, and “continue cancelling” the faintest.
                 </p>
               )}
+              <h3 className="reveal-label">What happened</h3>
               <dl className="readout">
                 <div>
                   <dt>Flow A</dt>
@@ -373,7 +416,7 @@ export function FrictionBoard({ exp, n, result = {}, onRecord, onReset, next }) 
                 <p className="outcome-research">{versusResearch('friction', null, result)}</p>
               </div>
               <Notes exp={exp} />
-              <InTheWild id={exp.id} />
+              <InTheWild id={exp.id} defaultOpen={false} />
               <Actions next={next} onReset={onReset} />
             </div>
           )}
