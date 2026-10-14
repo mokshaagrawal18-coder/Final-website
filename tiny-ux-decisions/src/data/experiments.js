@@ -24,7 +24,7 @@ export const experiments = [
     versionA: 'Three plans, no labels.',
     versionB: 'The same three plans. Plus carries a “Most popular” badge.',
     change: '+ Most popular',
-    changeNote: 'Same plans. Same prices. Same features. One option was simply given an extra signal.',
+    changeNote: 'Nothing about the plans changed. Plus just got a badge.',
     explanation: [
       '“Most popular” can do two things at once: make an option easier to notice, and provide information about what other people supposedly choose.',
       'That can reduce the work of comparing options. It can also make one choice feel more normal.',
@@ -46,7 +46,7 @@ export const experiments = [
     versionA: 'Neither option selected.',
     versionB: 'The same two options. “Add travel protection” is already selected.',
     change: 'Pre-selected',
-    changeNote: 'The choice was made before you arrived. Nothing about the insurance changed. Only its starting state.',
+    changeNote: 'Frame B arrived with the insurance already chosen for you. The price and the wording were identical.',
     explanation: [
       'Defaults reduce effort because doing nothing becomes a valid choice. That’s useful for things like language, accessibility, or sensible settings.',
       'But when a default costs money or affects privacy, who chooses the default starts to matter.',
@@ -68,7 +68,7 @@ export const experiments = [
     versionA: 'A product page.',
     versionB: 'The same product page with “Only 2 left”.',
     change: '+ Only 2 left',
-    changeNote: 'Nothing about the lamp changed. Same price. Same product. Same reviews. Same delivery.',
+    changeNote: 'It’s the same lamp at the same price. Frame B added one line about stock.',
     explanation: [
       'Scarcity introduces a new possibility: if I wait, I might lose the option.',
       'That changes the decision from “Do I want this?” to “Do I want to risk missing this?” A subtle but important difference.',
@@ -90,7 +90,7 @@ export const experiments = [
     versionA: 'A two-step cancellation.',
     versionB: 'The same cancellation, routed through offers, a survey and a warning.',
     change: '+ 3 extra screens',
-    changeNote: 'Same membership. Same outcome. Same person who had already decided.',
+    changeNote: 'You’d already decided to leave. Flow B made you decide again on almost every screen.',
     explanation: [
       'Friction isn’t always visual. Sometimes design shapes behaviour by making one action simply require more effort than another.',
       'An extra click seems tiny. Four extra decisions don’t.',
@@ -112,7 +112,7 @@ export const experiments = [
     versionA: 'Four films, no hierarchy.',
     versionB: 'The same four films. One is labelled “Recommended for you”.',
     change: '+ Recommended for you',
-    changeNote: 'Same four films, same order, same ratings. One label, with no explanation of why.',
+    changeNote: 'One film got a label in frame B. The label never says why.',
     explanation: [
       'A recommendation can save us from comparing every option ourselves.',
       'But the label also asks us to trust something we can’t see: why was this recommended to me? That matters more as recommendations become more personal.',

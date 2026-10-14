@@ -1,10 +1,25 @@
 import { useState } from 'react';
-import { builtWith, experiments, filters, methodology, SOURCE_URL, specimens, stripLayers } from '../data/experiments.js';
+import { experiments, filters, methodology, SOURCE_URL, specimens, stripLayers } from '../data/experiments.js';
 import { describeChoice } from '../components/Sections.jsx';
 import { outcomeLabel, outcomeOf, sessionTakeaway } from '../data/outcomes.js';
 import { Sample } from '../components/Library.jsx';
 import { HotelCard } from '../components/Strip.jsx';
 import { ShipChecklist } from '../components/Wild.jsx';
+import { author, prompts, showPrompts } from '../data/author.js';
+import { spotted } from '../data/spotted.js';
+import v1Shot from './assets/version-1.jpg';
+import v2Shot from './assets/version-2.jpg';
+
+/** A note for the author, shown only while showPrompts is on. */
+function FillIn({ children }) {
+  if (!showPrompts) return null;
+  return (
+    <aside className="fill-in">
+      <span className="fill-in-tag">For you to fill in</span>
+      {children}
+    </aside>
+  );
+}
 
 const isDone = (choices, id) => (id === 'friction' ? choices[id]?.b !== undefined : choices[id]?.spot !== undefined);
 const isStarted = (choices, id) => choices[id]?.a !== undefined;
@@ -66,7 +81,9 @@ export function Masthead() {
     <section className="mast" id="top">
       <div className="wrap mast-grid">
         <div className="mast-text">
-          <p className="eyebrow">An interactive product experiment</p>
+          <p className="eyebrow">
+            An interactive product experiment · {author.name}, {author.year}
+          </p>
           <h1 className="mast-title">
             Tiny UX
             <br />
@@ -163,12 +180,12 @@ export function SessionLog({ choices, onResetAll }) {
           <h2 className="h2" id="log-title">
             Your session
           </h2>
-          {takeaway && <p className="log-takeaway">{takeaway}</p>}
-          <p className="log-note">This isn’t a psychological profile. Five choices can’t tell us that.</p>
-          <p className="log-note">
-            But they do make something visible: interfaces don’t only present choices.{' '}
-            <strong>They decide how those choices are presented.</strong>
-          </p>
+          {takeaway ? (
+            <p className="log-takeaway">{takeaway}</p>
+          ) : (
+            <p className="log-note">Run a test and your answers show up here.</p>
+          )}
+          <FillIn>{prompts.pilot}</FillIn>
           {anyStarted && (
             <div className="log-reset" aria-live="polite">
               {confirming ? (
@@ -252,6 +269,29 @@ export function Index() {
           </h2>
           <p className="index-lede">Once I started looking for them, they were everywhere.</p>
         </div>
+        {(spotted.length > 0 || showPrompts) && (
+          <div className="spotted">
+            <h3 className="h3">Ones I’ve actually found</h3>
+            {spotted.length > 0 ? (
+              <ul className="spotted-grid">
+                {spotted.map((x) => (
+                  <li key={x.src}>
+                    <figure>
+                      <img src={x.src} alt={x.note} loading="lazy" />
+                      <figcaption>
+                        <span>{x.where}</span>
+                        {x.note}
+                      </figcaption>
+                    </figure>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <FillIn>{prompts.spotted}</FillIn>
+            )}
+            <h3 className="h3 spotted-after">And the patterns behind them</h3>
+          </div>
+        )}
         <div className="tabs" role="group" aria-label="Filter the index">
           {filters.map((f) => (
             <button key={f.id} type="button" className="tab" aria-pressed={active === f.id} onClick={() => setActive(f.id)}>
@@ -356,7 +396,7 @@ export function Layers() {
         <div className="layers-outro" aria-live="polite">
           {none ? (
             <div className="appear">
-              <p className="outro-big">Same room. Same price. Very different decision environment.</p>
+              <p className="outro-big">What’s left is a room, a price and a cancellation policy.</p>
               <p className="question">
                 <span className="q-mark" aria-hidden="true">
                   ?
@@ -373,6 +413,8 @@ export function Layers() {
   );
 }
 
+const setupNotes = methodology.filter((m) => !['There is no control group', 'You are both groups'].includes(m.title));
+
 export function EndNotes() {
   return (
     <section className="end" id="notes" aria-labelledby="notes-title">
@@ -382,33 +424,71 @@ export function EndNotes() {
         </h2>
         <div className="end-body">
           <p>
-            I started this project thinking about persuasive interfaces: defaults, urgency, recommendations, and the little
-            decisions designers make around a choice.
+            I started this wanting to know whether nudges work. They do, and there are decades of research saying so. I’ve
+            put the parts I could check in the “In the wild” panels.
           </p>
           <p>
-            What became more interesting was that the same technique isn’t automatically helpful or manipulative. A default
-            can save effort. A recommendation can narrow an overwhelming set of options. A progress bar can make a long
-            process clearer.
+            The more useful lessons came from building it. My first draft named every test after its trick. The lamp test was
+            called “Only Two Left”, in big letters, right above the lamp. I had made a page about interfaces quietly steering
+            people, and it was loudly steering them the other way. The tests now have plain names until you’ve chosen.
           </p>
-          <p>The question I kept returning to was simpler:</p>
+          <p>
+            Then I got stuck on a question: what does it mean if someone picks the same plan both times? My first version said
+            “You stuck with your first choice” and moved on. But the badge might have agreed with them, or not moved them, or
+            pushed them the other way, and those are different results. The same click can mean several things, and most
+            interfaces only ever count one of them.
+          </p>
+          <FillIn>{prompts.moment}</FillIn>
+          <p>The question I ask of any interface now, including this one:</p>
           <p className="end-q">Does this design help someone make their decision, or does it quietly make more of the decision for them?</p>
 
           <ShipChecklist />
 
-          <h3 className="h3">How the tests are set up</h3>
-          <dl className="method">
-            {methodology.map((m) => (
-              <div key={m.title}>
-                <dt>{m.title}</dt>
-                <dd>{m.body}</dd>
-              </div>
-            ))}
-          </dl>
-
-          <p className="built">
-            Built with {builtWith.slice(0, -1).join(', ').toLowerCase().replace('react', 'React').replace('javascript', 'JavaScript')} and{' '}
-            {builtWith[builtWith.length - 1]}.
+          <h3 className="h3" id="process">
+            How this was made
+          </h3>
+          <p>
+            The first version looked like a lot of AI-made portfolio pages: cream paper, a big serif headline, little uppercase
+            labels, rounded cards and a yellow box for the key question. It worked. It also looked generated, which is an
+            awkward look for a project about interfaces you shouldn’t take at face value.
           </p>
+          <p>
+            So I rebuilt it as a design review, the kind of document a product team marks up before shipping: a grey canvas,
+            the interface in a frame, a column listing what’s held constant, and one magenta outline around the thing that
+            changed. I also added a step I hadn’t planned, where you try to find the change before I show you. It’s the part I
+            most want to test with real people, because noticing a nudge might matter more than resisting it.
+          </p>
+          <div className="versions">
+            <figure>
+              <img src={v1Shot} alt="Version 1: cream background with a faint grid, a large serif title with a yellow highlight, and small uppercase labels." />
+              <figcaption>Version 1</figcaption>
+            </figure>
+            <figure>
+              <img src={v2Shot} alt="Version 2: white page, wide bold sans-serif title, and a grey canvas showing the same sign-up form twice." />
+              <figcaption>Version 2, this page</figcaption>
+            </figure>
+          </div>
+          <FillIn>{prompts.handmade}</FillIn>
+          <p className="built">Built with React and plain CSS. There’s no backend; your answers stay in this tab.</p>
+
+          <h3 className="h3">What this can’t tell you</h3>
+          <p>
+            One person seeing both versions isn’t an experiment. You saw frame A first, you knew something was coming, and by
+            test three you were probably hunting for it. A real test would show different people different frames, plus a
+            group who sees the same frame twice. That’s the next version.
+          </p>
+          <details className="setup">
+            <summary>Setup notes</summary>
+            <dl className="method">
+              {setupNotes.map((m) => (
+                <div key={m.title}>
+                  <dt>{m.title}</dt>
+                  <dd>{m.body}</dd>
+                </div>
+              ))}
+            </dl>
+          </details>
+
           {SOURCE_URL && (
             <a className="link" href={SOURCE_URL} target="_blank" rel="noreferrer">
               View the source code
@@ -425,7 +505,9 @@ export function Foot() {
     <footer className="foot">
       <div className="wrap foot-inner">
         <p className="foot-line">Change one tiny thing. Look again.</p>
-        <p className="foot-small">All brands and products are fictional. Nothing you choose leaves this page.</p>
+        <p className="foot-small">
+          Made by {author.name}, {author.year}. The brands are made up, and your answers never leave this tab.
+        </p>
       </div>
     </footer>
   );

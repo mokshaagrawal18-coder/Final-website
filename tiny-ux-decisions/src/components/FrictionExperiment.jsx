@@ -36,9 +36,13 @@ function useHeadingFocus(screen) {
 }
 
 /** Flow A: the straight path. */
-export function FlowA({ onDone }) {
+export function FlowA({ onDone, onAction }) {
   const [step, setStep] = useState(0);
   const [actions, setActions] = useState(0);
+  // Lets a host page show a live count of actions as they happen.
+  useEffect(() => {
+    onAction?.(actions);
+  }, [actions, onAction]);
   const act = (to) => {
     setActions((n) => n + 1);
     setStep(to);
@@ -92,9 +96,13 @@ export function FlowA({ onDone }) {
 }
 
 /** Flow B: the same cancellation, the long way round. */
-export function FlowB({ onDone }) {
+export function FlowB({ onDone, onAction }) {
   const [step, setStep] = useState('account');
   const [actions, setActions] = useState(0);
+  // Lets a host page show a live count of actions as they happen.
+  useEffect(() => {
+    onAction?.(actions);
+  }, [actions, onAction]);
   const [reason, setReason] = useState('');
   const [detour, setDetour] = useState(null); // { text, back }
   const [detours, setDetours] = useState([]);

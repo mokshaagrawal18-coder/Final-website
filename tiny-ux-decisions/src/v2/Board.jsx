@@ -32,10 +32,10 @@ function useFollow(step) {
  * Left column of every board: what this test is, and what it holds constant.
  * Until the reveal it uses a neutral name and hides the pattern, so nothing primes the choice.
  */
-function Spec({ exp, n, revealed, steps, current }) {
+function Spec({ exp, n, revealed, steps, current, wide = false }) {
   const [details, setDetails] = useState(false);
   return (
-    <div className="spec">
+    <div className={`spec ${wide ? 'spec-wide' : ''}`}>
       <p className="spec-no">Test {n} of 5</p>
       <h2 className="spec-title" id={`exp-${exp.id}-title`}>
         {revealed ? exp.title : exp.neutral}
@@ -342,17 +342,23 @@ function Trail({ label, steps, count }) {
 const FRICTION_STEPS = ['Cancel, flow A', 'Cancel, flow B', 'Compare'];
 
 /** Test 4: two real cancellation flows, then the click trails side by side. */
+/**
+ * Test 4 deliberately breaks the layout of the other four: full width, a dark canvas that
+ * matches the streaming app, and a live count of every action you take.
+ */
 export function FrictionBoard({ exp, n, result = {}, onRecord, onReset, next }) {
   const phase = result.a === undefined ? 'a' : result.b === undefined ? 'b' : 'reveal';
   const canvasRef = useFollow(phase);
   const diff = (result.b ?? 0) - (result.a ?? 0);
+  const [live, setLive] = useState(0);
 
   return (
-    <section className="board" id={`exp-${exp.id}`} aria-labelledby={`exp-${exp.id}-title`}>
+    <section className="board board-wide" id={`exp-${exp.id}`} aria-labelledby={`exp-${exp.id}-title`}>
       <div className="wrap board-grid">
         <Spec
           exp={exp}
           n={n}
+          wide
           revealed={phase === 'reveal'}
           steps={FRICTION_STEPS}
           current={{ a: 0, b: 1, reveal: 2 }[phase]}
@@ -369,14 +375,25 @@ export function FrictionBoard({ exp, n, result = {}, onRecord, onReset, next }) 
                   </>
                 )}
               </p>
-              <div className="canvas canvas-centre">
+              <div className="canvas canvas-dark">
                 <p className="frame-label">{phase === 'a' ? 'Flow A' : 'Flow B'}</p>
-                <div className="flow-box appear" key={phase}>
-                  {phase === 'a' ? (
-                    <FlowA onDone={(c) => onRecord({ a: c })} />
-                  ) : (
-                    <FlowB onDone={(c, detours) => onRecord({ b: c, detours })} />
-                  )}
+                <div className="flow-stage">
+                  <div className="flow-box appear" key={phase}>
+                    {phase === 'a' ? (
+                      <FlowA onAction={setLive} onDone={(c) => onRecord({ a: c })} />
+                    ) : (
+                      <FlowB onAction={setLive} onDone={(c, detours) => onRecord({ b: c, detours })} />
+                    )}
+                  </div>
+                  <div className="counter" aria-live="polite">
+                    <p className="counter-num">{live}</p>
+                    <p className="counter-label">action{live === 1 ? '' : 's'} so far</p>
+                    {phase === 'b' && (
+                      <p className="counter-prev">
+                        Flow A took <strong>{result.a}</strong>
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </>
