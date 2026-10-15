@@ -70,19 +70,21 @@ import { site } from '../../data/site';
     <!-- 03 -->
     <article class="project grid" aria-labelledby="p3-title">
       <div class="p-text reveal">
-        <p class="p-n"><span class="num">03</span> <span class="soon">Coming soon</span></p>
+        <p class="num p-n">03</p>
         <h2 class="t-section p-title" id="p3-title">Tiny UX Decisions</h2>
         <p class="p-q">How much can one tiny interface change affect a decision?</p>
-        <div class="p-copy"><p>A growing collection of defaults, framing, friction, recommendations, and other interface choices that quietly shape what people notice and choose.</p></div>
+        <div class="p-copy">
+          <p>Five interactive tests. In each one you make the same choice twice, and one small thing changes in between: a badge, a pre-ticked box, a stock warning, a longer cancellation flow, or a recommendation label.</p>
+          <p>Then you try to spot the change, see how your answer moved, and read what the research and India’s 2023 dark-pattern rules say about it.</p>
+        </div>
+        <p class="p-key">The same click can mean several different things.</p>
         <ul class="tags" role="list">
-          <li class="tag">Behaviour</li>
-          <li class="tag">UX</li>
+          <li class="tag tag--metric">5 tests</li>
+          <li class="tag">Behavioural design</li>
           <li class="tag">Experimentation</li>
+          <li class="tag">React</li>
         </ul>
-        <details class="p-more">
-          <summary class="arrow-link"><span class="al-text">Learn more</span> <span class="al-arrow al-arrow--right" aria-hidden="true">→</span></summary>
-          <p class="muted">Still being built, so there’s nothing to show yet. When there is, the write-up will live here.</p>
-        </details>
+        {site.tinyUx && <ArrowLink href={site.tinyUx} external dir="ext" variant="button" class="p-cta">Try the experiments</ArrowLink>}
       </div>
       <div class="p-visual reveal" style="--delay:120ms">
         <PricingTeaser />
@@ -126,7 +128,6 @@ import { site } from '../../data/site';
   .p-text { grid-column: 1 / span 5; }
   .p-visual { grid-column: 7 / span 6; }
   .p-n { font-size: 1rem; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
-  .soon { font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; background: var(--yellow); color: var(--ink); padding: 4px 8px 3px; border-radius: 3px; }
   .p-title { font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.9rem); }
   .p-copy { margin: -6px 0 16px; max-width: 46ch; color: var(--grey); }
   .p-copy p + p { margin-top: 0.6em; }
@@ -134,11 +135,6 @@ import { site } from '../../data/site';
   .p-q { margin: 18px 0 22px; font-size: 1.2rem; line-height: 1.4; font-weight: 500; color: var(--cobalt); max-width: 30ch; }
   :global(.p-cta) { margin-top: 28px; }
   :global(.p-report) { margin: 28px 0 0 20px; }
-  .p-more { margin-top: 18px; }
-  .p-more summary { list-style: none; cursor: pointer; }
-  .p-more summary::-webkit-details-marker { display: none; }
-  .p-more[open] .al-arrow { transform: rotate(90deg); }
-  .p-more p { max-width: 40ch; font-size: 0.95rem; }
 
   .small-title { margin-bottom: 28px; }
   .small-arrow { color: var(--cobalt); }
