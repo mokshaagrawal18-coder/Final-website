@@ -21,12 +21,12 @@ export const companies: Company[] = [
     intro: 'A lot of my work here starts with information that is recurring, scattered, or difficult to compare. I turn it into structured analysis, reusable data, or a process that is easier to run the next time.',
     question: 'How do you make recurring research easier to compare and update?',
     keyword: 'clarity',
-    bullets: ['33–40 funds / quarter', '2 hrs → 30 mins'],
+    bullets: ['40 funds / quarter', '2 hrs → 30 mins'],
     items: [
       {
         title: 'Track what changed',
-        body: 'I analyse quarterly 13F filings across 33–40 institutional funds, using Power BI to track new positions, exits, and changes in position size.',
-        evidence: ['33–40 funds', 'quarterly analysis', 'Power BI'],
+        body: 'I analyse quarterly 13F filings across 40 institutional funds, using Power BI to track new positions, exits, and changes in position size.',
+        evidence: ['40 funds', 'quarterly analysis', 'Power BI'],
         hand: 'the number matters. the change usually matters more.',
       },
       {
@@ -37,8 +37,8 @@ export const companies: Company[] = [
       },
       {
         title: 'Automate the repeatable part',
-        body: 'I automated recurring research and disclosure workflows, cutting daily monitoring from 2 hours to 30 minutes and disclosure processing from 30–40 minutes to 2–3 minutes.',
-        evidence: ['2 hrs → 30 mins', '30–40 mins → 2–3 mins'],
+        body: 'I automated recurring research and disclosure workflows, cutting daily monitoring from 2 hours to 30 minutes and disclosure processing from 35 minutes to under 3 minutes.',
+        evidence: ['2 hrs → 30 mins', '35 mins → under 3 mins'],
         hand: 'if it happens every day, I’m probably wondering why it still happens manually.',
       },
     ],
@@ -60,7 +60,7 @@ export const companies: Company[] = [
       {
         title: 'Why self-service still became an escalation',
         body: 'I studied chatbot and customer-query patterns, then helped standardise response templates and resolution steps.',
-        evidence: ['customer escalations ↓20%'],
+        evidence: ['customer escalations ↓22%'],
         quote: 'People rarely say “your process has a bottleneck.” They just tell you they’re stuck.',
       },
     ],
@@ -75,13 +75,13 @@ export const companies: Company[] = [
     items: [
       {
         title: 'Make ad spend work harder',
-        body: 'I worked across a 40–60 product Amazon portfolio, adjusting bids and reallocating spend using Amazon Ads and Helium 10.',
+        body: 'I worked across a 60-product Amazon portfolio, adjusting bids and reallocating spend using Amazon Ads and Helium 10.',
         evidence: ['sales 2× across 80% of products', 'ad spend ↓40%'],
       },
       {
         title: 'Understand the shelf around the product',
-        body: 'I analysed 300+ competing products across 5–6 brands to understand keywords, positioning, and where competitors were leaving gaps.',
-        evidence: ['300+ products', '5–6 brands'],
+        body: 'I analysed 300+ competing products across 6 brands to understand keywords, positioning, and where competitors were leaving gaps.',
+        evidence: ['300+ products', '6 brands'],
         hand: 'what are customers actually searching for?',
       },
     ],
@@ -93,7 +93,7 @@ export const toolkitSteps = [
   { n: '02', title: 'Give it structure', body: 'Clean it, standardise it, and make the pieces comparable.', examples: ['DRHP data', 'structured holdings', 'SQL / databases', 'market datasets'] },
   { n: '03', title: 'Test what matters', body: 'Use the right analysis to understand what is driving the outcome.', examples: ['regression', 'statistics', 'time series', 'patterns'] },
   { n: '04', title: 'Build the answer', body: 'Turn the analysis into something someone can actually use.', examples: ['dashboards', 'automation', 'databases', 'models'] },
-  { n: '05', title: 'Make it repeatable', body: 'If it has to happen again, the second run should not start from zero.', examples: ['2 hrs → 30 mins', '30–40 mins → 2–3 mins', 'reusable workflows'] },
+  { n: '05', title: 'Make it repeatable', body: 'If it has to happen again, the second run should not start from zero.', examples: ['2 hrs → 30 mins', '35 mins → under 3 mins', 'reusable workflows'] },
 ];
 
 // logo: official mark in public/logos/; tools without one show as text only
