@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import AboutHero from '../components/AboutHero.astro';
 import AboutNotes from '../components/AboutNotes.astro';
+import Toolkit from '../components/Toolkit.astro';
 ---
 <BaseLayout title="About" description="It’s me, in context: a few things that explain how Moksha thinks, shows up, and makes her way through things.">
   <!-- ABOUT 1 · PORTRAIT + ANNOTATIONS -->
@@ -19,6 +20,8 @@ import AboutNotes from '../components/AboutNotes.astro';
     </div>
   </section>
 
+  <!-- ABOUT 3 · HOW I WORK WITH DATA -->
+  <Toolkit />
 </BaseLayout>
 
 <style>

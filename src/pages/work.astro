@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArrowLink from '../components/ArrowLink.astro';
-import Toolkit from '../components/Toolkit.astro';
+import Education from '../components/work/Education.astro';
 import DesLoop from '../components/work/DesLoop.astro';
 import GrowwJourneyPanel from '../components/work/GrowwJourneyPanel.astro';
 import MensaLandscape from '../components/work/MensaLandscape.astro';
@@ -93,8 +93,8 @@ const visuals: Record<string, any> = { 'de-shaw': DesLoop, groww: GrowwJourneyPa
       );
     })}
 
-    <!-- TOOLKIT -->
-    <Toolkit />
+    <!-- EDUCATION + OUTSIDE WORK -->
+    <Education />
 
     <!-- NEXT -->
     <section class="container work-next">
@@ -180,7 +180,6 @@ const visuals: Record<string, any> = { 'de-shaw': DesLoop, groww: GrowwJourneyPa
   .work :global(.panel-title) { font-family: var(--font-serif-text); font-weight: 600; font-size: 1rem; color: var(--ink); }
   .work :global(.panel-sub) { font-weight: 400; color: var(--grey); }
 
-  .work :global(.toolkit) { padding-top: clamp(110px, 10vw, 160px); }
   .work-next { padding-top: 64px; }
 
   @media (max-width: 1100px) {
