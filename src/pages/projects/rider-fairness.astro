@@ -15,7 +15,7 @@ import '../../styles/details.css';
   ]}
   stoodOut="Riders with similar underlying performance could still receive meaningfully different scores because of the conditions around them."
   keyLine="A model can be consistent without necessarily being fair."
-  proof={['15,000 records', '99.9% model fit', 'Fair Score framework']}
+  proof={['15,000 records', 'Python + regression', 'Fair Score framework']}
   reflection="This made me more interested in the difference between predicting performance and judging it fairly."
   detailsLabel="How I tested it"
   next={{ href: '/projects/healthcare-expenditure/', label: 'Next: Healthcare Expenditure' }}
@@ -36,7 +36,7 @@ import '../../styles/details.css';
     <div class="xd-block">
       <h3>Score reconstruction</h3>
       <p>Treated the existing performance score as the thing to explain, and worked backwards to find which recorded factors reproduced it.</p>
-      <p>The reconstructed model fit the original scores at 99.9%, which meant the logic was understood well enough to question it.</p>
+      <p>The reconstructed model matched the original scores closely, which meant the logic was understood well enough to question it.</p>
     </div>
     <div class="xd-block">
       <h3>Regression</h3>
