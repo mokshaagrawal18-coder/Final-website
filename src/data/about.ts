@@ -35,10 +35,10 @@ export const notes: Note[] = [
   {
     n: '03', title: 'Leading from rehearsals.', kicker: 'less spotlight, more logistics',
     body: [
-      'Running a dance team sounded much more glamorous before there were auditions to organise, formations to fix, and twelve people learning at twelve different speeds.',
+      'Running a dance team sounded much more glamorous before there were auditions to organise, formations to fix, and 12 people learning at 12 different speeds.',
       'Somewhere in all that, I realised I actually like being the person who helps things come together.',
     ],
-    closing: 'twelve speeds, one formation.',
+    closing: '12 speeds, 1 formation.',
     paper: 'card', rotate: -0.8,
     icon: 'M6 6a1.5 1.5 0 1 0 0.01 0M18 6a1.5 1.5 0 1 0 0.01 0M12 12a1.5 1.5 0 1 0 0.01 0M6 18a1.5 1.5 0 1 0 0.01 0M18 18a1.5 1.5 0 1 0 0.01 0',
   },
@@ -46,10 +46,10 @@ export const notes: Note[] = [
     n: '04', title: 'I give problems a shape.', kicker: 'name it, then fix it',
     body: [
       '“Everything is going wrong” is not very helpful.',
-      '“What are the three things actually going wrong?” — much better.',
+      '“What are the 3 things actually going wrong?” — much better.',
       'Once I know what I’m dealing with, I can usually figure out where to start.',
     ],
-    closing: 'start with three.',
+    closing: 'start with 3.',
     paper: 'graph', rotate: 1.8, pullout: 'shape',
     icon: 'M4 4h7v7H4zM13 13h7v7h-7zM11 7.5h4.5V13',
   },
@@ -81,7 +81,7 @@ export const notes: Note[] = [
     body: [
       'You practise. You count. You fix. You repeat.',
       'Then you walk on stage and trust that all of it is in there somewhere.',
-      'More than sixteen years later, I still like that balance: prepare properly, then let yourself do the thing.',
+      'More than 16 years later, I still like that balance: prepare properly, then let yourself do the thing.',
     ],
     closing: 'prepare, then trust it.',
     paper: 'lined', rotate: -1.1, pullout: 'counts',

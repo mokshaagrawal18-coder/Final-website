@@ -9,7 +9,7 @@ const groups = [
 ];
 ---
 <figure class={`hc ${cls}`} data-reveal>
-  <figcaption class="visually-hidden">Three factor groups (demographics, enabling factors and healthcare need) feed into healthcare expenditure. Healthcare need is the strongest driver.</figcaption>
+  <figcaption class="visually-hidden">3 factor groups (demographics, enabling factors and healthcare need) feed into healthcare expenditure. Healthcare need is the strongest driver.</figcaption>
   <div class="hc-groups">
     {groups.map((g) => <span class:list={['hc-group', { 'is-strong': g.strong }]}>{g.name}</span>)}
   </div>
