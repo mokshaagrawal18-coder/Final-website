@@ -2,7 +2,7 @@
 /**
  * Healthcare expenditure: "Guess first."
  * The reader picks the factor they think pushes spending up most; the bars then show the real
- * correlations with healthcare spending from the survey (210 responses, all significant).
+ * correlations with healthcare spending from the survey (all significant).
  */
 import '../../styles/try-card.css';
 
@@ -35,7 +35,7 @@ const fmt = (r: number) => `${r > 0 ? '+' : '−'}${Math.abs(r).toFixed(2)}`;
 
   <p class="tc-verdict" data-verdict aria-live="polite"></p>
   <p class="hg-after">Women in the survey spent more on healthcare, while reporting fewer financial resources to cover it.</p>
-  <p class="tc-fine hg-after">Correlation with healthcare spending · 210 survey responses</p>
+  <p class="tc-fine hg-after">Correlation with healthcare spending, from my survey</p>
 </figure>
 
 <script>
