@@ -1,0 +1,148 @@
+---
+/**
+ * Rider fairness: "You be the algorithm."
+ * The reader rates a late delivery, then sees what happened on the road and how the score judged it.
+ * Illustrative scenario: the order, times and scores are not records from the dataset.
+ */
+import '../../styles/try-card.css';
+---
+<figure class="tc rt" data-rider-try>
+  <div class="tc-head">
+    <p class="tc-title">You be the algorithm.</p>
+    <button type="button" class="tc-again" data-again hidden>↺ try again</button>
+    <span class="tc-tag" data-tag>illustrative</span>
+  </div>
+
+  <div class="rt-notif">
+    <span class="rt-app" aria-hidden="true">
+      <svg viewBox="0 0 48 48"><circle cx="13" cy="35" r="5" /><circle cx="36" cy="35" r="5" /><path d="M13 35 H 22 L 27 24 H 33 M 33 24 L 36 35 M 22 24 H 15" /><rect x="14" y="14" width="10" height="9" rx="1" /></svg>
+    </span>
+    <p><b>Your order arrived 14 minutes late.</b><br /><span>How would you rate the rider?</span></p>
+  </div>
+
+  <div class="tc-fold"><div>
+    <div class="rt-stars" role="group" aria-label="Rate the rider from 1 to 5 stars">
+      {[1, 2, 3, 4, 5].map((n) => (
+        <button type="button" data-star={n} aria-label={`${n} star${n > 1 ? 's' : ''}`}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.3l-5.6 2.9 1.1-6.3L2.9 9.5l6.3-.9z" /></svg>
+        </button>
+      ))}
+    </div>
+  </div></div>
+
+  <div class="tc-reveal" aria-live="polite"><div>
+    <p class="rt-lead" data-lead></p>
+    <svg class="rt-scene" viewBox="0 0 440 120" role="img" aria-label="A rider on a scooter in the rain, behind a car in traffic, on the way to the delivery point.">
+      <path class="ink" d="M58 40 a12 12 0 0 1 2-23 a16 16 0 0 1 30 3 a10 10 0 0 1 2 20 z" />
+      <line class="drop" x1="64" y1="48" x2="61" y2="57" />
+      <line class="drop" x1="75" y1="48" x2="72" y2="57" style="animation-delay:.4s" />
+      <line class="drop" x1="86" y1="48" x2="83" y2="57" style="animation-delay:.8s" />
+      <path class="road" d="M10 104 C 150 99, 290 108, 430 102" />
+      <g class="ink" transform="translate(250 72)"><path d="M0 22 v-8 l5-11 h30 l5 11 v8 z M0 22 v5 h7 v-5 M33 22 v5 h7 v-5" /></g>
+      <path class="pin" d="M404 62 c-8 0-13 6-13 13 0 10 13 21 13 21 s13-11 13-21 c0-7-5-13-13-13z" />
+      <circle class="pin-hole" cx="404" cy="75" r="4.5" />
+      <g class="scooter"><g transform="translate(120 58)">
+        <circle class="ink" cx="8" cy="38" r="7" /><circle class="ink" cx="48" cy="38" r="7" />
+        <path class="ink" d="M8 38 H 28 L 35 21 H 42 M 42 21 L 48 38 M 28 25 H 15" />
+        <rect class="box" x="4" y="11" width="15" height="13" rx="2" />
+        <path class="ink" d="M30 21 L 28 6 M 28 10 L 39 15" /><circle class="ink" cx="28" cy="0" r="4.5" />
+      </g></g>
+    </svg>
+    <ol class="rt-tl" role="list">
+      <li><span>7:02</span> rain starts</li>
+      <li><span>7:10</span> in traffic</li>
+      <li><span>7:31</span> delivered</li>
+    </ol>
+    <div class="rt-scores">
+      <div class="rt-orig"><p class="rt-lab">original score</p><p class="rt-val" data-orig>71</p></div>
+      <span class="rt-arr" aria-hidden="true">→</span>
+      <div class="rt-fair"><p class="rt-lab">Fair Score</p><p class="rt-val" data-fair>86</p></div>
+    </div>
+    <p class="tc-verdict" data-verdict></p>
+  </div></div>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-rider-try]').forEach((card) => {
+    const stars = Array.from(card.querySelectorAll<HTMLButtonElement>('[data-star]'));
+    const again = card.querySelector<HTMLButtonElement>('[data-again]')!;
+    const tag = card.querySelector<HTMLElement>('[data-tag]')!;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let rated = 0;
+    const paint = (n: number) => stars.forEach((s, i) => s.classList.toggle('on', i < n));
+    const count = (el: HTMLElement, from: number, to: number) => {
+      if (reduce) { el.textContent = String(to); return; }
+      const t0 = performance.now();
+      const step = (t: number) => {
+        const k = Math.min(1, (t - t0) / 900);
+        el.textContent = String(Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3))));
+        if (k < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    stars.forEach((s, i) => {
+      s.addEventListener('mouseenter', () => { if (!rated) paint(i + 1); });
+      s.addEventListener('mouseleave', () => { if (!rated) paint(0); });
+      s.addEventListener('click', () => {
+        if (rated) return;
+        rated = i + 1; paint(rated);
+        card.querySelector('[data-lead]')!.innerHTML = `You gave <b>${'★'.repeat(rated)}${'☆'.repeat(5 - rated)}</b>. Here’s what you didn’t see:`;
+        card.querySelector('[data-verdict]')!.textContent = rated <= 3
+          ? 'You judged the outcome, not the conditions. So does the score.'
+          : 'You were kinder than the score. It only saw “14 minutes late”.';
+        card.classList.add('is-done'); again.hidden = false; tag.hidden = true;
+        count(card.querySelector<HTMLElement>('[data-orig]')!, 100, 71);
+        setTimeout(() => count(card.querySelector<HTMLElement>('[data-fair]')!, 71, 86), 700);
+      });
+    });
+    again.addEventListener('click', () => {
+      rated = 0; paint(0); card.classList.remove('is-done'); again.hidden = true; tag.hidden = false; stars[0].focus();
+    });
+  });
+</script>
+
+<style>
+  .rt { margin: 0; }
+  .rt-notif { display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: center; margin-top: 16px; padding: 12px 14px; background: #fff; border: 1px solid var(--line); border-radius: 12px; }
+  .rt-app { width: 40px; height: 40px; border-radius: 10px; background: var(--yellow); display: grid; place-items: center; }
+  .rt-app svg { width: 26px; height: 26px; fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .rt-notif p { font-size: 0.9rem; line-height: 1.4; }
+  .rt-notif b { font-weight: 600; }
+  .rt-notif span { color: var(--grey); }
+
+  .rt-stars { display: flex; gap: 4px; padding-top: 12px; }
+  .rt-stars button { width: 44px; height: 44px; display: grid; place-items: center; padding: 0; background: none; border: 0; border-radius: 8px; cursor: pointer; }
+  .rt-stars svg { width: 30px; height: 30px; fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linejoin: round; transition: fill 0.2s, transform 0.15s; }
+  .rt-stars button:global(.on) svg { fill: var(--yellow); }
+  .rt-stars button:hover svg { transform: scale(1.08); }
+
+  .rt-lead { margin-top: 18px; font-size: 0.92rem; color: var(--grey); }
+  .rt-lead :global(b) { color: var(--ink); font-weight: 600; }
+  .rt-scene { display: block; width: 100%; height: auto; margin-top: 8px; overflow: visible; }
+  .rt-scene .ink { fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .rt-scene .road { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linecap: round; }
+  .rt-scene .drop { stroke: var(--cobalt); stroke-width: 1.4; stroke-linecap: round; animation: rt-fall 1.2s linear infinite; }
+  .rt-scene .box { fill: var(--yellow); stroke: var(--ink); stroke-width: 1.4; }
+  .rt-scene .pin { fill: var(--cobalt); }
+  .rt-scene .pin-hole { fill: var(--paper); }
+  .rt-scene .scooter { animation: rt-creep 7s ease-in-out infinite alternate; }
+  @keyframes rt-fall { from { transform: translateY(-5px); opacity: 0; } 30% { opacity: 1; } to { transform: translateY(10px); opacity: 0; } }
+  @keyframes rt-creep { from { transform: translateX(0); } to { transform: translateX(40px); } }
+
+  .rt-tl { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); font-size: 0.8rem; color: var(--grey); border-top: 1px solid var(--line); }
+  .rt-tl li { position: relative; padding-top: 10px; }
+  .rt-tl li::before { content: ''; position: absolute; left: 0; top: -4px; width: 7px; height: 7px; border-radius: 50%; background: var(--cobalt); }
+  .rt-tl li:nth-child(2) { text-align: center; }
+  .rt-tl li:nth-child(2)::before { left: calc(50% - 3.5px); }
+  .rt-tl li:nth-child(3) { text-align: right; }
+  .rt-tl li:nth-child(3)::before { left: auto; right: 0; }
+  .rt-tl span { font-weight: 600; color: var(--ink); margin-right: 3px; }
+
+  .rt-scores { display: flex; align-items: flex-end; justify-content: center; gap: 28px; margin-top: 22px; text-align: center; }
+  .rt-lab { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--grey); }
+  .rt-val { position: relative; z-index: 0; display: inline-block; margin-top: 4px; font-family: var(--font-head); font-size: 2.6rem; line-height: 1; font-variant-numeric: tabular-nums; }
+  .rt-orig .rt-val { color: var(--tc-red); }
+  .rt-fair .rt-val { color: var(--cobalt); }
+  .rt-fair .rt-val::after { content: ''; position: absolute; left: -6%; right: -6%; bottom: 0.08em; height: 0.3em; background: var(--yellow-soft); z-index: -1; }
+  .rt-arr { padding-bottom: 8px; font-size: 1.3rem; color: var(--grey); }
+</style>

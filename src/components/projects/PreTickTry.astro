@@ -1,0 +1,114 @@
+---
+/**
+ * Tiny UX Decisions: a mini version of one of the five tests (the pre-ticked box).
+ * The reader checks out twice; in round 2 the add-on is quietly pre-ticked.
+ * A preview of the project, not a result from it.
+ */
+import '../../styles/try-card.css';
+interface Props { href?: string }
+const { href } = Astro.props;
+const ITEM = 499, ADDON = 49;
+---
+<figure class="tc pt2" data-pretick-try data-item={ITEM} data-addon={ADDON}>
+  <div class="tc-head">
+    <p class="tc-title">Same checkout, twice.</p>
+    <button type="button" class="tc-again" data-again hidden>↺ start over</button>
+    <span class="tc-tag" data-tag>a preview</span>
+  </div>
+  <p class="tc-sub" data-sub>Round 1 of 2. Check out the way you normally would.</p>
+
+  <div class="tc-fold"><div>
+    <div class="pt2-screen" data-screen>
+      <div class="pt2-line"><span>Phone case</span><span>₹{ITEM}</span></div>
+      <label class="pt2-check">
+        <input type="checkbox" id="pt2-addon" data-addon-box />
+        <span>Add screen protection plan</span>
+        <span class="pt2-add">+₹{ADDON}</span>
+      </label>
+      <div class="pt2-line pt2-total"><span>Total</span><span data-total>₹{ITEM}</span></div>
+      <button type="button" class="pt2-pay" data-pay>Pay <span data-paytotal>₹{ITEM}</span></button>
+    </div>
+  </div></div>
+
+  <div class="tc-reveal" aria-live="polite"><div>
+    <div class="pt2-rounds">
+      <div><p class="pt2-lab">round 1</p><p class="pt2-val" data-r1></p></div>
+      <div><p class="pt2-lab">round 2</p><p class="pt2-val" data-r2></p></div>
+    </div>
+    <p class="tc-verdict" data-verdict></p>
+    <p class="tc-fine">The one thing that changed: in round 2, the box was already ticked.</p>
+    {href && <p class="pt2-more"><a href={href} target="_blank" rel="noopener noreferrer">Try all five tests ↗</a></p>}
+  </div></div>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-pretick-try]').forEach((card) => {
+    const item = Number(card.dataset.item), addon = Number(card.dataset.addon);
+    const box = card.querySelector<HTMLInputElement>('[data-addon-box]')!;
+    const total = card.querySelector<HTMLElement>('[data-total]')!;
+    const payTotal = card.querySelector<HTMLElement>('[data-paytotal]')!;
+    const sub = card.querySelector<HTMLElement>('[data-sub]')!;
+    const screen = card.querySelector<HTMLElement>('[data-screen]')!;
+    const again = card.querySelector<HTMLButtonElement>('[data-again]')!;
+    const tag = card.querySelector<HTMLElement>('[data-tag]')!;
+    let round = 1;
+    let r1 = false;
+    const money = (n: number) => `₹${n}`;
+    const update = () => { const t = item + (box.checked ? addon : 0); total.textContent = money(t); payTotal.textContent = money(t); };
+    box.addEventListener('change', update);
+
+    card.querySelector<HTMLButtonElement>('[data-pay]')!.addEventListener('click', () => {
+      if (round === 1) {
+        r1 = box.checked;
+        round = 2;
+        again.hidden = false; tag.hidden = true;
+        screen.classList.add('is-swap');
+        setTimeout(() => {
+          box.checked = true; update(); // the quiet change
+          sub.textContent = 'Round 2 of 2. Same item. Check out again.';
+          screen.classList.remove('is-swap');
+        }, 350);
+        return;
+      }
+      const r2 = box.checked;
+      card.querySelector('[data-r1]')!.textContent = money(item + (r1 ? addon : 0));
+      card.querySelector('[data-r2]')!.textContent = money(item + (r2 ? addon : 0));
+      card.querySelector('[data-r2]')!.classList.toggle('is-more', r2 && !r1);
+      card.querySelector('[data-verdict]')!.textContent =
+        !r1 && r2 ? `Did you spot it? Same choice, but you paid ₹${addon} more in round 2.`
+        : r1 && r2 ? 'You wanted it both times. But in round 2 it was chosen for you.'
+        : 'You caught it. The box was ticked for you in round 2, and it’s easy to miss.';
+      sub.textContent = 'Here’s how your two checkouts compare:';
+      card.classList.add('is-done');
+    });
+
+    again.addEventListener('click', () => {
+      round = 1; r1 = false; box.checked = false; update();
+      card.classList.remove('is-done');
+      sub.textContent = 'Round 1 of 2. Check out the way you normally would.';
+      card.querySelector('[data-verdict]')!.textContent = '';
+      again.hidden = true; tag.hidden = false; box.focus();
+    });
+  });
+</script>
+
+<style>
+  .pt2 { margin: 0; }
+  .pt2-screen { display: grid; gap: 10px; margin-top: 16px; padding: 16px; background: #fff; border: 1px solid var(--line); border-radius: 12px; transition: opacity 0.35s, transform 0.35s; }
+  .pt2-screen:global(.is-swap) { opacity: 0; transform: translateX(-10px); }
+  .pt2-line { display: flex; justify-content: space-between; gap: 12px; font-size: 0.92rem; }
+  .pt2-check { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; min-height: 44px; padding: 8px 10px; font-size: 0.88rem; color: var(--grey); border: 1px dashed var(--line-strong); border-radius: 8px; cursor: pointer; }
+  .pt2-check input { width: 18px; height: 18px; margin: 0; accent-color: var(--cobalt); cursor: pointer; }
+  .pt2-add { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .pt2-total { padding-top: 10px; border-top: 1px solid var(--line); font-weight: 600; }
+  .pt2-total span:last-child { font-variant-numeric: tabular-nums; }
+  .pt2-pay { min-height: 44px; margin-top: 2px; font: inherit; font-weight: 600; font-size: 0.95rem; color: #fff; background: var(--ink); border: 0; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; }
+  .pt2-pay:hover { background: #333; }
+
+  .pt2-rounds { display: flex; justify-content: center; gap: 40px; margin-top: 18px; text-align: center; }
+  .pt2-lab { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--grey); }
+  .pt2-val { position: relative; z-index: 0; display: inline-block; margin-top: 4px; font-family: var(--font-head); font-size: 2.2rem; line-height: 1; font-variant-numeric: tabular-nums; }
+  .pt2-val:global(.is-more) { color: var(--tc-red); }
+  .pt2-more { margin-top: 12px; text-align: center; font-size: 0.88rem; }
+  .pt2-more a { color: var(--cobalt); font-weight: 500; border-bottom: 1.5px solid var(--yellow); }
+</style>

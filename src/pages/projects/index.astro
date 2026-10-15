@@ -2,9 +2,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArrowLink from '../../components/ArrowLink.astro';
 import HandNote from '../../components/HandNote.astro';
-import RiderCompare from '../../components/visuals/RiderCompare.astro';
-import HealthcareFactors from '../../components/visuals/HealthcareFactors.astro';
-import PricingTeaser from '../../components/visuals/PricingTeaser.astro';
+import RiderTry from '../../components/projects/RiderTry.astro';
+import HealthcareGuess from '../../components/projects/HealthcareGuess.astro';
+import PreTickTry from '../../components/projects/PreTickTry.astro';
 import DriftSketch from '../../components/visuals/DriftSketch.astro';
 import { site } from '../../data/site';
 ---
@@ -25,22 +25,22 @@ import { site } from '../../data/site';
       <div class="p-text reveal">
         <p class="num p-n">01</p>
         <h2 class="t-section p-title" id="p1-title">Is the Algorithm Being Fair to Riders?</h2>
-        <p class="p-q">Can a performance score be mathematically accurate and still be unfair?</p>
+        <p class="p-q">Can a score tell a slow rider from a slow road?</p>
         <div class="p-copy">
-          <p>I reverse-engineered scoring across 15,000 delivery records, measuring how traffic, weather and rider experience shaped performance scores.</p>
-          <p>Then I built a condition-adjusted Fair Score designed to separate rider performance from circumstances outside the rider’s control.</p>
+          <p>Delivery riders are ranked by a single performance score. That score sees how long a delivery took. It doesn’t see the traffic jam or the rain.</p>
+          <p>I reverse-engineered the scoring across <strong>15,000 deliveries</strong> to measure how much traffic, weather and experience were shaping it. Then I built a <strong>Fair Score</strong> that adjusts for conditions, so riders are judged on what they can actually control.</p>
         </div>
-        <p class="p-key">A model can be consistent without necessarily being fair.</p>
+        <p class="p-key">A rider who works the hardest shifts shouldn’t rank lower for it.</p>
         <ul class="tags" role="list">
-          <li class="tag tag--metric">15,000 records</li>
+          <li class="tag tag--metric">15,000 deliveries</li>
           <li class="tag tag--metric">Fair Score</li>
           <li class="tag">Python</li>
-          <li class="tag">regression</li>
+          <li class="tag">Regression</li>
         </ul>
         <ArrowLink href="/projects/rider-fairness/" variant="button" class="p-cta">View project</ArrowLink>
       </div>
       <div class="p-visual reveal" style="--delay:120ms">
-        <RiderCompare />
+        <RiderTry />
       </div>
     </article>
 
@@ -49,21 +49,23 @@ import { site } from '../../data/site';
       <div class="p-text reveal">
         <p class="num p-n">02</p>
         <h2 class="t-section p-title" id="p2-title">Healthcare Expenditure:<br /> A Gender-Based Analysis</h2>
-        <p class="p-q">What actually drives healthcare spending — and is it the same across genders?</p>
+        <p class="p-q">What actually drives what people spend on healthcare?</p>
         <div class="p-copy">
-          <p>I used Jamovi, regression and statistical analysis to test demographic, financial and healthcare-need drivers of expenditure.</p>
-          <p>The resulting model explained 63.1% of expenditure variation, helping identify which factors were most strongly associated with spending behaviour across genders.</p>
+          <p>Healthcare spending isn’t only about how unwell someone is. Income, insurance, age and education all play a part, and they don’t always affect men and women the same way.</p>
+          <p>For my undergraduate research, I surveyed <strong>210 people</strong> and used the Andersen model and multiple regression to test which factors mattered most, and whether they differed by gender. The model explained <strong>63.1%</strong> of the variation in spending.</p>
         </div>
+        <p class="p-key">Women in the survey spent more on healthcare while reporting fewer financial resources to pay for it.</p>
         <ul class="tags" role="list">
+          <li class="tag tag--metric">210 responses</li>
+          <li class="tag tag--metric">R² 0.631</li>
           <li class="tag">Jamovi</li>
           <li class="tag">Regression</li>
-          <li class="tag tag--metric">R² 0.631</li>
         </ul>
         <ArrowLink href="/projects/healthcare-expenditure/" variant="button" class="p-cta">View project</ArrowLink>
         {site.healthcareReport && <ArrowLink href={site.healthcareReport} dir="ext" external class="p-report">View research report</ArrowLink>}
       </div>
       <div class="p-visual reveal" style="--delay:120ms">
-        <HealthcareFactors />
+        <HealthcareGuess />
       </div>
     </article>
 
@@ -87,7 +89,7 @@ import { site } from '../../data/site';
         {site.tinyUx && <ArrowLink href={site.tinyUx} external dir="ext" variant="button" class="p-cta">Try the experiments</ArrowLink>}
       </div>
       <div class="p-visual reveal" style="--delay:120ms">
-        <PricingTeaser />
+        <PreTickTry />
       </div>
     </article>
   </div>
@@ -131,6 +133,7 @@ import { site } from '../../data/site';
   .p-title { font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.9rem); }
   .p-copy { margin: -6px 0 16px; max-width: 46ch; color: var(--grey); }
   .p-copy p + p { margin-top: 0.6em; }
+  .p-copy strong { color: var(--ink); font-weight: 600; }
   .p-key { margin: 0 0 18px; font-weight: 500; }
   .p-q { margin: 18px 0 22px; font-size: 1.2rem; line-height: 1.4; font-weight: 500; color: var(--cobalt); max-width: 30ch; }
   :global(.p-cta) { margin-top: 28px; }

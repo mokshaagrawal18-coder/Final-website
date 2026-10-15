@@ -1,0 +1,29 @@
+/* "Try it" cards on the Projects page: one small interaction per project, same frame for all. */
+.tc {
+  --tc-red: #A9372A;
+  position: relative;
+  padding: var(--pad-panel);
+  background: var(--paper);
+  border-radius: 10px;
+  box-shadow: var(--shadow-paper);
+}
+.tc-head { display: flex; align-items: baseline; gap: 12px; }
+.tc-title { margin: 0; font-family: var(--font-head); font-weight: 400; font-size: 1.35rem; line-height: 1.15; }
+.tc-tag { margin-left: auto; font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--grey); white-space: nowrap; }
+.tc-again { margin-left: auto; min-height: 32px; padding: 6px 0; font-size: 0.8rem; font-weight: 500; color: var(--cobalt); background: none; border: 0; cursor: pointer; }
+.tc-tag[hidden], .tc-again[hidden] { display: none; }
+.tc-sub { margin-top: 6px; font-size: 0.92rem; color: var(--grey); }
+.tc-verdict { margin-top: 16px; font-family: var(--font-hand); font-size: 1.05rem; line-height: 1.3; color: var(--cobalt); text-align: center; }
+.tc-verdict:empty { display: none; }
+.tc-fine { margin-top: 8px; font-size: 0.74rem; color: var(--grey); text-align: center; }
+
+/* fold away / open up */
+.tc-fold { display: grid; grid-template-rows: 1fr; transition: grid-template-rows 0.5s var(--ease), opacity 0.3s; }
+.tc-reveal { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.7s var(--ease) 0.15s; }
+.tc-fold > div, .tc-reveal > div { overflow: hidden; min-height: 0; }
+.tc.is-done .tc-fold { grid-template-rows: 0fr; opacity: 0; }
+.tc.is-done .tc-reveal { grid-template-rows: 1fr; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tc *, .tc *::before, .tc *::after { transition: none !important; animation: none !important; }
+}

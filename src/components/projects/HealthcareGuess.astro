@@ -1,0 +1,97 @@
+---
+/**
+ * Healthcare expenditure: "Guess first."
+ * The reader picks the factor they think pushes spending up most; the bars then show the real
+ * correlations with healthcare spending from the survey (210 responses, all significant).
+ */
+import '../../styles/try-card.css';
+
+const options = [
+  { key: 'income', name: 'Income & insurance', r: -0.22, verdict: 'It actually went the other way: more income and insurance went with lower spending.' },
+  { key: 'age', name: 'Age, education & awareness', r: 0.48, verdict: 'Close. Health needs had an even stronger link.' },
+  { key: 'need', name: 'Health needs', r: 0.68, verdict: 'Yes. Health needs had the strongest link to spending.' },
+];
+const fmt = (r: number) => `${r > 0 ? '+' : '−'}${Math.abs(r).toFixed(2)}`;
+---
+<figure class="tc hg" data-hc-guess>
+  <div class="tc-head">
+    <p class="tc-title">Guess first.</p>
+    <button type="button" class="tc-again" data-again hidden>↺ guess again</button>
+    <span class="tc-tag" data-tag>real survey results</span>
+  </div>
+  <p class="tc-sub">Which of these pushes healthcare spending up the most?</p>
+
+  <div class="hg-opts" role="group" aria-label="Pick one factor">
+    {options.map((o) => (
+      <button type="button" class:list={['hg-opt', o.r < 0 ? 'is-neg' : 'is-pos']} data-r={o.r} data-says={o.verdict}>
+        <span class="hg-row">
+          <span class="hg-name">{o.name}<span class="hg-you hand"> ← your guess</span></span>
+          <span class="hg-val">{fmt(o.r)}</span>
+        </span>
+        <span class="hg-track" aria-hidden="true"><span class="hg-bar"></span></span>
+      </button>
+    ))}
+  </div>
+
+  <p class="tc-verdict" data-verdict aria-live="polite"></p>
+  <p class="hg-after">Women in the survey spent more on healthcare, while reporting fewer financial resources to cover it.</p>
+  <p class="tc-fine hg-after">Correlation with healthcare spending · 210 survey responses</p>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-hc-guess]').forEach((card) => {
+    const opts = Array.from(card.querySelectorAll<HTMLButtonElement>('.hg-opt'));
+    const again = card.querySelector<HTMLButtonElement>('[data-again]')!;
+    const tag = card.querySelector<HTMLElement>('[data-tag]')!;
+    const verdict = card.querySelector<HTMLElement>('[data-verdict]')!;
+    const ZERO = 25; // % of the track where zero sits; r = 1 spans the other 75%
+    let done = false;
+    opts.forEach((o) => o.addEventListener('click', () => {
+      if (done) return;
+      done = true;
+      card.classList.add('is-done');
+      o.classList.add('is-picked');
+      opts.forEach((x) => {
+        const r = parseFloat(x.dataset.r!);
+        const bar = x.querySelector<HTMLElement>('.hg-bar')!;
+        bar.style.left = `${r >= 0 ? ZERO : ZERO + r * 75}%`;
+        bar.style.width = `${Math.abs(r) * 75}%`;
+      });
+      verdict.textContent = o.dataset.says!;
+      again.hidden = false; tag.hidden = true;
+    }));
+    again.addEventListener('click', () => {
+      done = false;
+      card.classList.remove('is-done');
+      opts.forEach((x) => { x.classList.remove('is-picked'); const b = x.querySelector<HTMLElement>('.hg-bar')!; b.style.width = '0'; b.style.left = `${ZERO}%`; });
+      verdict.textContent = ''; again.hidden = true; tag.hidden = false; opts[0].focus();
+    });
+  });
+</script>
+
+<style>
+  .hg { margin: 0; }
+  .hg-opts { display: grid; gap: 8px; margin-top: 16px; }
+  .hg-opt { display: grid; gap: 8px; width: 100%; min-height: 48px; padding: 12px 14px; text-align: left; font: inherit; color: inherit; background: #fff; border: 1px solid var(--line); border-radius: 10px; cursor: pointer; transition: border-color 0.2s; }
+  .hg-opt:hover { border-color: var(--cobalt-line); }
+  .hg-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .hg-name { font-weight: 600; font-size: 0.95rem; }
+  .hg-you { display: none; font-size: 0.9rem; font-weight: 400; color: var(--cobalt); }
+  .hg-val { font-family: var(--font-head); font-size: 1.2rem; font-variant-numeric: tabular-nums; white-space: nowrap; opacity: 0; transition: opacity 0.4s 0.5s; }
+  .is-pos .hg-val { color: var(--cobalt); }
+  .is-neg .hg-val { color: var(--tc-red); }
+  .hg-track { position: relative; display: none; height: 8px; border-radius: 4px; background: rgba(23, 23, 23, 0.05); overflow: hidden; }
+  .hg-bar { position: absolute; top: 0; bottom: 0; left: 25%; width: 0; border-radius: 4px; transition: width 0.9s var(--ease), left 0.9s var(--ease); }
+  .is-pos .hg-bar { background: var(--cobalt); }
+  .is-neg .hg-bar { background: var(--tc-red); }
+  .hg-after { display: none; }
+  p.hg-after:not(.tc-fine) { margin-top: 10px; font-size: 0.88rem; color: var(--grey); text-align: center; }
+
+  :global(.is-done) .hg-opt { cursor: default; }
+  :global(.is-done) .hg-opt:hover { border-color: var(--line); }
+  :global(.is-done) .hg-track { display: block; }
+  :global(.is-done) .hg-val { opacity: 1; }
+  :global(.is-done) .hg-after { display: block; }
+  .hg-opt:global(.is-picked) { border-color: var(--ink); }
+  .hg-opt:global(.is-picked) .hg-you { display: inline; }
+</style>
